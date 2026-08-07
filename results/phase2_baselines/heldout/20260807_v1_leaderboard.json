@@ -1,0 +1,53 @@
+{
+  "kind": "heldout_observation",
+  "source": "organizer Phase 2 leaderboard, read 2026-08-07T06:31Z+02:00",
+  "recorded_utc": "2026-08-07T04:40:00+00:00",
+  "team_display": "fa***an",
+  "rank": 1,
+  "note_on_rank": "rank 1 of 1 - ours was the only submission on the board when this was read, so the rank carries no information about relative quality",
+  "version": "v1",
+  "archive": "submissions/phase2/fabiundstefan_v1.zip",
+  "archive_built_from_sha": "be196d00",
+  "archive_tag": "phase2-v1",
+  "best_score": 33.2473,
+  "latest_score": 33.2473,
+  "official_scores": {
+    "MicEPR": 99.4815,
+    "MacEPR": 95.0,
+    "C-LPR": 55.1966,
+    "FPR": 0.0,
+    "DAV": 0.0,
+    "ATT": 0.0,
+    "DDR": 0.0
+  },
+  "aggregate_check": {
+    "formula": "0.10*MicEPR + 0.10*MacEPR + 0.25*C-LPR + 0.40*FPR + 0.05*(DAV+ATT+DDR)",
+    "recomputed": 33.2473,
+    "published": 33.2473,
+    "matches_exactly": true
+  },
+  "comparable_local_row": {
+    "run": "R17",
+    "row": "results/phase2_baselines/full_runs/20260806T115309Z.json",
+    "split": "tpc_phase2_familiar_100",
+    "git_sha": "efbfea96",
+    "official_scores": {
+      "MicEPR": 99.6667,
+      "MacEPR": 98.0,
+      "C-LPR": 90.0812,
+      "FPR": 44.0,
+      "DAV": 26.0417,
+      "ATT": 34.4752,
+      "DDR": 25.1944,
+      "overall": 64.1725
+    },
+    "comparability": "NOT comparable as a like-for-like row - different query set, unknown query count, organizer host. It is the configuration v1 shipped, so it is the right reference for what changed, not for a delta."
+  },
+  "what_is_unknown": [
+    "the held-out query count",
+    "clauses per held-out query (the analysis assumes familiar-100's 11.09)",
+    "held-out phrasing register",
+    "whether any query timed out or any worker died on the organizer host"
+  ],
+  "analysis": "scripts/analyze_heldout_breakdown.py, and docs/tpc_phase2_eval.md#the-one-fact-that-reorganizes-this-document"
+}

@@ -35,6 +35,14 @@
 
 \urlstyle{same}
 
+% Tighten the glue around floats. The default \textfloatsep is 20pt with 2pt of stretch, which on a
+% page whose column starts with a float absorbs any text we cut instead of pulling the column up --
+% that is why this report sat one bibliography entry over the four-page limit. Typography only; no
+% ijcai26.sty formatting rule is affected.
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{10pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+
 \pdfinfo{
 /TemplateVersion (IJCAI.2026.0)
 }
@@ -125,7 +133,7 @@ labour that follows from the numbers (Section~\ref{sec:llm}).
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=0.80\textwidth]{figures/architecture.pdf}
+    \includegraphics[width=0.74\textwidth]{figures/architecture.pdf}
     \caption{The system. Requirements are extracted from the query text, normalised into
     branch-local variants that keep disjunctions separate, and solved into a candidate itinerary. The
     acceptance gate is the only path to output: a rejected candidate returns to search. Every fact
@@ -180,7 +188,7 @@ non-regressed set of plans.
 
 Because the dominant term is the fraction of itineraries satisfying \emph{every} requirement, and
 because the preference terms are zeroed for any itinerary that fails one, the preference terms are
-bounded by the pass rate. One point of pass rate is worth about five times as much as perfecting any
+bounded by the pass rate. One point of pass rate is worth about five times as much as perfecting a
 single preference term, so we ignored preferences almost entirely.
 
 \paragraph{The search is bimodal.}
@@ -204,7 +212,7 @@ raised the pass rate by ten points (Table~\ref{tab:abl}). The limit was represen
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\columnwidth]{figures/registers_single.pdf}
+    \includegraphics[width=0.95\columnwidth]{figures/registers_single.pdf}
     \caption{The same system on four query styles, strongest where requirements are enumerated in a
     template and weakest on the organizers' unseen set (dotted line). The marked point is free prose
     before the fix of Section~\ref{sec:generalization}. Our extraction misses 0\% of stated
@@ -220,12 +228,21 @@ score. We had predicted the local number within a few points, with a stated conf
 that prediction was wrong by roughly thirty points. We report the diagnosis because it generalizes
 further than the system does.
 
-\paragraph{Bounding the failure without seeing the data.}
-Only the aggregate was returned, but inverting the weighted sum still constrains things. If the
-environmental terms held at their local values, the pass rate must have fallen to at most about a
-third of ours and the per-requirement rate roughly halved --- both collapsed together. That also
-excludes the comfortable explanation: had the run crashed and shipped empty plans, every term would
-have gone toward zero, and the arithmetic does not admit it.
+\paragraph{What actually failed.}
+The leaderboard later published the seven metrics behind that aggregate, and they localise the failure
+precisely. Environmental validity is essentially unchanged from our local runs (per-clause
+$99.7 \rightarrow 99.5$): every fact we emit still resolves in the database, on queries we have never
+seen. What collapsed is requirement satisfaction --- per-requirement $90 \rightarrow 55$, and the
+fraction of itineraries satisfying \emph{every} requirement $44 \rightarrow \mathbf{0}$. Grounding
+generalised; knowing what to ground did not. That also rules out a crashed run, since empty plans
+cannot score 99.5 on validity.
+
+The exact zero is arithmetic, not a second defect: a query passes only if all eleven of its
+requirements do, and a 58\% per-requirement rate leaves a quarter of a query per hundred. One
+consequence shaped what we did next. The pass rate carries weight 0.4 and zeroes all three preference
+terms, so \textbf{55\% of the total weight currently returns nothing}, and it stays near zero until the
+per-requirement rate reaches roughly 0.8. Partial coverage fixes earn only their per-requirement share;
+crossing that threshold is worth several times more.
 
 \paragraph{The largest identified cause is our own measurement.}
 Our rule-based extraction has \textbf{zero} clause-level gaps on the released set we developed
@@ -256,22 +273,22 @@ a half remains unexplained, most plausibly because the unseen queries are denser
 
 \paragraph{The process error, which we consider the more useful finding.}
 We did have a held-out tripwire, and it passed. It was a 20-record fold of the \emph{same} templated
-data, so it could only ever detect fitting the residual of one split --- never fitting the phrasing of
-the whole artifact. Every screen, gate and ablation in this project ran on that one style, and our
-extraction quality was reported throughout as a property of the parser when it was a property of the
-parser \emph{on one register}. A held-out fold of the same artifact is not a held-out distribution.
+data, so it could only detect fitting the residual of one split --- never fitting the phrasing of the
+whole artifact. Every screen, gate and ablation ran on that one style, and our extraction quality was
+reported throughout as a property of the parser when it was a property of the parser \emph{on one
+register}. A held-out fold of the same artifact is not a held-out distribution.
 
 \section{What the language model does, and does not do}
 \label{sec:llm}
 
 The organizers provide a model on the evaluation host, so using one was free. We ship a system that
-never calls it. That is an outcome of measurement, not a prior, and the measurements are more
-interesting than the decision. All three roles below use the organizers' model checkpoint, with the
-call count verified at the wire per query.
+never calls it --- an outcome of measurement, not a prior, and the measurements are more interesting
+than the decision. All three roles below use the organizers' model checkpoint, with call counts
+verified at the wire.
 
 \begin{table}[t]
     \centering
-    \small
+    \footnotesize
     \begin{tabular}{lrrl}
         \toprule
         & $\Delta$pass rate & $\Delta$score & verdict \\
@@ -326,16 +343,14 @@ the measurement pipeline, and deciding which experiment to run next --- includin
 budget across models, with a strong model planning the work and cheaper models implementing it under
 review. This is the asymmetry we would generalize: the model was most valuable in the loop that
 \emph{writes} the planner, and least valuable in the loop that \emph{runs} it. Asked instead to repair
-a rejected plan, with every edit required to ground against the environment and re-pass the verifier,
-it committed \textbf{zero} of 18 proposed edits --- eight referenced things that do not exist. The
-ideas were not bad; they were not groundable.
+a rejected plan, it committed \textbf{zero} of 18 proposed edits --- the ideas were not bad, they were
+not groundable.
 
-\paragraph{Two traps that make such measurements lie.}
-Both of our language-model measurements were initially wrong, in opposite directions, from the same
-cause: a silently degrading component. An early audit screen looked like $+2$ because a third of its
-calls timed out and fell back to our own parser, so the ``benefit'' was our deterministic path with
-extra latency; with every call firing it became $-3.2$. We now require a wire-level call counter for
-every optional stage, and treat an arm we did not count as unmeasured.
+\paragraph{A trap that makes such measurements lie.}
+An early audit screen looked like $+2$ because a third of its calls timed out and fell back to our own
+parser --- the ``benefit'' was our deterministic path with extra latency. With every call firing it
+became $-3.2$. We now require a wire-level call counter for every optional stage, and treat an arm we
+did not count as unmeasured.
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -343,16 +358,16 @@ every optional stage, and treat an arm we did not count as unmeasured.
 We built a planner that cannot emit an itinerary its verifier rejected, and it beats every baseline we
 could run by a wide margin. It also scored about half its local number on unseen queries, and the
 reason was not the solver: our requirement extraction had been developed, screened and gated against a
-single phrasing style, with a held-out fold drawn from that same style. The correction is cheap and
-buys generalization at no local cost. The lesson is not.
+single phrasing style, with a held-out fold drawn from that same style. The correction is cheap. The
+lesson is not.
 
 On the language model, our result is a division of labour rather than a verdict. Asked to plan, it
-scores near zero, because this benchmark measures grounding under a strict verifier and not fluency.
-Asked to read requirements out of unfamiliar prose, it recovers most of what our rules miss --- then
-cannot express them in the vocabulary the verifier checks, which is a solvable engineering problem and
-our next step. Asked to build the system, it wrote almost all of it. The pattern we would carry to
-other constrained agentic tasks: let the model handle language, let a verifier own truth, and make sure
-the evaluation can embarrass you before the leaderboard does.
+scores near zero: this benchmark measures grounding under a strict verifier, not fluency. Asked to read
+requirements out of unfamiliar prose, it recovers most of what our rules miss --- then cannot express
+them in the vocabulary the verifier checks, which is our next step. Asked to build the system, it wrote
+almost all of it. The pattern we would carry to other constrained agentic tasks: let the model handle
+language, let a verifier own truth, and make sure the evaluation can embarrass you before the
+leaderboard does.
 
 \section*{Acknowledgements}
 

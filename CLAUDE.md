@@ -37,19 +37,29 @@ remains**, due with the technical report on 2026-08-10, 24:00 Beijing Time.
 
 **`33.2473` is roughly half the `64.17` the same code scores locally on familiar-100
 ([R17](docs/tpc_phase2_eval.md#the-closed-queue-r1r19), `git_sha efbfea96`), and closing that gap is
-now the work.** The largest identified cause is measured, not suspected: our constraint extraction has
-**zero** clause-level gaps on familiar-100 — the numbered-template split it was built against — and
+now the work.** The leaderboard published the per-metric breakdown on 2026-08-07
+([artifact](results/phase2_baselines/heldout/20260807_v1_leaderboard.json)) and it is sharper than the
+aggregate: EPR-micro `99.48` (vs `99.67` locally — **grounding generalizes**), EPR-macro `95.00`,
+C-LPR **`55.20`** (vs `90.08`), **FPR `0.0000`** (vs `44.0`), all three preference terms `0`. Three
+things follow, and every agent should read them before choosing work: the failure is *only* in knowing
+what to satisfy, not in grounding it; `FPR = 0` is the arithmetic consequence of a `58 %` per-clause
+rate over ~11 clauses, **not a second bug to hunt**; and `55 %` of the total weight yields exactly zero
+and unlocks at a *threshold* (`p ≈ 0.8`), so rank work by whether it can cross that, not by how many
+clauses it fixes. The largest identified cause is measured: our constraint extraction has **zero**
+clause-level gaps on familiar-100 — the numbered-template split it was built against — and
 **12–29 %** on every differently-phrased released set, so we optimized against the one register we were
-already perfect on. Read
+already perfect on. It is not the *only* cause: held-out C-LPR sits below our worst local free-prose
+number, which is [P19](docs/tpc_phase2_roadmap.md#p19--find-the-unidentified-half-of-the-gap). Read
 [the eval doc's opening section](docs/tpc_phase2_eval.md#the-one-fact-that-reorganizes-this-document)
 before trusting any local number, and treat a familiar-100 result as evidence about *one phrasing
 register* only. A first fix landed (bare total budgets, plain room-type wording; free-prose e2e
 `41.62 → 49.99`, familiar-100 byte-identical), and the ranked residual is
-[P15–P18](docs/tpc_phase2_roadmap.md#work-items).
+[P15–P19](docs/tpc_phase2_roadmap.md#work-items).
 
-**Do not package or upload `v2`. Never upload automatically.** The owner submits manually, after the
-Phase 2 leaderboard publishes and only with a substantial measured improvement; agents prepare and
-measure, nothing more. The packaging path, when it is wanted, is in the [competition
+**Do not package or upload `v2`. Never upload automatically.** The owner submits manually, shortly
+before the deadline and only with a substantial measured improvement; agents prepare and measure,
+nothing more. The leaderboard's rank `1` is rank 1 of 1 and carries no information. The packaging path,
+when it is wanted, is in the [competition
 reference](docs/reference/competition.md#the-v1-archive-as-built-2026-08-05). That same 2026-08-04
 email also gave the
 organizers' exact evaluation LLM deployment (SGLang, `Qwen3.6-27B`, `http://127.0.0.1:30000/v1`,
