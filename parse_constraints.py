@@ -625,12 +625,57 @@ def parse_required_attractions(text):
                                   "sports", "entertainment", "venues", "other"}
                    for w in chunk.replace(",", " ").replace("/", " ").split()):
                 continue
-            # Split on " and " to get individual names
+            # The same greedy "visit <city> for N days and ..." split routinely lands a
+            # restaurant/cuisine clause somewhere in the chunk ("... and would like to try Hubei
+            # cuisine", "... and would like to try some local Jiangsu and Zhejiang cuisine", "...
+            # and would like to eat at Siji Minfu near Qianmen") -- a real requirement, but for
+            # `required_restaurants`/`cuisine_preference`, not this family. Their own anchored
+            # patterns catch cuisine-type phrasing ("try X cuisine") reliably; specific-restaurant
+            # phrasing ("would like to eat/dine at <name>") is caught only sometimes -- a sampled
+            # check found ~40% captured, ~60% dropped by both families on this exact phrasing. That
+            # gap is a `required_restaurants` recall residual, not something to fix by recording it
+            # here under the wrong family. Checked on the whole chunk, before splitting on " and ":
+            # an eat/dine/try cue anywhere means the whole capture is a food clause, e.g. "try
+            # Jiangsu and Zhejiang cuisine" splits into two cuisine names, not one cuisine name plus
+            # an unrelated attraction.
+            if re.search(
+                r"\b(?:try|eat|dine\s+at|have\s+(?:coffee|tea|a\s+meal)\s+at)\b",
+                chunk, re.I,
+            ):
+                continue
+            # Split on " and " to get individual names. The remaining guards below run per split
+            # part, not on the whole chunk (P24, 2026-08-07): "visit Chongqing for 2 days and
+            # would like to go to the Great Hall of the People" is one greedy capture split into a
+            # trip-framing part and a genuine trailing attraction reference -- filtering the chunk
+            # as a whole would drop the real half along with the invented one.
             parts = re.split(r"\s+and\s+", chunk)
             for p in parts:
                 p = p.strip().rstrip(".")
-                if p and len(p) > 1:
-                    names.append(p)
+                if not p or len(p) <= 1:
+                    continue
+                # "I want to visit <target city> for <N> days ... with a budget of ... RMB" is the
+                # trip-framing sentence, not an attraction request -- with no comma before the
+                # trailing budget/day-count clause, the pattern's own delimiter never fires and the
+                # whole tail is swallowed as one "attraction name". Measured as the dominant
+                # required_attractions precision leak on every HF free-prose set (every sampled
+                # spurious instance had no matching oracle attraction_name_set clause at all; see
+                # docs/tpc_phase2_roadmap.md#p24--stop-inventing-satisfiable-but-unrequested-constraints).
+                # Trip metadata never appears inside a real attraction name in this dataset, so its
+                # presence anywhere in a part is disqualifying on its own.
+                if re.search(
+                    r"\bbudget\b|\bRMB\b|¥|\byuan\b|\balone\b|\bby\s+myself\b"
+                    r"|\bfor\s+(?:\w+\s+){0,2}days?\b",
+                    p, re.I,
+                ):
+                    continue
+                # A real attraction name is a short proper-noun phrase. Free prose also uses
+                # "visit" for plain sentiment with no name in it at all ("some cool places",
+                # "places with beautiful scenery", "the university town there") -- every genuine
+                # capture in the released registers carries at least one capitalized word, so
+                # require one to filter the sentiment parts out (same measurement as above).
+                if not re.search(r"[A-Z]", p):
+                    continue
+                names.append(p)
 
     # "Visit the following attractions: X and Y." (familiar-100). Anchored at ':' so it stays on
     # the attraction-name line and never fires on "attraction types:" (-> required_attraction_types).
@@ -1107,6 +1152,20 @@ def parse_required_hotels(text):
                 continue
             # Skip "a hotel with/that" patterns (amenity references)
             if re.match(r"(?:a\s+)?hotel\s+(?:with|that)", chunk, re.I):
+                continue
+            # P24 (2026-08-07): "stay in two twin rooms" / "stay in a room with a double bed" /
+            # "stay in a big bed room" is a room-type/room-count requirement, not a hotel name --
+            # the guard above only caught chunks *starting* with "a single/double/twin", missing
+            # every quantified ("two twin rooms", "two rooms") or "a room ..." phrasing, which was
+            # the dominant required_hotels precision leak on every HF free-prose set (every sampled
+            # spurious instance had no matching oracle accommodation_name_set clause; see
+            # docs/tpc_phase2_roadmap.md#p24--stop-inventing-satisfiable-but-unrequested-constraints).
+            # A real hotel name never opens with a bare quantifier/article immediately in front of
+            # "room(s)".
+            if re.match(r"(?:a|an|one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s+"
+                        r"(?:[\w-]+[\s-]+)*rooms?\b", chunk, re.I):
+                continue
+            if re.match(r"(?:a|an)\s+room\b", chunk, re.I):
                 continue
             parts = re.split(r"\s+and\s+", chunk)
             for p in parts:

@@ -2,8 +2,13 @@
 
 The public parser intentionally stays broad and NL-friendly.  CP-SAT needs the
 opposite: small, branch-local, hard facts copied from the oracle DSL without
-leaking one OR arm into another.  This module only recognizes the finite DSL
-families emitted in the Phase-1 data; it does not execute hard_logic_py.
+leaking one OR arm into another.  This module recognizes a finite set of DSL
+shapes read off the data available when each was added; it does not execute
+hard_logic_py.  That set is not exhaustive by construction -- P24 (2026-08-07)
+found a whole shape (`intercity_transport_set` equality, the *only* form the HF
+free-prose generator emits) missing from `_parse_intercity`, silently dropping
+a real oracle requirement.  Treat "the DSL families we recognize" as a living,
+incomplete inventory, not a closed one.
 """
 
 from __future__ import annotations
@@ -316,6 +321,27 @@ def _parse_intercity(logic: str, result: dict[str, Any]) -> None:
             intercity[side] = "train"
         if re.search(re.escape(field) + r"\s*!=\s*['\"]train['\"]", logic):
             intercity[side] = "airplane"
+
+    # `intercity_transport_set` equality (P24, 2026-08-07): the generator's other shape for this
+    # requirement -- `intercity_transport_set=set(); ...; result=({'train'}==intercity_transport_set)`
+    # -- pins every intercity leg (outbound and return) to one mode, as opposed to the go/back
+    # accessor pattern above which can pin each leg independently. This is the *only* shape the HF
+    # free-prose generator emits (100% of a measured sample on easy/medium/human/preference_base50);
+    # missing it made every one of those real oracle clauses invisible to this function, so the
+    # oracle-side solver-dict never carried `intercity_mode` and a correct NL extraction on the
+    # parsed side scored as a false "spurious" family instead of "matched"
+    # (docs/tpc_phase2_roadmap.md#p24--stop-inventing-satisfiable-but-unrequested-constraints).
+    # Every sampled instance was a single-element set (one mode used for both legs); a two-element
+    # set is not a value this function can express as one mode; leave it unhandled rather than guess.
+    m = re.search(
+        r"\{'(train|airplane)'\}\s*==\s*intercity_transport_set"
+        r"|intercity_transport_set\s*==\s*\{'(train|airplane)'\}",
+        logic,
+    )
+    if m:
+        mode = m.group(1) or m.group(2)
+        intercity.setdefault("outbound", mode)
+        intercity.setdefault("return", mode)
 
     if intercity:
         result["intercity_mode"] = intercity

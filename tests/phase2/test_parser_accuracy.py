@@ -479,6 +479,69 @@ def test_multi_mode_exclusion_list_captures_all_modes():
     assert set(excluded) == {"walk", "taxi"}, raw
 
 
+# --- P24: oracle-side `intercity_transport_set` equality (2026-08-07) ------------------------
+#
+# The HF free-prose generator's *only* shape for this requirement is set equality --
+# `intercity_transport_set=set(); ...; result=({'train'}==intercity_transport_set)` -- pinning
+# every intercity leg to one mode. `_parse_intercity` (solver_constraints.py) previously
+# recognized only the go/back accessor shape (`intercity_transport_go`/`_back`), used by the
+# templated registers. Missing the set-equality shape meant the oracle-side solver-dict dropped a
+# real requirement, so a correct NL extraction on the parsed side scored as a false "spurious"
+# `intercity_mode` family instead of "matched" -- a measurement bug, not extraction over-reach.
+# Measured: 100% of a sampled `intercity_mode`-spurious set on hf_easy/medium/human/preference_base50
+# had this exact oracle clause (docs/tpc_phase2_roadmap.md#p24--stop-inventing-satisfiable-but-unrequested-constraints).
+
+def test_oracle_intercity_transport_set_equality_train():
+    query = {
+        "uid": "t", "nature_language": "A trip.", "people_number": 2, "days": 2,
+        "start_city": "Shanghai", "target_city": "Nanjing",
+        "hard_logic_py": [
+            "intercity_transport_set=set()\nfor activity in allactivities(plan):\n"
+            "  if activity_type(activity) in ['train', 'airplane']: "
+            "intercity_transport_set.add(intercity_transport_type(activity))\n"
+            "result=({'train'}==intercity_transport_set)"
+        ],
+    }
+    raw = pc.parse_query(query)
+    variants = solver_constraint_variants(query, raw, use_oracle=True)
+    assert variants[0].get("intercity_mode") == {"outbound": "train", "return": "train"}, variants[0]
+
+
+def test_oracle_intercity_transport_set_equality_airplane():
+    query = {
+        "uid": "t", "nature_language": "A trip.", "people_number": 2, "days": 2,
+        "start_city": "Shanghai", "target_city": "Nanjing",
+        "hard_logic_py": [
+            "intercity_transport_set=set()\nfor activity in allactivities(plan):\n"
+            "  if activity_type(activity) in ['train', 'airplane']: "
+            "intercity_transport_set.add(intercity_transport_type(activity))\n"
+            "result=({'airplane'}==intercity_transport_set)"
+        ],
+    }
+    raw = pc.parse_query(query)
+    variants = solver_constraint_variants(query, raw, use_oracle=True)
+    assert variants[0].get("intercity_mode") == {"outbound": "airplane", "return": "airplane"}, variants[0]
+
+
+def test_intercity_go_back_accessor_shape_not_clobbered_by_set_equality_fallback():
+    # Both shapes in one clause (shouldn't happen in real data -- no sampled query mixes them --
+    # but the go/back accessor pattern is more specific, e.g. it can pin each leg independently,
+    # so within a single ``_parse_intercity`` call it must not be clobbered by the coarser
+    # set-equality fallback; the fallback uses ``setdefault`` for exactly this reason.
+    from chinatravel.agent.tpc_agent.solver_constraints import _parse_intercity
+
+    logic = (
+        "result=(intercity_transport_go=='train')\n"
+        "intercity_transport_set=set()\nfor activity in allactivities(plan):\n"
+        "  if activity_type(activity) in ['train', 'airplane']: "
+        "intercity_transport_set.add(intercity_transport_type(activity))\n"
+        "result2=({'airplane'}==intercity_transport_set)"
+    )
+    result: dict = {}
+    _parse_intercity(logic, result)
+    assert result.get("intercity_mode", {}).get("outbound") == "train", result
+
+
 # --- OR-arm bare-imperative and arm-local budget recovery ------------------------------------
 
 
@@ -489,6 +552,93 @@ def test_bare_imperative_visit_extracts_attraction_name():
     assert pc.parse_required_attractions("Visit Shenzhen Art Museum (East Lake Branch)") == [
         "Shenzhen Art Museum (East Lake Branch)"
     ]
+
+
+# --- P24: stop inventing satisfiable but unrequested constraints (2026-08-07) -----------------
+#
+# required_attractions' "want to visit X" pattern has no delimiter between "visit <city>" and a
+# trailing budget/day-count clause when no comma precedes it, so on the dominant free-prose shape
+# "I want to visit <target city> for <N> days ... with a budget of ... RMB" it swallows the whole
+# trip-framing tail as one "attraction name". Measured: every sampled spurious instance on
+# hf_easy/medium/human/preference_base50 had no matching oracle attraction_name_set clause at all
+# (docs/tpc_phase2_roadmap.md#p24--stop-inventing-satisfiable-but-unrequested-constraints).
+
+def test_visit_city_with_trip_metadata_tail_is_not_an_attraction():
+    assert pc.parse_required_attractions(
+        "I want to visit Nanjing for a day by myself with a budget of 1800 RMB."
+    ) is None
+
+
+def test_visit_city_for_n_days_with_budget_is_not_an_attraction():
+    assert pc.parse_required_attractions(
+        "Three of us are planning to visit Nanjing for three days with a budget of 4000 RMB."
+    ) is None
+
+
+def test_visit_city_for_a_few_days_variant_is_not_an_attraction():
+    # "for a few days" -- filler words between "for" and "day(s)", not just a bare number/article.
+    assert pc.parse_required_attractions(
+        "My girlfriend and I want to visit Guangzhou for a few days to see the rivers and relax."
+    ) is None
+
+
+def test_generic_sentiment_phrase_is_not_an_attraction():
+    # No proper noun at all -- "attractions suitable for children" / "some cool places" /
+    # "places with beautiful scenery" style captures, filtered by requiring a capitalized token.
+    assert pc.parse_required_attractions(
+        "We mainly want to visit attractions suitable for children."
+    ) is None
+
+
+def test_real_attraction_name_still_extracted_unaffected_by_p24_guards():
+    assert pc.parse_required_attractions("We want to visit Iron Statue Temple Water Street.") == [
+        "Iron Statue Temple Water Street"
+    ]
+
+
+def test_trailing_real_attraction_after_trip_framing_part_survives_split():
+    # The greedy capture still spans "visit <city> for N days and would like to go to <POI>" as
+    # one match; the P24 guards run per split-part (not on the whole chunk) so the genuine second
+    # half is not discarded along with the trip-framing first half.
+    names = pc.parse_required_attractions(
+        "The three of us want to visit Chongqing for 2 days and would like to go to the "
+        "Great Hall of the People. Please provide us with a travel plan."
+    )
+    assert names and any("Great Hall of the People" in n for n in names), names
+
+
+def test_trailing_restaurant_reference_not_captured_as_attraction():
+    # The same split can land a restaurant/cuisine clause in the second part -- that belongs to
+    # required_restaurants/cuisine_preference (their own anchored patterns), not
+    # required_attractions.
+    assert pc.parse_required_attractions(
+        "Four of us want to visit Nanjing for 3 days and would like to try some Northeastern "
+        "Chinese cuisine. Please provide us with a travel plan."
+    ) is None
+
+
+def test_quantified_room_phrase_is_not_a_hotel_name():
+    assert pc.parse_required_hotels(
+        "The three of us want to visit Guangzhou for 3 days and stay in two twin-bed rooms."
+    ) is None
+    assert pc.parse_required_hotels(
+        "Four of us want to visit Shenzhen for two days and stay in two rooms."
+    ) is None
+
+
+def test_room_with_bed_description_is_not_a_hotel_name():
+    assert pc.parse_required_hotels(
+        "Two of us want to visit Beijing for 3 days and stay in a room with a double bed."
+    ) is None
+    assert pc.parse_required_hotels(
+        "I want to take my child to Suzhou for 3 days and stay in a big bed room."
+    ) is None
+
+
+def test_real_hotel_name_still_extracted_unaffected_by_p24_guards():
+    assert pc.parse_required_hotels(
+        "We wish to stay at the Floral Hotel Hangzhou Zhuyin Garden Homestay."
+    ) == ["the Floral Hotel Hangzhou Zhuyin Garden Homestay"]
 
 
 def test_bare_imperative_try_restaurants_extracts_name():
