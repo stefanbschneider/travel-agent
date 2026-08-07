@@ -8,7 +8,7 @@ SPLIT ?= tpc_phase1
 
 .PHONY: p1eval merge score submission upload upload-check clean-light help \
 	phase2-help phase2-test phase2-splits phase2-solve phase2-query phase2-rehearse \
-	phase2-parser-report phase2-timing phase2-gate phase2-budget-sweep \
+	phase2-parser-report phase2-timing phase2-gate phase2-generalization-gate phase2-budget-sweep \
 	phase2-baseline phase2-baseline-at phase2-harness phase2-submission \
 	phase2-submission-check phase2-full-run
 
@@ -113,6 +113,7 @@ phase2-help:
 	  '  make phase2-parser-report   - parser-vs-oracle attribution (Axis 1)' \
 	  '  make phase2-timing          - per-stage timing + reliability from a run dir (Axis 3)' \
 	  '  make phase2-gate            - regression gate: BASELINE=<json> CANDIDATE=<json>' \
+	  '  make phase2-generalization-gate - P18/R22 phrasing tripwire: fails on any set rising above results/phase2_baselines/phrasing_generalization_floor.json' \
 	  '  make phase2-quick-eval      - fast A/B SCREEN of an off-by-default flag: P2_FLAG=<env var> (docs/tpc_phase2_eval.md#quick-ab-screen)' \
 	  '  make phase2-familiar-splits - (re)create the familiar-100 val/test 80/20 split files (frozen unless --force)' \
 	  '  make phase2-progress        - live progress counter for a running phase2-baseline job (--watch)' \
@@ -208,6 +209,15 @@ phase2-timing:
 # Monotonic regression gate: fails if CANDIDATE is worse than BASELINE. Requires BASELINE/CANDIDATE.
 phase2-gate:
 	.venv/bin/python scripts/phase2_gate.py --baseline $(BASELINE) --candidate $(CANDIDATE)
+
+# P18/R22 standing phrasing-generalization tripwire: re-measures every DEFAULT_SETS entry and fails
+# if familiar-100 parse gaps rise above 0 or any free-prose set's rise above its recorded floor
+# (results/phase2_baselines/phrasing_generalization_floor.json). See docs/tpc_phase2_eval.md#r22.
+# Needs the local HF dataset cache; `tests/phase2/test_phrasing_generalization_gate.py` runs the
+# same check in the default suite and skips cleanly when that cache is absent.
+phase2-generalization-gate:
+	HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_generalization_probe.py \
+	  --check-floor results/phase2_baselines/phrasing_generalization_floor.json
 
 # Create the familiar-100 val/test split files (80/20, deterministic). Idempotent: the held-out
 # test set stays frozen unless P2_FAMILIAR_SPLIT_ARGS=--force. See docs/tpc_phase2_eval.md.

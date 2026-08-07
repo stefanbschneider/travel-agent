@@ -441,6 +441,103 @@ def fix_headroom(label: str, kind: str, name: str, *, fix_kinds=DEFAULT_FIX_KIND
     }
 
 
+# --- P18: the standing phrasing-generalization gate ------------------------
+#
+# R22 (docs/tpc_phase2_eval.md#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change)
+# was, until P18, "run the probe and read the table by eye". This turns that habit into a checked
+# floor file: ``results/phase2_baselines/phrasing_generalization_floor.json`` records, per set, the
+# last known-good ``n_parse_gap`` (must never rise) alongside ``n_oracle_clauses`` (a snapshot
+# fingerprint -- if the released/HF data itself changed shape, the gap counts are no longer
+# comparable and the check must skip that set, never fail it).
+
+
+def load_floor(path: Path) -> dict:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return data.get("floor", data)
+
+
+def check_floor(report: dict, floor: dict) -> tuple[list[str], list[str]]:
+    """Compare ``report`` against a recorded floor. Returns ``(violations, skipped)``.
+
+    A violation is a set whose ``n_parse_gap`` rose above its recorded floor, or a set present on
+    one side but not the other (a structural drift the gate must not silently ignore). A skip is a
+    set whose ``n_oracle_clauses`` no longer matches the floor's recorded snapshot -- the dataset
+    revision moved, so the gap counts are not comparable and this is not evidence of a regression.
+    """
+    violations, skipped = [], []
+    report_names = {s["source"]["name"] for s in report["sets"]}
+    floor_names = set(floor)
+    for missing in report_names - floor_names:
+        violations.append(f"{missing}: measured but has no floor entry (add one, see --update-floor)")
+    for stale in floor_names - report_names:
+        violations.append(f"{stale}: has a floor entry but was not measured this run")
+
+    for s in report["sets"]:
+        name = s["source"]["name"]
+        if name not in floor:
+            continue
+        recorded = floor[name]  # always {"n_parse_gap": int, "n_oracle_clauses": int} -- write_floor's shape
+        current_gap = s["clause_coverage"]["n_parse_gap"]
+        current_clauses = s["clause_coverage"]["n_oracle_clauses"]
+        recorded_clauses = recorded.get("n_oracle_clauses")
+        if recorded_clauses is not None and recorded_clauses != current_clauses:
+            skipped.append(
+                f"{s['label']} ({name}): n_oracle_clauses changed {recorded_clauses} -> "
+                f"{current_clauses} -- dataset snapshot drifted, gap counts not comparable"
+            )
+            continue
+        recorded_gap = recorded["n_parse_gap"]
+        if current_gap > recorded_gap:
+            violations.append(
+                f"{s['label']} ({name}): parse-gap clauses rose {recorded_gap} -> {current_gap} "
+                f"(n_oracle_clauses={current_clauses})"
+            )
+    return violations, skipped
+
+
+def _git_sha() -> str | None:
+    import subprocess
+
+    try:
+        return subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=PROJECT_ROOT,
+                              capture_output=True, text=True, timeout=5,
+                              check=True).stdout.strip()
+    except Exception:
+        return None
+
+
+def write_floor(report: dict, path: Path, *, existing: dict | None = None) -> dict:
+    """Ratchet-down-only: a set's recorded gap count only ever decreases here. If the current run
+    regressed a set, its old (lower) floor value is kept, so the next --check-floor still fails --
+    ``--update-floor`` can never launder a regression, only tighten the gate after a real fix."""
+    existing = existing or {}
+    new_floor = {}
+    for s in report["sets"]:
+        name = s["source"]["name"]
+        current_gap = s["clause_coverage"]["n_parse_gap"]
+        current_clauses = s["clause_coverage"]["n_oracle_clauses"]
+        prev = existing.get(name)
+        if prev and prev.get("n_oracle_clauses") == current_clauses:
+            new_gap = min(current_gap, prev["n_parse_gap"])
+            if current_gap > prev["n_parse_gap"]:
+                print(f"[probe] --update-floor: {name} regressed ({prev['n_parse_gap']} -> "
+                      f"{current_gap}); keeping the lower recorded floor ({new_gap})",
+                      file=sys.stderr)
+        else:
+            new_gap = current_gap
+        new_floor[name] = {"n_parse_gap": new_gap, "n_oracle_clauses": current_clauses}
+    doc = {"_meta": {"generated": None, "git_sha": _git_sha(),
+                     "note": "Frozen floor for the P18/R22 phrasing-generalization gate. "
+                             "tpc_phase2_familiar_100 must stay pinned at 0. Other sets: a parser "
+                             "change may lower a count but must never raise it -- see "
+                             "docs/tpc_phase2_roadmap.md#p18--make-phrasing-robustness-a-gate."},
+           "floor": new_floor}
+    import datetime
+    doc["_meta"]["generated"] = datetime.date.today().isoformat()
+    path.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return doc
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -450,7 +547,26 @@ def main() -> None:
     ap.add_argument("--fix-kinds", nargs="*", default=list(DEFAULT_FIX_KINDS),
                     help="Clause kinds a hypothetical parser fix would close, for the headroom "
                          f"table. Default: {' '.join(DEFAULT_FIX_KINDS)}")
+    ap.add_argument("--check-floor", default=None,
+                    help="Path to a floor JSON (see "
+                         "results/phase2_baselines/phrasing_generalization_floor.json). Exit 1 if "
+                         "any set's parse-gap count rose above its recorded floor. Incompatible "
+                         "with --only, which would make unmeasured sets silently pass.")
+    ap.add_argument("--update-floor", action="store_true",
+                    help="With --check-floor, overwrite it with this run's counts instead of "
+                         "checking. Ratchet-down only (see write_floor) -- never raises a set's "
+                         "recorded floor, so it can tighten the gate but never launder a "
+                         "regression.")
     args = ap.parse_args()
+
+    if args.only and args.check_floor:
+        ap.error("--check-floor measures every DEFAULT_SETS entry; --only would leave unmeasured "
+                 "sets silently unchecked. Run the full probe for --check-floor.")
+    if args.limit and args.check_floor:
+        ap.error("--check-floor compares n_oracle_clauses against the recorded floor to detect "
+                 "dataset drift; --limit shrinks every set's clause count, which would make every "
+                 "set look drifted and skip -- a silent, vacuous PASS. Run the full probe for "
+                 "--check-floor.")
 
     sets = DEFAULT_SETS
     if args.only:
@@ -464,6 +580,25 @@ def main() -> None:
         report["fix_headroom"].append(
             fix_headroom(label, kind, name, fix_kinds=tuple(args.fix_kinds), limit=args.limit)
         )
+
+    if args.check_floor:
+        floor_path = Path(args.check_floor)
+        if args.update_floor:
+            existing = load_floor(floor_path) if floor_path.exists() else {}
+            write_floor(report, floor_path, existing=existing)
+            print(f"[probe] wrote floor to {floor_path}", file=sys.stderr)
+        else:
+            floor = load_floor(floor_path)
+            violations, skipped = check_floor(report, floor)
+            for msg in skipped:
+                print(f"[probe] SKIPPED (snapshot drift, not a regression): {msg}", file=sys.stderr)
+            if violations:
+                print("[probe] PHRASING GENERALIZATION GATE: FAIL", file=sys.stderr)
+                for v in violations:
+                    print(f"  - {v}", file=sys.stderr)
+                sys.exit(1)
+            print("[probe] PHRASING GENERALIZATION GATE: PASS "
+                 "(no set rose above its recorded floor)", file=sys.stderr)
 
     out = json.dumps(report, ensure_ascii=False, indent=2)
     if args.out_dir:
