@@ -479,6 +479,69 @@ def test_multi_mode_exclusion_list_captures_all_modes():
     assert set(excluded) == {"walk", "taxi"}, raw
 
 
+# --- P24: oracle-side `intercity_transport_set` equality (2026-08-07) ------------------------
+#
+# The HF free-prose generator's *only* shape for this requirement is set equality --
+# `intercity_transport_set=set(); ...; result=({'train'}==intercity_transport_set)` -- pinning
+# every intercity leg to one mode. `_parse_intercity` (solver_constraints.py) previously
+# recognized only the go/back accessor shape (`intercity_transport_go`/`_back`), used by the
+# templated registers. Missing the set-equality shape meant the oracle-side solver-dict dropped a
+# real requirement, so a correct NL extraction on the parsed side scored as a false "spurious"
+# `intercity_mode` family instead of "matched" -- a measurement bug, not extraction over-reach.
+# Measured: 100% of a sampled `intercity_mode`-spurious set on hf_easy/medium/human/preference_base50
+# had this exact oracle clause (docs/tpc_phase2_roadmap.md#p24--stop-inventing-satisfiable-but-unrequested-constraints).
+
+def test_oracle_intercity_transport_set_equality_train():
+    query = {
+        "uid": "t", "nature_language": "A trip.", "people_number": 2, "days": 2,
+        "start_city": "Shanghai", "target_city": "Nanjing",
+        "hard_logic_py": [
+            "intercity_transport_set=set()\nfor activity in allactivities(plan):\n"
+            "  if activity_type(activity) in ['train', 'airplane']: "
+            "intercity_transport_set.add(intercity_transport_type(activity))\n"
+            "result=({'train'}==intercity_transport_set)"
+        ],
+    }
+    raw = pc.parse_query(query)
+    variants = solver_constraint_variants(query, raw, use_oracle=True)
+    assert variants[0].get("intercity_mode") == {"outbound": "train", "return": "train"}, variants[0]
+
+
+def test_oracle_intercity_transport_set_equality_airplane():
+    query = {
+        "uid": "t", "nature_language": "A trip.", "people_number": 2, "days": 2,
+        "start_city": "Shanghai", "target_city": "Nanjing",
+        "hard_logic_py": [
+            "intercity_transport_set=set()\nfor activity in allactivities(plan):\n"
+            "  if activity_type(activity) in ['train', 'airplane']: "
+            "intercity_transport_set.add(intercity_transport_type(activity))\n"
+            "result=({'airplane'}==intercity_transport_set)"
+        ],
+    }
+    raw = pc.parse_query(query)
+    variants = solver_constraint_variants(query, raw, use_oracle=True)
+    assert variants[0].get("intercity_mode") == {"outbound": "airplane", "return": "airplane"}, variants[0]
+
+
+def test_intercity_go_back_accessor_shape_not_clobbered_by_set_equality_fallback():
+    # Both shapes in one clause (shouldn't happen in real data -- no sampled query mixes them --
+    # but the go/back accessor pattern is more specific, e.g. it can pin each leg independently,
+    # so within a single ``_parse_intercity`` call it must not be clobbered by the coarser
+    # set-equality fallback; the fallback uses ``setdefault`` for exactly this reason.
+    from chinatravel.agent.tpc_agent.solver_constraints import _parse_intercity
+
+    logic = (
+        "result=(intercity_transport_go=='train')\n"
+        "intercity_transport_set=set()\nfor activity in allactivities(plan):\n"
+        "  if activity_type(activity) in ['train', 'airplane']: "
+        "intercity_transport_set.add(intercity_transport_type(activity))\n"
+        "result2=({'airplane'}==intercity_transport_set)"
+    )
+    result: dict = {}
+    _parse_intercity(logic, result)
+    assert result.get("intercity_mode", {}).get("outbound") == "train", result
+
+
 # --- OR-arm bare-imperative and arm-local budget recovery ------------------------------------
 
 

@@ -463,38 +463,66 @@ Measured on free prose from the committed
 | `required_attractions` | `105` | `25` | `25` | `20` | `30` / `41` / `23` / `5` |
 | `required_hotels` | `14` | `35` | `6` | `0` | `30` / `0` / `0` / `1` |
 
-Read the last column carefully, because it separates two different defects. `intercity_mode` is
-**pure invention**: `117` emitted clauses against `0` oracle instances anywhere on free prose. The
-other two families do exist in those oracles, so their `spurious` counts are over-extraction on the
-*wrong queries* rather than a family that should never fire — `required_hotels` emits `35` clauses on
-`hf_medium` where the oracle has none at all, and `required_attractions` emits `105` on `hf_easy`
-against `30` real instances, none of which it matches.
+Read the last column carefully, because it separates two different defects — **but read the
+correction below before trusting the `intercity_mode` row**, because that "`0` oracle instances"
+figure is itself wrong.
 
-**`intercity_mode` first — the cause is one pattern.** `parse_constraints.py`'s intercity block ends
-with a direction-free fallback,
-`(?:take|by|use)\s+(?:a\s+|the\s+)?(train|airplane|plane|flight)`, which assigns the matched mode to
-**both** `outbound` and `return`. On free prose any passing mention ("we'll take the high-speed train
-in", "flights are fine") pins both legs. Zero oracle instances across all four HF sets means every one
-of those `117` clauses is invented. The harm is not hypothetical: a pinned mode fixes arrival and
-departure times, and
-[R25](tpc_phase2_eval.md#r25--separate-the-cp-restart-and-outer-budget-limits) found timed-window
-placement to be the recurring blocker on failing queries — so this plausibly *manufactures* the
-infeasibility P25 would then have to search around. Note `local_released_150` has `16 matched / 1
-spurious` for this family, so the fallback earns its keep on the templated register; the fix is to
-require a direction or destination cue, not to delete it.
+**Correction, 2026-08-07: `intercity_mode` was misdiagnosed. It was never invention — it was a
+measurement bug in our own oracle-side extractor, and it is landed.** The "`0` oracle instances"
+count above was produced by `parser_vs_oracle.py`'s oracle-side reconstruction, which calls
+`solver_constraint_variants(..., use_oracle=True)`. That function treats `intercity_mode` as
+branch-local and rehydrates it from `hard_logic_py` via `_parse_intercity`
+(`chinatravel/agent/tpc_agent/solver_constraints.py`), which recognized only the go/back accessor
+shape (`intercity_transport_go`/`intercity_transport_back` — the templated register's shape) and
+the `allactivities(plan)[0]['type']` shape. It did **not** recognize the shape the HF free-prose
+generator actually uses for this requirement: `intercity_transport_set=set(); ...;
+result=({'train'}==intercity_transport_set)`. Measured directly: **100% of a sampled
+`intercity_mode`-spurious set on every one of `hf_easy`/`hf_medium`/`hf_human`/
+`hf_preference_base50` had exactly this oracle clause** — `genuinely_no_oracle_clause = 0`
+everywhere. There was no invented constraint; a correct NL extraction was being scored `spurious`
+because the oracle side of the comparison was blind to its own ground truth. The "pinned mode
+manufactures timed-window infeasibility" harm story does not apply to this family: the value the
+NL fallback produces matches the real oracle requirement in every sampled case, so requiring a
+direction/destination cue (the fix this section used to prescribe) would have been a pure recall
+loss for no precision gain — confirmed directly: `local_released_150`, the templated register this
+change was meant to protect, has `0` queries where `intercity_mode` fires without a direction cue,
+so the fallback earns nothing there either. **Fixed** by teaching `_parse_intercity` the
+set-equality shape (`setdefault`, so a more specific go/back value already found is never
+clobbered): `intercity_mode` spurious `172 → 0` and matched `0 → 172` across the four free-prose
+sets, `familiar_100`/`local_released_150` byte-identical. This is not diagnostic-only —
+`solver_constraint_variants(..., use_oracle=True)` also backs Phase 1's oracle-guided CP solve
+(`tpc_agent.py:360`), so Phase 1 was silently dropping this constraint on the same query shape.
+Full writeup, before/after family-stats table, and the P18 floor-file consequence (below):
+[screen README](../results/phase2_baselines/screens/20260807_p24_intercity_oracle_fix/README.md).
+**Follow-up, not yet built:** fixing the oracle side also revealed a real, previously-invisible
+recall gap — phrasing like "we have chosen to fly" / "traveling by high-speed train (G)" that
+`parse_intercity_mode` does not catch (`easy +2`, `medium +33`, `human +27` newly-visible parse
+gaps). Needs its own item; not folded into this one.
 
-**`required_attractions` second**, same root cause as [§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves):
-a `(?:want|wish|hope)\s+to\s+visit\s+(.+?)` capture filtered by a stoplist. P22 removes the
-*unsatisfiable* subset; the remainder are capture fragments that happen to fuzzy-match a real POI,
-which is worse because they look legitimate. A lexical anchor (the capture must look like a proper
-noun, or must fuzzy-match the catalog **above a high threshold**) is the same shape of fix P15 and
-P20 each needed and each documented.
+**`required_attractions` and `required_hotels` are real** — unlike `intercity_mode`, both families
+do exist in the free-prose oracles (see the table's last column), and their `spurious` counts are
+genuine over-extraction on the *wrong queries*, confirmed the same way: `has_marker_clause = 0` on
+every sampled spurious instance (no `attraction_name_set`/`accommodation_name_set` clause at all).
+`required_attractions`, same root cause as [§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves):
+a `(?:want|wish|hope)\s+to\s+visit\s+(.+?)` capture with no delimiter before a trailing
+budget/day-count clause swallows the whole tail as one "attraction name" (`"I want to visit
+Nanjing for a day by myself with a budget of 1800 RMB"` → captured as an attraction). Confirmed the
+dominant shape by direct sampling. `required_hotels`'s dominant shape is a sibling bug in the
+`stay at/in X` pattern: `"stay in two twin rooms"` / `"stay in a room with a double bed"` is a
+room-type/room-count requirement, not a hotel name — the existing type-word guard only matched
+chunks *starting* with `a single/double/twin`, missing every quantified phrasing.
 
-**Bar.** One family per commit. R22 GREEN (familiar-100 `0/1109`, no free-prose set's gaps rising),
-plus the target family's `spurious` falling on at least two free-prose sets with `matched` not falling
-on any set. A precision-only change cannot be gated on `matched` alone — state the `spurious` delta
-per set explicitly. Then [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries)
-or its own e2e arm; a precision fix whose e2e effect is unmeasured stays default-off.
+**Bar.** One family per commit. Target family's `spurious` falling on at least two free-prose sets
+with `matched` not falling on any set, familiar-100 control byte-identical. **The R22
+"no free-prose set's gaps rising" clause is retracted as stated** — the `intercity_mode` fix proves
+it was unmeetable by construction whenever a fix corrects the *oracle* side: `clause_is_covered()`
+tests family presence, not value correctness, so a query whose garbage capture used to count as
+"covered" correctly loses that credit once the garbage is gone. State the `spurious`/`missing`/
+`wrong_value` deltas per set explicitly instead, and treat any resulting P18 floor rise as
+information to justify in the floor file's `_meta`, not an automatic blocker — see the screen
+README for how that was handled here. Then
+[R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries) or its own e2e arm; a
+precision fix whose e2e effect is unmeasured stays default-off.
 
 ### P23 — make the free-prose register scoreable
 
