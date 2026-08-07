@@ -1,0 +1,241 @@
+{
+  "sets": [
+    {
+      "label": "familiar_100 (control)",
+      "n": 100,
+      "clause_count_histogram": {
+        "9": 12,
+        "10": 19,
+        "11": 32,
+        "12": 22,
+        "13": 15
+      },
+      "clause_count_percentiles": {
+        "p50": 11.0,
+        "p90": 13.0,
+        "max": 13
+      },
+      "dense_tail_ge10": {
+        "n_queries": 88,
+        "pct_queries": 88.0,
+        "n_clauses": 1001,
+        "extraction_ceiling_proxy_pct": 93.71,
+        "n_ascii_clauses": 1000,
+        "extraction_ceiling_proxy_ascii_only_pct": 93.7
+      },
+      "oracle_families_used_but_never_parsed_anywhere": []
+    },
+    {
+      "label": "local_released_150",
+      "n": 150,
+      "clause_count_histogram": {
+        "1": 73,
+        "5": 13,
+        "6": 64
+      },
+      "clause_count_percentiles": {
+        "p50": 5.0,
+        "p90": 6.0,
+        "max": 6
+      },
+      "dense_tail_ge10": {
+        "n_queries": 0,
+        "pct_queries": 0.0,
+        "n_clauses": 0,
+        "extraction_ceiling_proxy_pct": null,
+        "n_ascii_clauses": 0,
+        "extraction_ceiling_proxy_ascii_only_pct": null
+      },
+      "oracle_families_used_but_never_parsed_anywhere": []
+    },
+    {
+      "label": "hf_easy",
+      "n": 300,
+      "clause_count_histogram": {
+        "5": 251,
+        "6": 19,
+        "7": 30
+      },
+      "clause_count_percentiles": {
+        "p50": 5.0,
+        "p90": 6.9,
+        "max": 7
+      },
+      "dense_tail_ge10": {
+        "n_queries": 0,
+        "pct_queries": 0.0,
+        "n_clauses": 0,
+        "extraction_ceiling_proxy_pct": null,
+        "n_ascii_clauses": 0,
+        "extraction_ceiling_proxy_ascii_only_pct": null
+      },
+      "oracle_families_used_but_never_parsed_anywhere": [
+        "cuisine_preference"
+      ]
+    },
+    {
+      "label": "hf_medium",
+      "n": 150,
+      "clause_count_histogram": {
+        "7": 23,
+        "8": 80,
+        "9": 20,
+        "10": 18,
+        "11": 5,
+        "12": 4
+      },
+      "clause_count_percentiles": {
+        "p50": 8.0,
+        "p90": 10.0,
+        "max": 12
+      },
+      "dense_tail_ge10": {
+        "n_queries": 27,
+        "pct_queries": 18.0,
+        "n_clauses": 283,
+        "extraction_ceiling_proxy_pct": 67.14,
+        "n_ascii_clauses": 228,
+        "extraction_ceiling_proxy_ascii_only_pct": 76.75
+      },
+      "oracle_families_used_but_never_parsed_anywhere": [
+        "cuisine_preference"
+      ]
+    },
+    {
+      "label": "hf_human",
+      "n": 154,
+      "clause_count_histogram": {
+        "3": 38,
+        "4": 47,
+        "5": 40,
+        "6": 22,
+        "7": 4,
+        "8": 2,
+        "9": 1
+      },
+      "clause_count_percentiles": {
+        "p50": 4.0,
+        "p90": 6.0,
+        "max": 9
+      },
+      "dense_tail_ge10": {
+        "n_queries": 0,
+        "pct_queries": 0.0,
+        "n_clauses": 0,
+        "extraction_ceiling_proxy_pct": null,
+        "n_ascii_clauses": 0,
+        "extraction_ceiling_proxy_ascii_only_pct": null
+      },
+      "oracle_families_used_but_never_parsed_anywhere": [
+        "cuisine_preference"
+      ]
+    },
+    {
+      "label": "hf_preference_base50",
+      "n": 50,
+      "clause_count_histogram": {
+        "5": 41,
+        "6": 8,
+        "7": 1
+      },
+      "clause_count_percentiles": {
+        "p50": 5.0,
+        "p90": 6.0,
+        "max": 7
+      },
+      "dense_tail_ge10": {
+        "n_queries": 0,
+        "pct_queries": 0.0,
+        "n_clauses": 0,
+        "extraction_ceiling_proxy_pct": null,
+        "n_ascii_clauses": 0,
+        "extraction_ceiling_proxy_ascii_only_pct": null
+      },
+      "oracle_families_used_but_never_parsed_anywhere": [
+        "cuisine_preference",
+        "required_hotel_all_types"
+      ]
+    }
+  ],
+  "global": {
+    "all_known_families": [
+      "activity_time_windows",
+      "budgets",
+      "cuisine_preference",
+      "excluded_attraction_types",
+      "excluded_attractions",
+      "excluded_cuisine_types",
+      "excluded_hotels",
+      "excluded_inner_transport",
+      "excluded_restaurants",
+      "hotel_nearby",
+      "intercity_mode",
+      "poi_distance_hotel",
+      "position_presence",
+      "required_attraction_types",
+      "required_attractions",
+      "required_hotel_all_types",
+      "required_hotel_any_types",
+      "required_hotels",
+      "required_order",
+      "required_restaurants",
+      "room_type",
+      "stay_duration",
+      "taxi_cars_equals"
+    ],
+    "families_ever_parsed_any_set": [
+      "activity_time_windows",
+      "budgets",
+      "cuisine_preference",
+      "excluded_attraction_types",
+      "excluded_attractions",
+      "excluded_cuisine_types",
+      "excluded_hotels",
+      "excluded_inner_transport",
+      "excluded_restaurants",
+      "free_attractions_only",
+      "hotel_nearby",
+      "intercity_mode",
+      "poi_distance_hotel",
+      "position_presence",
+      "required_attraction_types",
+      "required_attractions",
+      "required_hotel_all_types",
+      "required_hotel_any_types",
+      "required_hotels",
+      "required_order",
+      "required_restaurants",
+      "room_type",
+      "stay_duration",
+      "taxi_cars_equals"
+    ],
+    "families_ever_required_by_oracle_any_set": [
+      "activity_time_windows",
+      "budgets",
+      "cuisine_preference",
+      "excluded_attraction_types",
+      "excluded_attractions",
+      "excluded_cuisine_types",
+      "excluded_hotels",
+      "excluded_inner_transport",
+      "excluded_restaurants",
+      "free_attractions_only",
+      "hotel_nearby",
+      "intercity_mode",
+      "poi_distance_hotel",
+      "position_presence",
+      "required_attraction_types",
+      "required_attractions",
+      "required_hotel_all_types",
+      "required_hotel_any_types",
+      "required_hotels",
+      "required_order",
+      "required_restaurants",
+      "room_type",
+      "stay_duration",
+      "taxi_cars_equals"
+    ],
+    "known_families_never_parsed_anywhere": [],
+    "oracle_required_families_never_parsed_anywhere": []
+  }
+}

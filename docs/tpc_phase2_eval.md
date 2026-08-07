@@ -148,18 +148,24 @@ whole-run solve on either host; queue behind them.
 
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **R23** | is the held-out set denser, or does it carry families we never see? — the unidentified half of the gap | nothing; static, cheap | ~1 h |
-| **R24** | does a query above `300 s` ever flip? the regime no row has ever measured | nothing; per-query ladder first | ~1 h |
-| **R22** | standing phrasing-robustness tripwire before any parser change promotes | nothing; cheap, run alongside | ~2 min |
 | R20 | does fill-only LLM extraction plus value grounding convert recall into score? | [P16](tpc_phase2_roadmap.md#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | ~$0 + ~1 h |
 | R21 | does spending the unspent envelope on all queries buy preference points? | [P17](tpc_phase2_roadmap.md#p17--stop-trusting-our-own-satisfied-verdict) | ~1.4 h |
-| R9 | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#work-items) + P2 | ~5 h |
+| R9 | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#work-items) + P2 — **closed by R24, see below** | n/a, closed |
 
 R19 closed GREEN ([closed queue](#the-closed-queue-r1r19)) — familiar-100 confirmed unaffected by the
-phrasing fix, reproducing R17 on every metric. R20 stays blocked on unlanded Implementation work;
-**R24, R23 and R22 are the items this workstream can run without waiting on another lane.**
+phrasing fix, reproducing R17 on every metric. **R22 ran 2026-08-07, first post-P15, GREEN** (see
+[R22's own section](#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change)) —
+it stays off this table because it is a recurring instrument, not a one-shot item, and belongs back on
+the queue at the next parser change. **R23 closed 2026-08-07** (see
+[its own section](#r23--what-else-separates-the-held-out-set-open-static-1-h)): kill
+criterion did not fire; top finding is a fully-explained, phrasing-conditional `cuisine_preference`
+extraction blackout on free prose, worth its own follow-up item. **R24 closed 2026-08-07** (see
+below): zero flips at `900 s`, plans byte-identical to `300 s` — land P4 as a correctness fix only,
+close P5. R20 stays blocked on unlanded Implementation work; R21 and R9(closed) are what remains open
+on this table, both blocked on Implementation landings.
 
-### R24 — does a query above 300 s ever flip? (the owner's question) *(open)*
+<a id="r24--does-a-query-above-300-s-ever-flip-the-owners-question-open"></a>
+### R24 — does a query above 300 s ever flip? (the owner's question) *(closed 2026-08-07)*
 
 **Registered 2026-08-07 because the owner asked whether more time and fresh seeds could fix failing
 constraints, and the honest answer was that we had never tested it.** Across all 25 recorded rows the
@@ -168,15 +174,24 @@ per-query cap is `300.0 s` and no pass ever exceeded it — not by choice but be
 makes a higher budget structurally unreachable. This row measures the untested regime.
 
 **Cheapest form first — a per-query ladder, not a whole run.** `--budget-sec` is already the per-query
-cap, so no code change is needed to measure it:
+cap, so no code change is needed to measure it. Call the per-query runner directly rather than
+`phase2_quick_eval.py` — that tool requires `--flag` for its paired A/B design, and an inert flag still
+runs two identical arms per budget (double the wall clock for no signal); a single-arm ladder is a
+plain sweep over budgets, so call `solve_phase2.py` once per budget with a distinct `--method` per arm
+(no `--resume`, so each arm always re-solves fresh rather than risking one budget's plan being reused
+by another — see `_run_whole_run`'s docstring on the same collision):
 
 ```bash
 for B in 300 900 2700; do
-  .venv/bin/python scripts/phase2_quick_eval.py --mode end-to-end \
-    --n 30 --budget-sec $B --parallel 3 --off 0 --on 0 \
-    --out results/phase2_quick_eval/budget_ladder_$B
+  .venv/bin/python agent_env/scripts/solve_phase2.py \
+    --split tpc_phase2_familiar_100 --method "phase2_e2e_r24_ladder_b${B}" \
+    --uids-file <failing-30-uids.txt> --budget-sec "$B" --lang en
 done
 ```
+
+(Shown as one process for clarity; the closed row below split the 30 uids across `cores − 1` concurrent
+`solve_phase2.py` subprocesses per budget arm — one uid per subprocess — since the per-query mode has
+no internal parallelism of its own.)
 
 Run it on the **failing** subset, not a random one: take the uids that fail their constraints in
 [R19](#the-closed-queue-r1r19)'s plan directory, since a query that already passes at `120 s` tells you
@@ -200,7 +215,31 @@ that is not in the objective. So a positive ladder result on familiar-100 does *
 gain held-out, and a negative one does not close the question for a *correctly extracted* constraint
 set. This row measures the solver, not the extractor.
 
-### R23 — what else separates the held-out set? *(open, static, ~1 h)*
+**Result** ([`20260807_r24_budget_ladder`](../results/phase2_baselines/screens/20260807_r24_budget_ladder/README.md),
+`git_sha 54be4514`): **`0` flips at `900 s`, and plans are byte-identical to `300 s` modulo the timing
+field** — stronger than "no flips," the solver does not use the extra budget at all.
+`solve_sec` mean `107.8 s` (`300 s` cap) vs `107.4 s` (`900 s` cap), max observed `192 s` either way,
+`0/30` timeouts at both budgets, `overall_true` moved by exactly `0.0000` on every one of the 30
+previously-failing queries. **The `2700 s` arm was not run** — both the doc's own decision table above
+and the pre-registered gate agree it only changes the reading if `900 s` shows flips, and it showed
+zero with byte-identical output, so a `~7.5 h` arm would almost certainly reproduce the same fixed
+point. Per the table: **land P4 as a correctness fix only, and close P5 with this row as the
+evidence** — done here as a recommendation for the Implementation workstream, not landed by this
+Evaluation-workstream row.
+
+**Two methodology notes for whoever reruns this.** (1) The failing subset was derived at **zero solve
+cost** by re-scoring R19's own already-written plans rather than guessing — this independently
+reproduced R19's official `FPR 44.0` exactly (`44/100` passing), which is worth checking first on any
+rerun as a sanity gate. (2) This row calls `agent_env/scripts/solve_phase2.py --budget-sec <B>`
+directly per arm, **not** the `phase2_quick_eval.py --off 0 --on 0` form sketched above: that form
+requires a `--flag`, and an inert flag name still runs two literally-identical arms (baseline and
+candidate configured the same way), doubling wall clock for zero signal — and a *real* promoted flag
+set to `off 0`/`on 0` would deviate from the shipped default in both arms. Calling the per-query
+runner directly, once per budget with a distinct `--method` per arm (avoiding the resume/directory
+collision documented in `_run_whole_run`'s docstring), measures the same thing without either problem.
+
+<a id="r23--what-else-separates-the-held-out-set-open-static-1-h"></a>
+### R23 — what else separates the held-out set? *(closed 2026-08-07, static, ~1 h)*
 
 The leaderboard closed the "is it phrasing?" question with a qualified yes, and opened a sharper one:
 **held-out C-LPR is below our worst local free-prose measurement**, so density or unseen families must
@@ -222,7 +261,30 @@ Reconstruct, from released data only, what a query set would have to look like t
 C-LPR cost. **Kill criterion:** if the dense tail of HF `medium` already reproduces `C-LPR ≈ 55`, stop —
 density is the answer, and the action is to re-tune against dense queries rather than to hunt families.
 
-### R22 — the standing phrasing tripwire *(open, ~2 min, run with every parser change)*
+**Result** ([`20260807_r23_residual_causes`](../results/phase2_baselines/screens/20260807_r23_residual_causes/README.md),
+`git_sha dbacc183`): **kill criterion did not fire.** Ranked findings:
+
+1. **`cuisine_preference`/`restaurant_type` extraction is 100% uncovered on every one of the four HF
+   free-prose sets (`0/30`, `0/33`, `0/27`, `0/7`), while ~100% covered on the two locally-phrased sets
+   (familiar-100 `67/67`, local_released_150 `21/22`) — a complete, phrasing-conditional precision
+   failure of one extractor pattern, not a density effect and not a missing family. Fully explained,
+   fixed cost: `2.56` C-LPR points on the combined HF sets (`97/3790` clauses). The single cleanest
+   residual-cause candidate found, and the cheapest to act on.
+2. **Density is real but not shown sufficient.** The `≥10`-clause regime `FPR = 0.0000` implies is
+   almost unobserved locally — only `27/150` `hf_medium` queries ever reach it, capping at `12` clauses,
+   and every other free-prose set never reaches double digits. Its dense-tail extraction-*ceiling*
+   proxy (family-presence only, an optimistic upper bound on C-LPR) is `67–77`, still `12–22` points
+   above the held-out floor (`55.2`) — closing that gap needs a scored run, not just this static check.
+3. **Unseen constraint families: ruled out.** Zero families are unreachable by our parser across all
+   six released sets combined — the "constraint families we have no local example of" hypothesis is
+   not needed to explain any local gap (cannot rule out the held-out set containing something no
+   released set has either).
+
+Not run here (out of this screen's static scope, flagged as the natural follow-up): a scored e2e pass
+on `hf_medium`'s 27-query dense tail, to replace the ceiling proxy with real C-LPR.
+
+<a id="r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change"></a>
+### R22 — the standing phrasing tripwire *(recurring, ~2 min, run with every parser change)*
 
 The process failure behind the held-out gap was that **no gate could see a phrasing dependency**. This
 closes it, and it costs seconds:
@@ -235,6 +297,14 @@ HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_generalization_probe.py \
 Require: familiar-100 parse gaps still `0/1109` **and** no free-prose set's gap count rising. A parser
 change that improves familiar-100 while worsening free prose is now a **regression**, whatever its
 familiar-100 number says. Commit the screen next to the change.
+
+**Last run 2026-08-07, first post-P15** ([`20260807_generalization_post_p15`](../results/phase2_baselines/screens/20260807_generalization_post_p15/README.md),
+`git_sha dbacc183`): **GREEN**. `familiar_100` stays `0/1109`; `local_released_150` gap count
+`15/522 → 6/522` — independently reproduces P15's own screen's claimed `9/15` closure, from a run
+outside the PR that made the change. `hf_easy` and `hf_preference_base50` each improved by a further
+`1–5` gaps (unfitted — P15 did not read those sets while writing its patterns); `hf_medium`/`hf_human`
+flat. No set regressed. This is a recurring instrument, not a one-time run — re-run it on the next
+parser change, same acceptance criteria.
 
 ### R20 — does LLM extraction convert recall into score? *(needs P16)*
 
@@ -275,7 +345,7 @@ above). Read this row as **per-pass improvement counts**, not as a total: the qu
 re-polishing queries the scheduler believes are finished converts idle time into preference points.
 Acceptance: `overall` up with `FPR` not down. Expected small — preference terms are capped at `FPR`.
 
-### R9 — the falsification run for "spend the idle envelope" *(needs P5)*
+### R9 — the falsification run for "spend the idle envelope" *(closed 2026-08-07 by R24, moot)*
 
 ```bash
 TPC_P2_EXPLORE=1 .venv/bin/python scripts/phase2_full_run.py \
@@ -287,6 +357,12 @@ the question is whether that accumulates over the ~10 passes the idle envelope a
 draws give `5–10` flips (`+1.7..+4.2` overall, promoting P5); an exhausted reachable set gives `1–2`
 and closes the "we aren't using our time" question for good. Demoted below R20–R22: it re-attacks the
 *search*, and the evidence now says the binding limit is *coverage*.
+
+**Closed without running, 2026-08-07.** R9's premise was P5 landing; [R24](#r24--does-a-query-above-300-s-ever-flip-the-owners-question-open)
+found zero flips and byte-identical plans between `300 s` and `900 s` on the failing subset, which per
+R24's own decision table closes P5 rather than landing it. With P5 closed, spending a `5 h` slot to
+measure how *many* flips accumulate over more passes is moot — R24 already shows the accumulation rate
+is `0` per pass, not `~1/68`.
 
 ### What not to spend a slot on
 
