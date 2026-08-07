@@ -148,7 +148,6 @@ whole-run solve on either host; queue behind them.
 
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **R23** | is the held-out set denser, or does it carry families we never see? — the unidentified half of the gap | nothing; static, cheap | ~1 h |
 | **R24** | does a query above `300 s` ever flip? the regime no row has ever measured | nothing; per-query ladder first | ~1 h |
 | R20 | does fill-only LLM extraction plus value grounding convert recall into score? | [P16](tpc_phase2_roadmap.md#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | ~$0 + ~1 h |
 | R21 | does spending the unspent envelope on all queries buy preference points? | [P17](tpc_phase2_roadmap.md#p17--stop-trusting-our-own-satisfied-verdict) | ~1.4 h |
@@ -158,8 +157,11 @@ R19 closed GREEN ([closed queue](#the-closed-queue-r1r19)) — familiar-100 conf
 phrasing fix, reproducing R17 on every metric. **R22 ran 2026-08-07, first post-P15, GREEN** (see
 [R22's own section](#r22--the-standing-phrasing-tripwire-recurring-2-min-run-with-every-parser-change)) —
 it stays off this table because it is a recurring instrument, not a one-shot item, and belongs back on
-the queue at the next parser change. R20 stays blocked on unlanded Implementation work; **R24 and R23
-are the items this workstream can run without waiting on another lane.**
+the queue at the next parser change. **R23 closed 2026-08-07** (see
+[its own section](#r23--what-else-separates-the-held-out-set-closed-2026-08-07-static-1-h)): kill
+criterion did not fire; top finding is a fully-explained, phrasing-conditional `cuisine_preference`
+extraction blackout on free prose, worth its own follow-up item. R20 stays blocked on unlanded
+Implementation work; **R24 is the item this workstream can run without waiting on another lane.**
 
 ### R24 — does a query above 300 s ever flip? (the owner's question) *(open)*
 
@@ -202,7 +204,7 @@ that is not in the objective. So a positive ladder result on familiar-100 does *
 gain held-out, and a negative one does not close the question for a *correctly extracted* constraint
 set. This row measures the solver, not the extractor.
 
-### R23 — what else separates the held-out set? *(open, static, ~1 h)*
+### R23 — what else separates the held-out set? *(closed 2026-08-07, static, ~1 h)*
 
 The leaderboard closed the "is it phrasing?" question with a qualified yes, and opened a sharper one:
 **held-out C-LPR is below our worst local free-prose measurement**, so density or unseen families must
@@ -223,6 +225,28 @@ Reconstruct, from released data only, what a query set would have to look like t
 **Acceptance:** a ranked, quantified list of candidate residual causes, and for each an estimate of its
 C-LPR cost. **Kill criterion:** if the dense tail of HF `medium` already reproduces `C-LPR ≈ 55`, stop —
 density is the answer, and the action is to re-tune against dense queries rather than to hunt families.
+
+**Result** ([`20260807_r23_residual_causes`](../results/phase2_baselines/screens/20260807_r23_residual_causes/README.md),
+`git_sha dbacc183`): **kill criterion did not fire.** Ranked findings:
+
+1. **`cuisine_preference`/`restaurant_type` extraction is 100% uncovered on every one of the four HF
+   free-prose sets (`0/30`, `0/33`, `0/27`, `0/7`), while ~100% covered on the two locally-phrased sets
+   (familiar-100 `67/67`, local_released_150 `21/22`) — a complete, phrasing-conditional precision
+   failure of one extractor pattern, not a density effect and not a missing family. Fully explained,
+   fixed cost: `2.56` C-LPR points on the combined HF sets (`97/3790` clauses). The single cleanest
+   residual-cause candidate found, and the cheapest to act on.
+2. **Density is real but not shown sufficient.** The `≥10`-clause regime `FPR = 0.0000` implies is
+   almost unobserved locally — only `27/150` `hf_medium` queries ever reach it, capping at `12` clauses,
+   and every other free-prose set never reaches double digits. Its dense-tail extraction-*ceiling*
+   proxy (family-presence only, an optimistic upper bound on C-LPR) is `67–77`, still `12–22` points
+   above the held-out floor (`55.2`) — closing that gap needs a scored run, not just this static check.
+3. **Unseen constraint families: ruled out.** Zero families are unreachable by our parser across all
+   six released sets combined — the "constraint families we have no local example of" hypothesis is
+   not needed to explain any local gap (cannot rule out the held-out set containing something no
+   released set has either).
+
+Not run here (out of this screen's static scope, flagged as the natural follow-up): a scored e2e pass
+on `hf_medium`'s 27-query dense tail, to replace the ceiling proxy with real C-LPR.
 
 ### R22 — the standing phrasing tripwire *(recurring, ~2 min, run with every parser change)*
 
