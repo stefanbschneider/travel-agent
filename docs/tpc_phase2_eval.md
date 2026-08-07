@@ -150,14 +150,16 @@ whole-run solve on either host; queue behind them.
 | --- | --- | --- | --- |
 | **R23** | is the held-out set denser, or does it carry families we never see? — the unidentified half of the gap | nothing; static, cheap | ~1 h |
 | **R24** | does a query above `300 s` ever flip? the regime no row has ever measured | nothing; per-query ladder first | ~1 h |
-| **R22** | standing phrasing-robustness tripwire before any parser change promotes | nothing; cheap, run alongside | ~2 min |
 | R20 | does fill-only LLM extraction plus value grounding convert recall into score? | [P16](tpc_phase2_roadmap.md#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | ~$0 + ~1 h |
 | R21 | does spending the unspent envelope on all queries buy preference points? | [P17](tpc_phase2_roadmap.md#p17--stop-trusting-our-own-satisfied-verdict) | ~1.4 h |
 | R9 | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#work-items) + P2 | ~5 h |
 
 R19 closed GREEN ([closed queue](#the-closed-queue-r1r19)) — familiar-100 confirmed unaffected by the
-phrasing fix, reproducing R17 on every metric. R20 stays blocked on unlanded Implementation work;
-**R24, R23 and R22 are the items this workstream can run without waiting on another lane.**
+phrasing fix, reproducing R17 on every metric. **R22 ran 2026-08-07, first post-P15, GREEN** (see
+[R22's own section](#r22--the-standing-phrasing-tripwire-recurring-2-min-run-with-every-parser-change)) —
+it stays off this table because it is a recurring instrument, not a one-shot item, and belongs back on
+the queue at the next parser change. R20 stays blocked on unlanded Implementation work; **R24 and R23
+are the items this workstream can run without waiting on another lane.**
 
 ### R24 — does a query above 300 s ever flip? (the owner's question) *(open)*
 
@@ -222,7 +224,7 @@ Reconstruct, from released data only, what a query set would have to look like t
 C-LPR cost. **Kill criterion:** if the dense tail of HF `medium` already reproduces `C-LPR ≈ 55`, stop —
 density is the answer, and the action is to re-tune against dense queries rather than to hunt families.
 
-### R22 — the standing phrasing tripwire *(open, ~2 min, run with every parser change)*
+### R22 — the standing phrasing tripwire *(recurring, ~2 min, run with every parser change)*
 
 The process failure behind the held-out gap was that **no gate could see a phrasing dependency**. This
 closes it, and it costs seconds:
@@ -235,6 +237,14 @@ HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_generalization_probe.py \
 Require: familiar-100 parse gaps still `0/1109` **and** no free-prose set's gap count rising. A parser
 change that improves familiar-100 while worsening free prose is now a **regression**, whatever its
 familiar-100 number says. Commit the screen next to the change.
+
+**Last run 2026-08-07, first post-P15** ([`20260807_generalization_post_p15`](../results/phase2_baselines/screens/20260807_generalization_post_p15/README.md),
+`git_sha dbacc183`): **GREEN**. `familiar_100` stays `0/1109`; `local_released_150` gap count
+`15/522 → 6/522` — independently reproduces P15's own screen's claimed `9/15` closure, from a run
+outside the PR that made the change. `hf_easy` and `hf_preference_base50` each improved by a further
+`1–5` gaps (unfitted — P15 did not read those sets while writing its patterns); `hf_medium`/`hf_human`
+flat. No set regressed. This is a recurring instrument, not a one-time run — re-run it on the next
+parser change, same acceptance criteria.
 
 ### R20 — does LLM extraction convert recall into score? *(needs P16)*
 
