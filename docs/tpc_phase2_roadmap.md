@@ -189,7 +189,7 @@ the previous ranking:
 
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
-| **P20** | [Close the two dominant family-recall gaps](#p20--close-the-two-dominant-family-recall-gaps) | half day | P19 attributes `202` released clause misses to `required_attraction_types` and `cuisine_preference`, over 2x the next family | **open, first implementation item** |
+| **P20** | [Close the two dominant family-recall gaps](#p20--close-the-two-dominant-family-recall-gaps) | half day | P19 attributes `202` released clause misses to `required_attraction_types` and `cuisine_preference`, over 2x the next family | **landed 2026-08-07; R22 GREEN; R26 (e2e) pending, Evaluation workstream** |
 | **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | landed | detects unfamiliar requirements, but current-tree `matched 311 < 320` deterministic and `hf_medium` e2e is flat | **landed, library default off; not promoted** |
 | **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | 1 h | prevents the recurrence of the failure that cost this cycle | **open; independent of P20/P6** |
 | **P6** | [Validator-in-loop Qwen repair](#p6--validator-in-loop-qwen-repair) | 1 day spike | tests the successful Kiro/Claude interaction shape without allowing generated facts or unchecked plans | **open; independent spike, default off** |
@@ -409,34 +409,61 @@ metrics, already recorded in
 
 ### P20 — close the two dominant family-recall gaps
 
-**Immediate implementation item; independent of R20/R25 and safe to run on a separate machine.** P19
-ranks `required_attraction_types` (`102` misses) and `cuisine_preference` (`100` misses) more than
-twice above the next family. P16 can ground values only after a family exists; it cannot repair the
+**Landed 2026-08-07** (`parse_constraints.py`;
+[screen](../results/phase2_baselines/screens/20260807_p20_family_recall/README.md)). P19 ranked
+`required_attraction_types` (`102` misses) and `cuisine_preference` (`100` misses) more than twice
+above the next family. P16 can ground values only after a family exists; it cannot repair the
 `missing` bucket, and `extract_fill` deliberately cannot overwrite a deterministic family already
-populated with garbage. The merged P16 screen gives the concrete example:
+populated with garbage. The merged P16 screen gave the concrete example:
 `cuisine_preference = ["one of the following", "Japanese cuisine"]`.
 
-**Implement exactly this slice in `parse_constraints.py`:**
+**The measurable universe turned out much smaller than the miss counts suggest, and this reshapes
+the whole item.** Before writing any pattern, every miss in both families across all six
+released/HF sets was partitioned by whether its *oracle value* is an English or a CJK literal
+(`scripts/phase2_family_recall_gap_partition.py`). `diff_constraints` requires exact value equality,
+so an English extraction against a CJK oracle literal can only ever land as `wrong_value`, never
+`matched` — the same wall [P16's screen](#p16--ground-llm-extracted-values-into-the-closed-vocabulary)
+already measured ("`missing` converts into `wrong_value` almost one-for-one"), now confirmed as the
+*general* shape of this problem rather than an LLM-arm-specific quirk. Not a loader artifact:
+`tpc_phase2_test`/`tpc_phase2_familiar_100` load from a physically separate, pre-translated English
+tree (`chinatravel/data/en/`); the four HF sets never translate `hard_logic_py` regardless of the
+query's English text. Result: **only 3 clauses, all `cuisine_preference`, all on
+`local_released_150`, are locally measurable as `matched` at all** — zero for
+`required_attraction_types` anywhere in released data.
 
-1. Use P19's released-data report to list English-visible clauses in the two families. Treat CJK
-  oracle literals paired with English text as unmeasurable, not parser failures to fit.
-2. In the cuisine parser, strip only anchored list lead-ins such as "one of the following
-  restaurant types" before splitting alternatives. Do not add a global stoplist and do not change
-  another family's precedence.
-3. Add lexically anchored free-prose alternatives for attraction categories and cuisines. Preserve
-  OR alternatives as branch-local lists; never flatten "A or B" into two simultaneous requirements.
-4. Add focused tests for every new phrase, the prefix-garbage regression, one negative sentence per
-  pattern, and an OR-branch case. Keep the two familiar-100 floor tests byte-identical.
+**What landed, in two parts:**
 
-**Required screen and acceptance:** run R22 over all six released sets. Familiar-100 stays `0/1109`;
-neither total parse gaps nor spurious clauses may rise on any free-prose set; each target family's
-`matched` count must rise on at least one English-literal set. Then run
-[R26](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets). A static recall gain without an
-e2e C-LPR/FPR gain does not promote the change. Commit the R22 screen beside the parser change, plus
-`target_uids.txt` listing the released English-visible target clauses used by R26.
+1. **Two bugs in `parse_cuisine_preference`**, closing all 3 of the measurable misses (plus 4 more
+  the same fixes happened to also unblock): a list-lead-in leak (the roadmap's own cited example —
+  a non-greedy "want to try X restaurant" scan stopping at the lead-in words instead of the value)
+  and a numbered-OR-arm boundary swallow (the released generator doesn't always end an arm with a
+  period before the next arm's digit, so a bare `.+?` over-captured into it). `local_released_150`
+  `cuisine_preference`: `matched 7 -> 14`, `spurious 4 -> 1`.
+2. **Free-prose fallback patterns for both families** (`_free_prose_type_mentions`), gated to run
+  only when every anchored pattern above found nothing — structurally unable to touch
+  familiar-100 (always populated through the template) or override a value an anchored pattern
+  already found. Three false positives were found and fixed while developing this, each now a
+  regression test: negation checked only at the trigger (missed a later, separately-negated
+  clause); a proper-noun guard that didn't skip past a POI name's " - " separator
+  (`"Sichuan University (Wangjiang Campus) - Museum"`); a bare `universit(y|ies)` alternative that
+  matched `"university students"`.
 
-**Do not bundle:** distance-value formatting, activity end-window semantics, P17 scheduler coverage,
-or LLM merge policy. They have different failure and precision risks.
+**Acceptance, honestly scored against the criterion as originally written.** R22 is GREEN:
+familiar-100 stays `0/1109` (also structurally guaranteed, not just tested); no free-prose set's
+parse gaps or spurious count rose (checked at both the whole-parse total and the two target
+families specifically). "Each target family's `matched` count must rise on at least one
+English-literal set" — **met for `cuisine_preference`** (`local_released_150` `7 -> 14`); **cannot
+be met for `required_attraction_types` with any local data**, since zero English-literal misses
+exist for it anywhere released, a fact discovered during this item rather than assumed going in.
+The fallback for that family is shipped anyway on the same bounded-risk argument P16 used for its
+own unmeasurable-locally extension (familiar-100 cannot regress, spurious flat everywhere
+measured, coverage ceiling up on every free-prose set) — its real value is a question only
+[R26](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets) or the held-out register can
+answer. **R26 is not run here** (CLAUDE.md's two-VM rule; this was done on the coding VM) and is
+recorded as pending for the Evaluation workstream, using the screen's `target_uids.txt`.
+
+**Did not bundle:** distance-value formatting, activity end-window semantics, P17 scheduler
+coverage, or LLM merge policy — different failure and precision risks.
 
 ### P17 — stop trusting our own "satisfied" verdict
 

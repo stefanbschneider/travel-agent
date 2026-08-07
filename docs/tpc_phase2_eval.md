@@ -146,7 +146,11 @@ re-deriving the argument.
 but is **not promoted**: its same-tree parse arm has `matched 311 < 320` deterministic and its
 `hf_medium` e2e arm is flat. P19 closes the residual diagnosis and points directly at
 `required_attraction_types` and `cuisine_preference`. R24 changed only the outer timeout; it did not
-raise the fixed 400-restart cap or the default 30-second CP-SAT cap.
+raise the fixed 400-restart cap or the default 30-second CP-SAT cap. P20 is implemented and R22-GREEN
+on a branch (`implementation/p20-family-recall-cuisine-attraction-type`), pending PR merge; its own
+screen found the local English-literal-measurable universe for these two families is far smaller than
+P19's miss counts suggested — only 3 `cuisine_preference` clauses, zero `required_attraction_types` —
+so R26 is what actually judges the `required_attraction_types` half of this item, not a local number.
 
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
