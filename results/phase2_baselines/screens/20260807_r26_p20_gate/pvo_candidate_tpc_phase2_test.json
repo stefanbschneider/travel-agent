@@ -1,0 +1,421 @@
+{
+  "split": "tpc_phase2_test",
+  "n": 150,
+  "precision": 0.7067,
+  "recall": 0.8743,
+  "f1": 0.7816,
+  "value_accuracy": 0.8938,
+  "disjunction_flattened": 73,
+  "totals": {
+    "matched": 276,
+    "missing": 10,
+    "spurious": 76,
+    "wrong_value": 32,
+    "defaulted": 73
+  },
+  "family_stats": [
+    {
+      "family": "budgets",
+      "matched": 62,
+      "missing": 0,
+      "spurious": 13,
+      "wrong_value": 6,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [
+        "20250322103307363428",
+        "20250322113234605221",
+        "20250322114824594241",
+        "20250322150025121412",
+        "20250322165324766437"
+      ],
+      "example_wrong_value_uids": [
+        "20250322140738894742",
+        "20250322181935398779",
+        "20250322190831212547",
+        "20250323012917171263",
+        "20250324210130772857"
+      ]
+    },
+    {
+      "family": "required_restaurants",
+      "matched": 4,
+      "missing": 0,
+      "spurious": 11,
+      "wrong_value": 1,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [
+        "20250322102104636925",
+        "20250322120628752145",
+        "20250322122812261533",
+        "20250322155650799736",
+        "20250322162846822521"
+      ],
+      "example_wrong_value_uids": [
+        "20250324214731716167"
+      ]
+    },
+    {
+      "family": "intercity_mode",
+      "matched": 10,
+      "missing": 0,
+      "spurious": 7,
+      "wrong_value": 0,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [
+        "20250322182643388445",
+        "20250322183831460985",
+        "20250322234352450008",
+        "20250323001443329618",
+        "20250323011240987986"
+      ],
+      "example_wrong_value_uids": []
+    },
+    {
+      "family": "required_hotels",
+      "matched": 2,
+      "missing": 0,
+      "spurious": 7,
+      "wrong_value": 6,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [
+        "20250322122515270434",
+        "20250322180344489669",
+        "20250322185047891707",
+        "20250322210310765461",
+        "20250322213901723017"
+      ],
+      "example_wrong_value_uids": [
+        "20250321211519984127",
+        "20250322155650799736",
+        "20250322164053425056",
+        "20250322200936553702",
+        "20250322212110159665"
+      ]
+    },
+    {
+      "family": "required_attractions",
+      "matched": 5,
+      "missing": 2,
+      "spurious": 6,
+      "wrong_value": 4,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [
+        "20250321211519984127",
+        "20250324083022806437"
+      ],
+      "example_spurious_uids": [
+        "20250322103652290807",
+        "20250322114924953868",
+        "20250322200936553702",
+        "20250322230928925177",
+        "20250323034202937777"
+      ],
+      "example_wrong_value_uids": [
+        "20250322020241140095",
+        "20250322072436176919",
+        "20250324075652034944",
+        "20250324082922869744"
+      ]
+    },
+    {
+      "family": "required_hotel_all_types",
+      "matched": 4,
+      "missing": 0,
+      "spurious": 6,
+      "wrong_value": 0,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [
+        "20250322211542694780",
+        "20250322213855894929",
+        "20250322213901723017",
+        "20250322214707379941",
+        "20250322221022354837"
+      ],
+      "example_wrong_value_uids": []
+    },
+    {
+      "family": "excluded_inner_transport",
+      "matched": 15,
+      "missing": 0,
+      "spurious": 5,
+      "wrong_value": 0,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [
+        "20250322121642720041",
+        "20250322172358050368",
+        "20250322190852845849",
+        "20250323190504274874",
+        "20250324200943774601"
+      ],
+      "example_wrong_value_uids": []
+    },
+    {
+      "family": "poi_distance_hotel",
+      "matched": 0,
+      "missing": 0,
+      "spurious": 5,
+      "wrong_value": 4,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [
+        "20250323095147120434",
+        "20250323095841362897",
+        "20250323114817950571",
+        "20250323120319012899",
+        "20250323123736098947"
+      ],
+      "example_wrong_value_uids": [
+        "20250323094730230054",
+        "20250323110221959432",
+        "20250323114048262328",
+        "20250324224314592672"
+      ]
+    },
+    {
+      "family": "required_hotel_any_types",
+      "matched": 0,
+      "missing": 4,
+      "spurious": 3,
+      "wrong_value": 0,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [
+        "20250322211542694780",
+        "20250322213425694680",
+        "20250322213855894929",
+        "20250322214707379941"
+      ],
+      "example_spurious_uids": [
+        "20250322130847337844",
+        "20250322205522416056",
+        "20250323094730230054"
+      ],
+      "example_wrong_value_uids": []
+    },
+    {
+      "family": "cuisine_preference",
+      "matched": 12,
+      "missing": 0,
+      "spurious": 3,
+      "wrong_value": 4,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [
+        "20250322120628752145",
+        "20250322130847337844",
+        "20250322150025121412"
+      ],
+      "example_wrong_value_uids": [
+        "20250322155650799736",
+        "20250322165721791741",
+        "20250322180059097796",
+        "20250323094730230054"
+      ]
+    },
+    {
+      "family": "required_attraction_types",
+      "matched": 11,
+      "missing": 0,
+      "spurious": 3,
+      "wrong_value": 3,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [
+        "20250321152320931058",
+        "20250321211519984127",
+        "20250322072436176919"
+      ],
+      "example_wrong_value_uids": [
+        "20250322103652290807",
+        "20250322114924953868",
+        "20250322122731296343"
+      ]
+    },
+    {
+      "family": "excluded_attractions",
+      "matched": 1,
+      "missing": 0,
+      "spurious": 2,
+      "wrong_value": 1,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [
+        "20250322101949422756",
+        "20250322105748349364"
+      ],
+      "example_wrong_value_uids": [
+        "20250322070031331863"
+      ]
+    },
+    {
+      "family": "excluded_cuisine_types",
+      "matched": 1,
+      "missing": 0,
+      "spurious": 2,
+      "wrong_value": 0,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [
+        "20250322180946178753",
+        "20250323185206369446"
+      ],
+      "example_wrong_value_uids": []
+    },
+    {
+      "family": "excluded_restaurants",
+      "matched": 7,
+      "missing": 0,
+      "spurious": 2,
+      "wrong_value": 0,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [
+        "20250321152320931058",
+        "20250322120300879962"
+      ],
+      "example_wrong_value_uids": []
+    },
+    {
+      "family": "excluded_attraction_types",
+      "matched": 3,
+      "missing": 1,
+      "spurious": 1,
+      "wrong_value": 0,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [
+        "20250322101949422756"
+      ],
+      "example_spurious_uids": [
+        "20250322105748349364"
+      ],
+      "example_wrong_value_uids": []
+    },
+    {
+      "family": "position_presence",
+      "matched": 16,
+      "missing": 2,
+      "spurious": 0,
+      "wrong_value": 1,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [
+        "20250322200936553702",
+        "20250324082922869744"
+      ],
+      "example_spurious_uids": [],
+      "example_wrong_value_uids": [
+        "20250322131031099056"
+      ]
+    },
+    {
+      "family": "activity_time_windows",
+      "matched": 14,
+      "missing": 1,
+      "spurious": 0,
+      "wrong_value": 1,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [
+        "20250324082922869744"
+      ],
+      "example_spurious_uids": [],
+      "example_wrong_value_uids": [
+        "20250322131031099056"
+      ]
+    },
+    {
+      "family": "excluded_hotels",
+      "matched": 1,
+      "missing": 0,
+      "spurious": 0,
+      "wrong_value": 0,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [],
+      "example_wrong_value_uids": []
+    },
+    {
+      "family": "free_attractions_only",
+      "matched": 7,
+      "missing": 0,
+      "spurious": 0,
+      "wrong_value": 0,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [],
+      "example_wrong_value_uids": []
+    },
+    {
+      "family": "required_order",
+      "matched": 1,
+      "missing": 0,
+      "spurious": 0,
+      "wrong_value": 0,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [],
+      "example_wrong_value_uids": []
+    },
+    {
+      "family": "room_type",
+      "matched": 18,
+      "missing": 0,
+      "spurious": 0,
+      "wrong_value": 0,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [],
+      "example_wrong_value_uids": []
+    },
+    {
+      "family": "stay_duration",
+      "matched": 5,
+      "missing": 0,
+      "spurious": 0,
+      "wrong_value": 1,
+      "defaulted": 0,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [],
+      "example_wrong_value_uids": [
+        "20250322131031099056"
+      ]
+    },
+    {
+      "family": "taxi_cars_equals",
+      "matched": 77,
+      "missing": 0,
+      "spurious": 0,
+      "wrong_value": 0,
+      "defaulted": 73,
+      "reject_miss": 0,
+      "example_missing_uids": [],
+      "example_spurious_uids": [],
+      "example_wrong_value_uids": []
+    }
+  ]
+}

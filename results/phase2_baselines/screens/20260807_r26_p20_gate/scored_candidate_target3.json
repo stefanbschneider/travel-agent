@@ -1,0 +1,72 @@
+[
+  {
+    "uid": "20250322130847337844",
+    "fpr_true": 100.0,
+    "overall_true": 93.54166666666666,
+    "conditional_logical_micro": 100.0,
+    "commonsense_macro": 100.0,
+    "commonsense_micro": 100.0,
+    "all_pass": true,
+    "constraints": {
+      "free_attractions_only": true,
+      "required_hotel_any_types": [
+        "Of restaurants: Hot pot"
+      ],
+      "cuisine_preference": "Hot pot",
+      "taxi_cars_equals": 1
+    },
+    "solve_sec": 13.38931144727394,
+    "restarts_used": 30,
+    "stop_reason": "converged",
+    "timed_out": false,
+    "used_fallback": false
+  },
+  {
+    "uid": "20250322174632709770",
+    "fpr_true": 100.0,
+    "overall_true": 98.05555555555556,
+    "conditional_logical_micro": 100.0,
+    "commonsense_macro": 100.0,
+    "commonsense_micro": 100.0,
+    "all_pass": true,
+    "constraints": {
+      "budgets": {
+        "dining": 2100.0
+      },
+      "required_restaurants": [
+        "types: buffet"
+      ],
+      "cuisine_preference": "buffet",
+      "taxi_cars_equals": 1
+    },
+    "solve_sec": 71.31810479005799,
+    "restarts_used": 400,
+    "stop_reason": "max_restarts",
+    "timed_out": false,
+    "used_fallback": false
+  },
+  {
+    "uid": "20250322175216115859",
+    "fpr_true": 100.0,
+    "overall_true": 94.97222222222223,
+    "conditional_logical_micro": 100.0,
+    "commonsense_macro": 100.0,
+    "commonsense_micro": 100.0,
+    "all_pass": true,
+    "constraints": {
+      "budgets": {
+        "total": 4800.0
+      },
+      "required_restaurants": [
+        "types: Cantonese cuisine"
+      ],
+      "cuisine_preference": "Cantonese cuisine",
+      "taxi_cars_equals": 1
+    },
+    "solve_sec": 81.06049063615501,
+    "restarts_used": 389,
+    "stop_reason": "budget",
+    "timed_out": false,
+    "used_fallback": false
+  }
+]

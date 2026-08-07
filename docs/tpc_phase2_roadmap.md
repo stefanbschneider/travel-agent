@@ -193,7 +193,7 @@ the previous ranking:
 
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
-| **P20** | [Close the two dominant family-recall gaps](#p20--close-the-two-dominant-family-recall-gaps) | half day | P19 attributes `202` released clause misses to `required_attraction_types` and `cuisine_preference`, over 2x the next family | **landed 2026-08-07; R22 GREEN; R26 (e2e) pending, Evaluation workstream** |
+| **P20** | [Close the two dominant family-recall gaps](#p20--close-the-two-dominant-family-recall-gaps) | half day | P19 attributes `202` released clause misses to `required_attraction_types` and `cuisine_preference`, over 2x the next family | **landed 2026-08-07; R22 GREEN; R26 GREEN 2026-08-07 (e2e no-regression + per-family gain confirmed)** |
 | **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | landed | detects unfamiliar requirements, but current-tree `matched 311 < 320` deterministic and `hf_medium` e2e is flat | **landed, library default off; not promoted** |
 | **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | 1 h | prevents the recurrence of the failure that cost this cycle | **landed 2026-08-07; R22 GREEN** |
 | **P6** | [Validator-in-loop Qwen repair](#p6--validator-in-loop-qwen-repair) | 1 day spike | tests the successful Kiro/Claude interaction shape without allowing generated facts or unchecked plans | **open; independent spike, default off** |
@@ -462,10 +462,13 @@ be met for `required_attraction_types` with any local data**, since zero English
 exist for it anywhere released, a fact discovered during this item rather than assumed going in.
 The fallback for that family is shipped anyway on the same bounded-risk argument P16 used for its
 own unmeasurable-locally extension (familiar-100 cannot regress, spurious flat everywhere
-measured, coverage ceiling up on every free-prose set) — its real value is a question only
-[R26](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets) or the held-out register can
-answer. **R26 is not run here** (CLAUDE.md's two-VM rule; this was done on the coding VM) and is
-recorded as pending for the Evaluation workstream, using the screen's `target_uids.txt`.
+measured, coverage ceiling up on every free-prose set) — its real value was a question only
+[R26](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets) or the held-out register could
+answer. **R26 has since run on the Evaluation machine and closed GREEN** (2026-08-07, using this
+screen's `target_uids.txt`): no set gained gaps or spurious clauses, and — beyond what this screen
+found — one locally-measurable `required_attraction_types` gain turned up too (a disjunctive-branch
+clause this item's own partition script didn't enumerate). See
+[R26's result](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets) for the full readout.
 
 **Did not bundle:** distance-value formatting, activity end-window semantics, P17 scheduler
 coverage, or LLM merge policy — different failure and precision risks.
