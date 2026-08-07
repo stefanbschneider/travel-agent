@@ -416,9 +416,16 @@ Measured on free prose from the committed
 
 | family | `easy` | `medium` | `human` | `preference_base50` | oracle instances on those sets |
 | --- | --- | --- | --- | --- | --- |
-| `intercity_mode` | `49` | `52` | `5` | `11` | **`0`** |
-| `required_attractions` | `105` | `25` | `25` | `20` | `11` / `17` / `15` / `1` |
-| `required_hotels` | `14` | `35` | `6` | `0` | `18` / `0` / `0` / `0` |
+| `intercity_mode` | `49` | `52` | `5` | `11` | **`0` / `0` / `0` / `0`** |
+| `required_attractions` | `105` | `25` | `25` | `20` | `30` / `41` / `23` / `5` |
+| `required_hotels` | `14` | `35` | `6` | `0` | `30` / `0` / `0` / `1` |
+
+Read the last column carefully, because it separates two different defects. `intercity_mode` is
+**pure invention**: `117` emitted clauses against `0` oracle instances anywhere on free prose. The
+other two families do exist in those oracles, so their `spurious` counts are over-extraction on the
+*wrong queries* rather than a family that should never fire — `required_hotels` emits `35` clauses on
+`hf_medium` where the oracle has none at all, and `required_attractions` emits `105` on `hf_easy`
+against `30` real instances, none of which it matches.
 
 **`intercity_mode` first — the cause is one pattern.** `parse_constraints.py`'s intercity block ends
 with a direction-free fallback,
