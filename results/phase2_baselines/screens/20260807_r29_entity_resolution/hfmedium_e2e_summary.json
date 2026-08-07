@@ -1,0 +1,42 @@
+{
+  "measurement_kind": "screen",
+  "flag": "TPC_P2_ENTITY_RESOLUTION",
+  "register": "hf_medium (free prose)",
+  "split": "hf_medium_r29 (materialized, deleted after scoring)",
+  "n": 30,
+  "budget_sec": 90,
+  "mode": "end-to-end (per-query solve_phase2.py, no --resume, 3-way sharded)",
+  "fpr_ceiling_note": "hf_medium official FPR ceiling under --lang en is 38.67 (61% of queries carry a CJK-only oracle literal no en-scored solver can pass) -- read 16.67 against that, not against 100.",
+  "baseline_env": {
+    "TPC_P2_ENTITY_RESOLUTION": "0"
+  },
+  "candidate_env": {
+    "TPC_P2_ENTITY_RESOLUTION": "1"
+  },
+  "baseline_scores": {
+    "MicEPR": 100.0,
+    "MacEPR": 100.0,
+    "C-LPR": 86.25,
+    "FPR": 16.666666666666664,
+    "DAV": 10.694444444444445,
+    "ATT": 15.591798941798944,
+    "DDR": 8.88888888888889,
+    "overall": 49.987923280423274
+  },
+  "candidate_scores": {
+    "MicEPR": 100.0,
+    "MacEPR": 100.0,
+    "C-LPR": 86.25,
+    "FPR": 16.666666666666664,
+    "DAV": 10.694444444444445,
+    "ATT": 15.591798941798944,
+    "DDR": 8.88888888888889,
+    "overall": 49.987923280423274
+  },
+  "plans_byte_identical_modulo_timing": true,
+  "plans_compared": 30,
+  "plans_differing": 0,
+  "telemetry_confirmed_flag_toggled": true,
+  "telemetry_confirmed_zero_llm_calls": true,
+  "verdict": "NEUTRAL (byte-identical plans and scores on all 30 uids)"
+}

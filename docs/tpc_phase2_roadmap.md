@@ -298,7 +298,7 @@ is available again — gate any candidate against R28.
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
 | **P22** | [Drop provably unsatisfiable required-name constraints](#p22--drop-provably-unsatisfiable-required-name-constraints) | half day | un-pins the `23–50 %` of free-prose queries that currently cannot pass at any budget; the only item with a dominance argument rather than an estimate | **landed 2026-08-07 (code + tests + static screen GREEN); promotion needs [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries) only** |
-| **P21** | [Promote deterministic entity resolution](#p21--promote-deterministic-entity-resolution) | screen only, no new code | already-landed flag, never measured alone: familiar-100 parse F1 `0.9552 → 0.9949`, `local_released_150` `0.8222 → 0.8451`, zero LLM calls; also takes familiar-100's unsatisfiable-name count `7 → 0` | **open; needs [R29](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end) only** |
+| **P21** | [Promote deterministic entity resolution](#p21--promote-deterministic-entity-resolution) | doc/bookkeeping only, no behavioral code change needed | already-landed flag, never measured alone: familiar-100 parse F1 `0.9552 → 0.9949`, `local_released_150` `0.8222 → 0.8451`, zero LLM calls; also takes familiar-100's unsatisfiable-name count `7 → 0` | **[R29 closed GREEN 2026-08-07](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end); found the flag was already harness-default-on since `b53a0747` (predates R28/`v1`) — remaining work is documenting that explicitly, not flipping a switch** |
 | **P24** | [Stop inventing satisfiable but unrequested constraints](#p24--stop-inventing-satisfiable-but-unrequested-constraints) | half day | Diagnosis revised 2026-08-07: the `intercity_mode` half was a measurement bug, not invention (fixed, spurious `172→0`); `required_attractions`/`required_hotels` were real (fixed, spurious `310→25` / `55→6`, 92%/89%, matched unchanged) | **landed 2026-08-07 (code + tests + two static screens GREEN, `pytest tests` green); e2e effect needs its own R-numbered arm, not yet run** |
 | **P23** | [Make the free-prose register scoreable](#p23--make-the-free-prose-register-scoreable) | half day | lifts a `38.67–46.0` FPR ceiling off every free-prose measurement we make, and makes P20's `required_attraction_types` half gateable at volume (R26 found exactly `1` locally-measurable clause; translation unlocks `~380`) | **open; unblocks the gate for P20/P22/P24** |
 | **P25** | [Cross-day timed-window relocation](#p25--cross-day-timed-window-relocation) | 1–2 days | the one solver move R25 identified as the binding blocker on failing queries, and the only unbuilt member of the family that produced our single largest gain (`+11.0` FPR) | **open, newly scoped** |
@@ -406,11 +406,24 @@ of HF queries also carry a structurally unpassable CJK oracle clause
 unable to pass for an unrelated reason. Read per-query flips and the target subset, not the split
 mean.
 
-### P21 — promote deterministic entity resolution
+### P21 — promote deterministic entity resolution *(closed 2026-08-07 — R29 GREEN, doc-framing corrected)*
 
-**The cheapest promotable thing on the board: no new code, one screen and one e2e A/B.**
+**Correction found while closing this item.** The paragraph below originally said
+`TPC_P2_ENTITY_RESOLUTION` "has been landed and default-off since Phase 2 plan 3" — true only of
+`Flags()`/`Flags.from_env({})`, the bare library constructor. The code path every real run takes,
+`agent_env/scripts/solve_phase2.py:resolve_llm_client_and_flags()` (called from `run_split`, which
+both the CLI and the organizer harness entry point dispatch to), has force-defaulted
+`entity_resolution = True` since `b53a0747` (2026-07-13) unless the operator explicitly sets the env
+var — the same auto-promotion pattern already used for `disjunction`/`dynamic_budget`. `b53a0747`
+predates both R28's `aed4363e` and the `v1` submission build ancestor `be196d00`; R28's own on-disk
+telemetry confirms `flags.entity_resolution: true` throughout. **R28's baseline and `v1`'s held-out
+score already ran with this flag on.** So "promote" below does not change harness behavior — it
+formalizes a default that already silently applies. See
+[R29's full writeup](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end)
+and its [screen README](../results/phase2_baselines/screens/20260807_r29_entity_resolution/README.md).
 
-`TPC_P2_ENTITY_RESOLUTION` has been landed and default-off since Phase 2 plan 3. **Every measurement
+`TPC_P2_ENTITY_RESOLUTION` has been landed and harness-default-on (not library-default-on) since
+`b53a0747`, 2026-07-13. **Every measurement
 of it ever taken ran it composed with `TPC_P2_LLM_PARSE_MODE=extract_fill` against a live DeepInfra
 backend** — all three arms of the
 [P16 screen](../results/phase2_baselines/screens/20260807_p16_entity_resolution_probe/) are
@@ -438,13 +451,18 @@ category-misrouting reroute firing where the oracle has no such family — the o
 small. **This is a static parse-diff and cannot promote anything by itself**: the corrected values
 must convert into satisfied clauses end-to-end.
 
-**Bar.** [R29](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end): a
-paired e2e A/B on familiar-100 *and* free prose. GREEN → add `entity_resolution` to
-`PROMOTED_SOLVER_FLAGS` and set it in `apply_deterministic_solver_defaults()`, leaving
-`Flags.from_env({})` untouched, then a `full_runs/` row against
-[R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main). Note that promoting this flag is
-also the natural carrier for [P22](#p22--drop-provably-unsatisfiable-required-name-constraints) — do
-them as one candidate configuration if both screen clean, so one row settles both.
+**Bar, met.** [R29](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end)
+ran the paired e2e A/B on familiar-100 *and* free prose: **GREEN** — familiar-100 FPR `45.00 → 50.00`,
+`overall_true` `64.83 → 67.53`, two more queries fully pass, zero LLM calls confirmed from telemetry;
+`hf_medium` free prose is NEUTRAL (byte-identical plans on all 30 uids, matching this section's own
+"HF sets are flat" prediction). But R29 also found the flag was already forced on for every harness
+run since `b53a0747` — see the correction at the top of this item. So the action this GREEN actually
+licenses is: record `entity_resolution` as an explicit, documented harness default (it already
+composes with [P22](#p22--drop-provably-unsatisfiable-required-name-constraints)'s catalog lookup
+today, since P22 forces that lookup whenever either flag is true) rather than adding it to
+`PROMOTED_SOLVER_FLAGS`/`apply_deterministic_solver_defaults()` as if it were currently off — those
+mechanisms don't govern this flag, `resolve_llm_client_and_flags()` does, and it already fires. No new
+`full_runs/` row is needed to re-confirm familiar-100 with the flag on (R28 already is that row).
 
 ### P24 — stop inventing satisfiable but unrequested constraints
 
