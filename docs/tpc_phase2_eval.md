@@ -172,7 +172,9 @@ neither flips a query, so do not schedule the combined `CP=300/restarts=4000` 30
 closed GREEN** (below): P20's parser fix is precision-safe on every register measured, it also moves
 one `required_attraction_types` clause locally (a disjunctive branch P20's own partition script didn't
 enumerate), and its flat 3-uid e2e arm is a power problem — all 3 queries already passed regardless of
-the bug — not evidence the fix is inert.
+the bug — not evidence the fix is inert. P18's tripwire is now an executable gate inside
+`pytest tests/phase2`, with two precision conditions still to add (see
+[R22](#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change)).
 
 **Three things changed the queue since the last revision, and the first is a blocker.**
 
@@ -218,13 +220,13 @@ R25 measured `0/10`.
 
 ### R28 — a whole-run row on the current `main`
 
-**The first slot, and everything else's prerequisite.** Four parser/normalize changes have merged
+**The first slot, and everything else's prerequisite.** Five changes have merged
 since R19 measured `ae0bd319`, and the ledger's own comparability rule forbids gating a candidate
 against a baseline from a different source revision. Right now every open item's promotion path is
 blocked on an absent denominator.
 
 ```bash
-make phase2-full-run P2_LABEL="current main baseline, post P15/P16/P19/P20"
+make phase2-full-run P2_LABEL="current main baseline, post P15/P16/P18/P19/P20"
 ```
 
 Same host as R19 (4-core Linux, 3 workers) so the row is comparable with it; nothing exported, so
@@ -855,9 +857,10 @@ for what they do and do not predict.
 | R18 released-150 regeneration | `20260806T132917Z` | `tpc_phase2_test` (150): `overall 90.5603`, FPR `90.67`, `constraints_ok 125/150`. P12's residual cross-tab is `4/150`. **Do not read `90.56` as generalization** — same template, a third the constraint density |
 | **R19 phrasing-fix regression check, 5 h** | `20260807T043142Z` | `git_sha ae0bd319` (`main` tip at launch; also carries **P13** `27d31efe`/`de3c8fcb`, which merged *after* R17's measured `efbfea96` and was flagged in `e7faa9f1` as unmeasured on this tree — so this row confirms P13, not only the phrasing fix). All 7 official metrics **byte-identical** to R17: `overall 64.17251838310492`, FPR `44.0`, C-LPR `90.08115419296664`, `constraints_ok 50/100`, `empty_plans 0/100`, `1.36 h` of `5 h`. All 100 plans byte-identical to `results/phase2_e2e_r17_ship/` modulo per-attempt timing fields (`parent_parse_failed_uids: []`, confirming P13's changed branch never fires here either). **GREEN — expected, and read narrowly**: familiar-100 contains the phrasing the fix targets (bare budgets, plain room-type wording) in `0/100` queries, so this shows the fix and P13 are true no-ops on the one register the parser was already perfect on. It is not evidence the phrasing fix helps — that evidence is the free-prose screen's `41.62 → 49.99`, which this run does not touch |
 
-**Drift note, same shape as `e7faa9f1`, and now four changes deep.** P15 (`a4d028bb`/`8688439c`),
-P16 (`3c1d3e8e`…`d65785c8`, library-default off), P19 (`f9e8233f`, analysis only) and P20 (`e6cc0e65`)
-all merged after this run's `ae0bd319`, so **no recorded row measures the current `main`**. Each
+**Drift note, same shape as `e7faa9f1`, and now five changes deep.** P15 (`a4d028bb`/`8688439c`),
+P16 (`3c1d3e8e`…`d65785c8`, library-default off), P19 (`f9e8233f`, analysis only), P20 (`e6cc0e65`)
+and P18 (`dfdace2a`, gate and tooling only) all merged after this run's `ae0bd319`, so **no recorded
+row measures the current `main`**. Each
 carries its own screen and floor test; none is remeasured here, and familiar-100 byte-identity is not
 itself evidence about them — P15 and P20 touch families the budget/room-type floor test does not cover,
 and P20's free-prose fallbacks are structurally unable to fire on familiar-100 at all.

@@ -58,7 +58,7 @@ before trusting any local number; treat a familiar-100 result as evidence about 
 only; and **never read a free-prose FPR against `100`** — under `--lang en` the HF splits cap at
 `38.67–46.0`, because their oracle literals are Chinese while their query text is English. The ranked
 work is [P22, P21, P24, P23, P25](docs/tpc_phase2_roadmap.md#work-items), and **no default can flip
-until a whole-run row exists on the current `main`** — the best row predates P15/P16/P19/P20, so there
+until a whole-run row exists on the current `main`** — the best row predates P15/P16/P18/P19/P20, so there
 is currently no valid gate baseline
 ([R28](docs/tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main)).
 
