@@ -125,7 +125,7 @@ they are ranked by expected effect on the held-out score.
 
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
-| **P15** | [Finish phrasing-robust extraction](#p15--finish-phrasing-robust-extraction) | half day | the measured residual: free-prose parse gaps beyond budget/room-type | **open, top item** |
+| **P15** | [Finish phrasing-robust extraction](#p15--finish-phrasing-robust-extraction) | half day | the measured residual: free-prose parse gaps beyond budget/room-type | **landed (partial) 2026-08-07; residual re-scoped, see below** |
 | **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | 1 day | converts a measured `40–65 %` recall gain into score, or kills the approach cleanly | **open** |
 | **P17** | [Stop trusting our own "satisfied" verdict](#p17--stop-trusting-our-own-satisfied-verdict) | half day (a), 2 h (b) | re-aims the repair queue; recovers `~85 %` idle envelope | **open** |
 | **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | 1 h | prevents the recurrence of the failure that cost this cycle | **open** |
@@ -145,38 +145,77 @@ they are ranked by expected effect on the held-out score.
 
 ### P15 — finish phrasing-robust extraction
 
-**Top item. The budget/room-type half is [landed](#the-phrasing-fix-landed-2026-08-06); this is the
-residual.**
+**The budget/room-type half is [landed](#the-phrasing-fix-landed-2026-08-06). This entry covers the
+residual: 9 of its 15 `local_released_150` clauses landed 2026-08-07
+([screen](../results/phase2_baselines/screens/20260807_p15_phrasing_robust_extraction/README.md));
+6 are re-scoped below, not silently dropped.**
 
-**What is left, measured.** After the landed fix, `hf_medium` parse gaps are `363 → 126`. Of the
-38-clause shortfall against the predicted `≤89`, **35 are unextractable from visible text at any parser
-quality**: `15 of 150` `medium` queries have an English `nature_language` that is only a rendered
-markdown title (`'**Travel Plan for a 2-Day Trip...**'`), and `14/14` residual `cost_total`, `10/10`
-residual `cost_restaurant` and `11/14` residual `room_type` clauses live in those queries. Do not chase
-them.
+**What is left, measured (the unextractable part, unchanged).** After the landed fix, `hf_medium`
+parse gaps are `363 → 126`. Of the 38-clause shortfall against the predicted `≤89`, **35 are
+unextractable from visible text at any parser quality**: `15 of 150` `medium` queries have an English
+`nature_language` that is only a rendered markdown title (`'**Travel Plan for a 2-Day
+Trip...**'`), and `14/14` residual `cost_total`, `10/10` residual `cost_restaurant` and `11/14`
+residual `room_type` clauses live in those queries. Do not chase them.
 
-**What is genuinely open** is the name/type families. On the HF sets they miss at `70–100 %`
-(`cuisine_preference` `100 %`, `required_attraction_types` `70–90 %`) — but **every** residual gap
-there sits in a CJK-literal clause, so that data cannot tell you their score impact. The set that can
-is `tpc_phase2_test`, whose literals are English: `15 of 522` clauses remain parse gaps after the
-landed fix, spread over `restaurant_name` (4), `inner_transport_set` (3), `attraction_name` (2),
-`restaurant_type` (2), `activity_time_window` (2), `attraction_type` (1), `accommodation_type` (1).
+**Landed 2026-08-07 (`parse_constraints.py`).** Of the `15 of 522` `tpc_phase2_test` parse-gap
+clauses this entry named, 9 are fixed: `restaurant_name` (4, all 4 — a shared-helper newline fix plus
+"avoid"/"do not try X" verb phrasings), `inner_transport_set` (3, all 3 — "wish to" and "travel by"
+verb phrasings), `restaurant_type` (1 of 2 — "restaurants of the cafe type" value-before-`type` word
+order), `cost_transport` (1 of 1 — "in-city" budget-scope synonym). A precision guard was needed
+alongside: an unanchored "would like to try X" pattern swallowed whole free-prose sentences that never
+say "restaurant" at all (measured: `required_restaurants` spurious rose on `hf_easy`/`medium`/`human`
+with zero recall gain) — the anchor is mandatory for "try" but stays optional for "dine at", which the
+released set always uses to name a specific venue. Full before/after (all 6 sets, precision **and**
+spurious) in the screen above.
+
+**What is genuinely still open** is 6 clauses, re-scoped into two tiers by risk rather than left as
+one flat list:
+
+- **Tier B — precedence-sensitive mis-classification, 3 clauses** (`attraction_name` ×2,
+  `attraction_type` ×1). Not an absence: the parser already fires, into the *wrong* family (e.g. "the
+  Hangzhou Suspended Glass Art Museum" → `required_attraction_types: ["Art Museum"]` instead of
+  `required_attractions`). Fixing the disambiguation changes which pattern wins on ambiguous text —
+  not an additive change, and its safety can only be shown by an e2e run this box (the coding VM)
+  must not start; see [the two-VM rule](tpc_phase2_eval.md).
+- **Tier C — infeasibility risk, 2 clauses** (`activity_time_window`, "must not leave X before
+  TIME"). Same class of move as the already-rejected `arrive_no_later`-from-`end_before` item below —
+  a pinned late-end-time window can prune the rest of the day's transport. Max measured gain is 1–2
+  queries against a real risk of making a solvable query infeasible.
+
+On the HF sets the name/type families miss at `70–100 %` (`cuisine_preference` `100 %`,
+`required_attraction_types` `70–90 %`) — but **every** residual gap there sits in a CJK-literal
+clause, so that data cannot tell you their score impact.
 **Treat the HF name/type miss rates as an upper bound of unknown tightness, and work the
 `tpc_phase2_test` list, which is real English evidence.**
 
-**How to do it.** Work one family at a time in `parse_constraints.py`. For each: find the released
-queries whose oracle carries the family and our parse does not (`scripts/phase2_generalization_probe.py`
-emits them per family), read the actual phrasing, add an additive alternative guarded so no existing
-pattern's precedence changes. **Two precision traps already paid for:** `spend no more than 70 RMB per
-meal` and `a budget of 500 yuan per day` both became plan-wide `budgets["total"]` in a first cut. An
-unsatisfiable 70-yuan total budget is strictly worse than no extraction — a spurious constraint makes
-a query infeasible, which costs the whole query.
+Two probe-classifier artifacts were also found and left untouched (measurement fix, not parser fix,
+not to be mixed into the same commit as the change it would be measured against — see the screen's
+§2): `free_attractions_only` already satisfies a `cost_attraction<=0` OR-arm but
+`CLAUSE_KIND_RULES` doesn't credit it; and the same table's `cost_transport` marker matches
+`inner_city_transportation_cost` only, so an `inter_city` (intercity) clause is invisible to it.
+
+**How to do it (Tier B/C).** Work one family at a time in `parse_constraints.py`. For each: find the
+released queries whose oracle carries the family and our parse does not
+(`scripts/phase2_generalization_probe.py` emits them per family), read the actual phrasing, add an
+additive alternative guarded so no existing pattern's precedence changes — Tier B specifically is
+**not** additive, so it needs a dedicated screen showing zero familiar-100 perturbation before it can
+land. **Two precision traps already paid for:** `spend no more than 70 RMB per meal` and `a budget of
+500 yuan per day` both became plan-wide `budgets["total"]` in a first cut. An unsatisfiable 70-yuan
+total budget is strictly worse than no extraction — a spurious constraint makes a query infeasible,
+which costs the whole query. A third, found 2026-08-07: an unanchored restaurant-name verb pattern
+can swallow a whole free-prose sentence that never names a restaurant at all (above) — the fix is a
+mandatory lexical anchor, not a stoplist, since a stoplist can never enumerate every non-name phrase.
 
 **Bar.** `pytest tests` green with **no pre-existing test edited**; the familiar-100 byte-identity
 floor test in `tests/phase2/test_parser_phrasing_generalization.py` still passes (it keeps verbatim
-copies of the pre-fix extractors and asserts equality over all 100 queries); and
+copies of the pre-fix budget/room-type extractors and asserts equality over all 100 queries) —
+**and**, since this entry's fixes touch families that test's verbatim copies do not cover,
+`tests/phase2/test_parser_phrasing_p15.py`'s hash-pinned `query_variants()` floor over all 100
+familiar-100 queries also passes; and
 [R22](tpc_phase2_eval.md#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change)
-shows familiar-100 gaps still `0/1109` with the targeted family's gap count down and no other set's up.
+shows familiar-100 gaps still `0/1109` with the targeted family's gap count down and no other set's
+up — measured here as spurious flat-or-down on all 6 sets, precision flat-or-up on all but two
+CJK-literal-only wobbles (screen §3).
 
 ### P16 — ground LLM-extracted values into the closed vocabulary
 

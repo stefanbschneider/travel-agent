@@ -82,7 +82,16 @@ _ABBREV_NO_TERM = (
     r"(?<!\bAve)(?<!\bInc)(?<!\bLtd)(?<!\bMrs)"
     r"(?<!\bBlvd)"
 )
-_LIST_TERM = _ABBREV_NO_TERM + r"\.|;|$"
+# A bare newline also terminates a captured list (2026-08-07, P15): free-prose "Requirements:"
+# blocks put one clause per line with no trailing punctuation ("Do not want to try the following
+# restaurants: A and B\nDo not want to stay at the following hotels: C and D"), and `.` never
+# matches `\n` regardless, so without this alternative the capture group could not reach any
+# terminator at all when a clause was not the last line of the block -- the match failed outright
+# rather than mis-capturing. Purely additive: `.+?` still cannot cross a newline either way, so
+# this can only turn a previously-failed match (no terminator reachable) into a successful one; it
+# never changes where an already-succeeding match stops, since `\n` cannot occur before whatever
+# terminator that match already found.
+_LIST_TERM = _ABBREV_NO_TERM + r"\.|;|\n|$"
 
 
 def _list_after_marker(text, lead_pattern, category_pattern, *, protect=(), check_negation=False):
@@ -392,7 +401,7 @@ def parse_budget(text):
     # that by rejecting a match whose token is immediately preceded by a hyphen (A3 fix).
     m = None
     for cand in re.finditer(
-        r"(?:intra-city|inner-city|city|intra\s*city|local)\s*(?:transportation|travel)\s*(?:budget|is)[^0-9]*?([\d]+(?:\.[\d]+)?)",
+        r"(?:intra-city|inner-city|in-city|city|intra\s*city|local)\s*(?:transportation|travel)\s*(?:budget|is)[^0-9]*?([\d]+(?:\.[\d]+)?)",
         text, re.I,
     ):
         if cand.start() > 0 and (text[cand.start() - 1] == "-" or text[cand.start() - 1].isalnum()):
@@ -400,7 +409,9 @@ def parse_budget(text):
         m = cand
         break
     if not m:
-        m = re.search(r"budget\s+for\s+(?:intra-city|inner-city|intra\s*city|local)\s*transportation[^0-9]*?([\d]+(?:\.[\d]+)?)", text, re.I)
+        # "in-city" added 2026-08-06 (P15): released phrasing for the same intra-city budget
+        # (local_released_150 uid 20250324225301554257's "the budget for in-city transportation").
+        m = re.search(r"budget\s+for\s+(?:intra-city|inner-city|in-city|intra\s*city|local)\s*transportation[^0-9]*?([\d]+(?:\.[\d]+)?)", text, re.I)
     if not m:
         m = re.search(r"budget\s+for\s+(?:travel|transport(?:ation)?)\s+within\s+the\s+city[^0-9]*?([\d]+(?:\.[\d]+)?)", text, re.I)
     if not m:
@@ -534,9 +545,13 @@ def parse_inner_transport_restrictions(text):
     # General multi-mode exclusion list: "do not want to use walking or taxi (as means of
     # transportation) within the city" -- any ,/or/and-separated run of mode words after a
     # negated "use", in any order/count (plan3 G4/N3.3; the earlier patterns above only fire when
-    # the negation cue is directly adjacent to a single mode word).
+    # the negation cue is directly adjacent to a single mode word). "wish to" and the "travel by"
+    # verb were added 2026-08-06 (P15): "do not wish to use taxi ... transportation" and "do not
+    # want to travel by walking within the city" are both released phrasing this trigger missed --
+    # the trailing "for/within ... transportation/city" text needs no pattern of its own since
+    # nothing is required to follow the captured mode list.
     m = re.search(
-        r"(?:do\s+not|don't|not)\s+(?:want\s+to\s+)?use\s+"
+        r"(?:do\s+not|don't|not)\s+(?:want\s+to\s+|wish\s+to\s+)?(?:use|travel\s+by)\s+"
         r"((?:taxis?|walking|walk|metro)(?:\s*(?:,|or|and)\s*(?:taxis?|walking|walk|metro))*)",
         text, re.I,
     )
@@ -1051,6 +1066,33 @@ def parse_conditional_transport(text):
     return None
 
 
+def _split_restaurant_names(chunk, match_text):
+    """Split a captured restaurant-name chunk into names, unless the trigger used the singular
+    "restaurant" (not "restaurants") -- in which case grammar says exactly one name was named, so
+    the chunk is returned whole even if the name itself contains a literal " and " (e.g. "Rib and
+    Lotus Root Soup in a Clay Pot"), which the naive and/comma splitter would otherwise cut in two
+    (2026-08-06, P15: `local_released_150` uid `20250322120300879962`)."""
+    if not re.search(r"restaurants\b", match_text, re.I):
+        return [chunk]
+    # Consume an optional "and" right after a comma so an Oxford-comma list ("A, B, and C") does
+    # not leave a leading "and C" fragment (same fix as `_list_after_marker`).
+    return re.split(r"\s+and\s+|,\s*(?:and\s+)?", chunk)
+
+
+def _looks_like_cuisine_type_chunk(chunk):
+    """True if a chunk captured after "restaurant(s):" is cuisine-TYPE phrasing, not a name --
+    either word order ("of the type X" / "of the following types: X", handled by
+    parse_cuisine_preference/parse_excluded_cuisine_types instead) or the mirrored "of the X type"
+    (2026-08-06, P15: local_released_150 uid 20250322141653938197's "restaurants of the cafe
+    type", which the first form alone does not catch and which would otherwise read as the
+    literal restaurant name "of the cafe type")."""
+    if re.match(r"of\s+(?:the\s+)?(?:following\s+)?types?\b", chunk, re.I):
+        return True
+    if re.match(r"(?:any\s+)?of\s+(?:the\s+)?\w[\w\s-]{0,40}?\s+types?\s*$", chunk, re.I):
+        return True
+    return False
+
+
 def parse_required_restaurants(text):
     """Extract specific restaurant names that must be visited.
 
@@ -1058,15 +1100,32 @@ def parse_required_restaurants(text):
     restaurants / cuisine types, not required ones.
     """
     names = []
-    # Negation immediately preceding the "want/wish/hope to try" trigger.
+    # Negation immediately preceding the "want/wish/hope/would like to try" trigger.
     neg_prefix = re.compile(r"(?:do\s+not|don't|didn't|does\s+not|do\s+n't|not|avoid|never|no)\s+$", re.I)
 
     patterns = [
-        r"(?:want|wish|hope)\s+to\s+(?:try|dine\s+at)\s+(?:the\s+following\s+)?(?:restaurants?[:\s]+)?(.+?)(?:\.|;|$)",
-        r"(?:want|wish|hope)\s+to\s+(?:try|dine\s+at)\s+(?:these\s+)?restaurants?[:\s]+(.+?)(?:\.|;|$)",
+        # "would like" added 2026-08-06 (P15): "Would like to try these restaurants: X" is a
+        # released paraphrase of "want to try" that carries the identical restaurant-name payload.
+        # The "restaurants?[:\s]+" anchor is deliberately NOT optional here: an earlier draft made
+        # it optional (matching the pre-existing "want/wish/hope" pattern), and on free prose that
+        # swallowed the *rest of the sentence* after "want/would like to try" on any clause that
+        # never says the word "restaurant" at all -- "would like to try some local Jiangsu and
+        # Zhejiang cuisine", "would like to try high-end dining options", "want to try hot pot,
+        # explore the local history and culture, and prefer a relaxed itinerary" were all captured
+        # whole (measured: hf_easy/medium/human `required_restaurants` spurious count rose with
+        # zero matching recall gain until this anchor was made mandatory). "try" is ambiguous
+        # between a cuisine/dish and a named venue, so it needs the anchor; "dine at" is not (see
+        # next pattern).
+        r"(?:want|wish|hope|would\s+like)\s+to\s+try\s+(?:one\s+of\s+)?(?:the\s+following\s+|these\s+)?restaurants?[:\s]+(.+?)(?:" + _LIST_TERM + r")",
+        # "want to dine at X" / "would like to dine at X" -- unlike "try", "dine at" always names a
+        # specific venue, so the "restaurant(s)" word is genuinely optional here (free-prose
+        # evidence: hf_easy/medium consistently write "dine at <Name>" with no "restaurant" word at
+        # all, e.g. "would like to dine at Yan Jintang near Longfu Temple"). Restricting this verb
+        # to a mandatory anchor would drop those real names (regression check, 2026-08-06).
+        r"(?:want|wish|hope|would\s+like)\s+to\s+dine\s+at\s+(?:the\s+following\s+|these\s+)?(?:restaurants?[:\s]+)?(.+?)(?:" + _LIST_TERM + r")",
         # Bare imperative ("Try one of these restaurants: X"), common in OR-arm bullet text with
         # no surrounding "we want to" framing (plan3 G3/N3.1) -- anchored to the start of the text.
-        r"^try\s+(?:one\s+of\s+(?:the\s+following|these)\s+)?restaurants?[:\s]+(.+?)(?:\.|;|$)",
+        r"^try\s+(?:one\s+of\s+(?:the\s+following|these)\s+)?restaurants?[:\s]+(.+?)(?:" + _LIST_TERM + r")",
     ]
 
     for pat in patterns:
@@ -1075,12 +1134,11 @@ def parse_required_restaurants(text):
             if neg_prefix.search(text[: m.start()]):
                 continue
             chunk = m.group(1).strip().rstrip(".")
-            # Skip cuisine-TYPE phrasing ("of the type X" / "of the following type(s): X"); those
-            # are not restaurant names.
-            if re.match(r"of\s+(?:the\s+)?(?:following\s+)?types?\b", chunk, re.I):
+            # Skip cuisine-TYPE phrasing ("of the type X" / "of the following type(s): X" / "of
+            # the X type"); those are not restaurant names.
+            if _looks_like_cuisine_type_chunk(chunk):
                 continue
-            # Split on " and " or ", "
-            parts = re.split(r"\s+and\s+|,\s*", chunk)
+            parts = _split_restaurant_names(chunk, m.group(0))
             for p in parts:
                 p = p.strip()
                 if p and len(p) > 2:
@@ -1110,22 +1168,28 @@ def parse_excluded_restaurants(text):
     """
     names = []
 
-    m = re.search(
+    patterns = [
         r"(?:do\s+not|don't|not)\s+(?:want|wish|hope)\s+to\s+(?:try|dine\s+at|visit)\s+"
-        r"(?:the\s+following\s+)?(?:the\s+)?restaurants?[:\s]+(.+?)(?:\.|;|$)",
-        text, re.I,
-    )
-    if m:
-        chunk = m.group(1).strip().rstrip(".")
-        # Not a restaurant name list — it's a cuisine type ("of the type X" / "of the following
-        # type(s): X"); handled elsewhere.
-        if re.match(r"of\s+(?:the\s+)?(?:following\s+)?types?\b", chunk, re.I):
-            return None
-        parts = re.split(r"\s+and\s+|,\s*", chunk)
-        for p in parts:
-            p = p.strip()
-            if p and len(p) > 2 and p not in names:
-                names.append(p)
+        r"(?:the\s+following\s+)?(?:the\s+)?restaurants?[:\s]+(.+?)(?:" + _LIST_TERM + r")",
+        # "Do not try the following restaurant: X" -- the same clause with the "want/wish/hope"
+        # step dropped (2026-08-06, P15: released, not in familiar-100's template).
+        r"(?:do\s+not|don't|not)\s+try\s+(?:the\s+following\s+)?(?:the\s+)?restaurants?[:\s]+(.+?)(?:" + _LIST_TERM + r")",
+        # "Avoid the following restaurant: X" -- a third verb the released set uses for the same
+        # exclusion (2026-08-06, P15), common as an OR-arm bullet with no "do not" framing at all.
+        r"avoid\s+(?:the\s+following\s+)?(?:the\s+)?restaurants?[:\s]+(.+?)(?:" + _LIST_TERM + r")",
+    ]
+    for pat in patterns:
+        for m in re.finditer(pat, text, re.I):
+            chunk = m.group(1).strip().rstrip(".")
+            # Not a restaurant name list — it's a cuisine type ("of the type X" / "of the following
+            # type(s): X" / "of the X type"); handled elsewhere.
+            if _looks_like_cuisine_type_chunk(chunk):
+                continue
+            parts = _split_restaurant_names(chunk, m.group(0))
+            for p in parts:
+                p = p.strip()
+                if p and len(p) > 2 and p not in names:
+                    names.append(p)
 
     # "Do not include any of these restaurants: X and Y." (familiar-100). Anchored at ':' so it
     # stays on the restaurant-name line and never fires on "restaurant types:" (-> cuisine).
@@ -1229,6 +1293,11 @@ def parse_excluded_cuisine_types(text):
     patterns = [
         # "do not want to try (restaurants) of the type X (and Y)"
         _NEG_TRY + r"(?:restaurants?\s+)?of\s+(?:the\s+)?types?\s+(.+?)(?:\.|;|$)",
+        # "do not want to try any restaurants of the cafe type" -- the value sits BEFORE "type"
+        # here, the mirror image of the pattern above (2026-08-06, P15: local_released_150 uid
+        # 20250322141653938197). Bounded to a short run of words so it can't swallow a whole
+        # trailing clause when "type" never appears in the sentence at all.
+        _NEG_TRY + r"(?:any\s+)?restaurants?\s+of\s+(?:the\s+)?(\w[\w\s-]{0,40}?)\s+type\b",
         # "do not want to try the following type(s) of restaurant(s): X (and Y)" (reversed order)
         _NEG_TRY + r"(?:the\s+following\s+)?types?\s+of\s+restaurants?[:\s]+(.+?)(?:\.|;|$)",
         # "do not want to try restaurants serving X"
