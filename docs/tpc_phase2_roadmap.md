@@ -31,16 +31,17 @@ rather than compute-bound — was correct and still holds, but it was a diagnosi
 | Measurement | Score | What it licenses |
 | --- | --- | --- |
 | **Organizer held-out, `v1`** | **`33.2473`** | the only external calibration, and since 2026-08-07 **broken out per metric** — see below |
-| familiar-100, [R19](tpc_phase2_eval.md#the-closed-queue-r1r19) `20260807T043142Z` | `64.17251838310492`, FPR `44.0` | best local row (byte-identical to R17 `20260806T115309Z`); a configuration on one phrasing register |
+| familiar-100, [R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main) `20260807T152009Z` | `64.17251838310492`, FPR `44.0` | current-`main` baseline row (byte-identical to R19 `20260807T043142Z` and R17 `20260806T115309Z`); a configuration on one phrasing register |
 | local released 150, R18 | `90.5603` | **nothing about generalization** — same template, a third the constraint density |
 | free prose (HF `medium`), matched-budget screen | `41.62 → 49.99` after the phrasing fix | the register the held-out set most resembles, though it is *easier* than held-out — and read its FPR against a **ceiling of `38.67`**, not `100` (see below) |
 
 **Two corrections to how the rows above must be read, both new on 2026-08-07.**
 
-1. **No row exists on the current `main`.** The best row (R19, `git_sha ae0bd319`) predates P15, P16,
-   P19, P20 and R25. Nothing can be promoted, and no `v2` decision can be taken, until
-   [R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main) produces a current-tip whole-run
-   row. That is the first thing an evaluation machine should do.
+1. **Was:** no row existed on the current `main`. **Now closed:**
+   [R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main) (`20260807T152009Z`,
+   `git_sha aed4363e`) remeasured the current tip and came back byte-identical to R19 on all seven
+   metrics and all 100 plans — the row above is already R28, not R19. "Promote" is an available verb
+   again; gate any new candidate against R28, not R19.
 2. **Every free-prose FPR we have ever measured was scored against a cap we did not know about.**
    The four HF splits' `hard_logic_py` literals are native Chinese while their query text is English,
    so under `--lang en` a clause like `'博物馆' in attraction_type(x)` can never be true — the plan's
@@ -289,10 +290,10 @@ landed.** The 2026-08-07 leaderboard breakdown had already established that the 
   by [R25](tpc_phase2_eval.md#r25--separate-the-cp-restart-and-outer-budget-limits), which tested the
   ordering argument directly rather than by inference.
 
-**And one process fact that gates everything.** No whole-run row exists on the current `main`: R19
-predates P15, P16, P19, P20 and P18. Until
-[R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main) lands, "promote" is not an available
-verb — a default can only flip against a like-for-like current-tip baseline.
+**And one process fact, now resolved.** A whole-run row on the current `main` was missing (R19
+predated P15, P16, P19, P20 and P18); [R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main)
+closed that gap 2026-08-07 (`20260807T152009Z`, `git_sha aed4363e`, byte-identical to R19). "Promote"
+is available again — gate any candidate against R28.
 
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
@@ -303,7 +304,7 @@ verb — a default can only flip against a like-for-like current-tip baseline.
 | **P25** | [Cross-day timed-window relocation](#p25--cross-day-timed-window-relocation) | 1–2 days | the one solver move R25 identified as the binding blocker on failing queries, and the only unbuilt member of the family that produced our single largest gain (`+11.0` FPR) | **open, newly scoped** |
 | **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | landed | prevents the recurrence of the failure that cost this cycle | **landed 2026-08-07 (`dfdace2a`); gates parse gaps only — two precision conditions still open, see below** |
 | **P6** | [Validator-in-loop Qwen repair](#p6--validator-in-loop-qwen-repair) | 1 day spike | tests the successful Kiro/Claude interaction shape without allowing generated facts or unchecked plans | **open; independent spike, default off** |
-| **P20** | [Close the two dominant family-recall gaps](#p20--close-the-two-dominant-family-recall-gaps) | landed | P19 attributed `202` released clause misses to `required_attraction_types` and `cuisine_preference`, over 2x the next family | **landed 2026-08-07 (`f413eb2a`); R22 GREEN; [R26 GREEN](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets) 2026-08-07 — authorizes one current-`main` whole-run row, i.e. [R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main)** |
+| **P20** | [Close the two dominant family-recall gaps](#p20--close-the-two-dominant-family-recall-gaps) | landed | P19 attributed `202` released clause misses to `required_attraction_types` and `cuisine_preference`, over 2x the next family | **landed 2026-08-07 (`f413eb2a`); R22 GREEN; [R26 GREEN](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets) 2026-08-07, and the whole-run row it authorized is done — [R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main), byte-identical to R19** |
 | **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | landed | detects unfamiliar requirements, but current-tree `matched 311 < 320` deterministic and `hf_medium` e2e is flat | **landed, library default off; not promoted** |
 | **P15** | [Finish phrasing-robust extraction](#p15--finish-phrasing-robust-extraction) | half day | the measured residual beyond budget/room-type; compounds through the FPR threshold | **landed (partial) 2026-08-07; residual re-scoped, see below** |
 | P4 | [Fix the 300 s per-query cap](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass) | half day | correctness fix (currently disables the intended `900 s` cap); R25 found it will not itself buy flips | open, correctness-only |
