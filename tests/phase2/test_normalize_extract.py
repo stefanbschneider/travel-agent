@@ -71,7 +71,12 @@ def test_validate_cuisine_preference_keeps_only_vocab_hits_case_insensitive():
     out = normalize._validate_extract_field(
         "cuisine_preference", ["Hot Pot", "Nonsense Cuisine", "japanese cuisine"], _VOCAB
     )
-    assert out == ["Hot Pot", "japanese cuisine"]
+    # "Hot Pot" hits the curated concept_labels alias table ("hot pot" -> "Hot pot", P16) before
+    # the plain vocab check, so it comes back in the sandbox's own canonical casing rather than
+    # the caller's -- the solver compares constraint values against tool columns
+    # case-sensitively, so preserving "Hot Pot" verbatim would silently never match. "japanese
+    # cuisine" has no alias-table entry and hits the vocab exactly, so it is unchanged.
+    assert out == ["Hot pot", "japanese cuisine"]
 
 
 def test_validate_cuisine_preference_all_invalid_is_none():
@@ -89,6 +94,97 @@ def test_validate_hotel_feature_field_checks_hotel_vocab_not_cuisine_vocab():
         "required_hotel_any_types", ["Hot spring bathing", "Hot pot"], _VOCAB
     )
     assert out == ["Hot spring bathing"]  # "Hot pot" is a cuisine, not a hotel feature
+
+
+# --- P16: grounding LLM-extracted values into the closed vocabulary ---------
+
+
+_VOCAB_WITH_CANONICAL = {
+    **_VOCAB,
+    "cuisine_canonical": {"hot pot": "Hot pot", "japanese cuisine": "Japanese cuisine"},
+    "hotel_feature_canonical": {"hot spring bathing": "Hot spring bathing"},
+}
+
+
+def test_ground_type_value_fuzzy_matches_a_near_miss_to_canonical_casing():
+    # The roadmap's own named example: "hotpot" (no space) is dropped by the pre-P16 exact-only
+    # check. difflib.SequenceMatcher("hotpot", "hot pot").ratio() == 0.923, above threshold.
+    out = normalize._validate_extract_field("cuisine_preference", ["hotpot"], _VOCAB_WITH_CANONICAL)
+    assert out == ["Hot pot"]
+
+
+def test_ground_type_value_below_threshold_is_dropped_not_guessed():
+    out = normalize._validate_extract_field(
+        "cuisine_preference", ["Italian food"], _VOCAB_WITH_CANONICAL
+    )
+    assert out is None
+
+
+def test_ground_type_value_without_canonical_map_drops_non_exact_value():
+    # _VOCAB (no *_canonical key) is the shape existing callers/tests already use; the fuzzy leg
+    # must degrade to "drop" rather than raise when there is nothing to fuzzy-match against.
+    out = normalize._validate_extract_field("cuisine_preference", ["hotpot"], _VOCAB)
+    assert out is None
+
+
+def test_ground_hotel_feature_fuzzy_matches_via_canonical_map():
+    out = normalize._validate_extract_field(
+        "required_hotel_any_types", ["hot spring  bathing"], _VOCAB_WITH_CANONICAL
+    )
+    assert out == ["Hot spring bathing"]
+
+
+def test_validate_attraction_type_grounds_against_city_scoped_vocab(monkeypatch):
+    calls = []
+
+    def fake_attraction_type_vocab(slug):
+        calls.append(slug)
+        return {"art museum": "Art Museum", "amusement park": "Amusement Park"}
+
+    monkeypatch.setattr(normalize, "_attraction_type_vocab", fake_attraction_type_vocab)
+    out = normalize._validate_extract_field(
+        "required_attraction_types", ["art museums"], _VOCAB, city_slug="beijing"
+    )
+    assert out == ["Art Museum"]
+    assert calls == ["beijing"]
+
+
+def test_validate_attraction_type_without_city_slug_uses_global_vocab(monkeypatch):
+    calls = []
+
+    def fake_attraction_type_vocab(slug):
+        calls.append(slug)
+        return {"art museum": "Art Museum"}
+
+    monkeypatch.setattr(normalize, "_attraction_type_vocab", fake_attraction_type_vocab)
+    normalize._validate_extract_field("required_attraction_types", ["Art Museum"], _VOCAB)
+    assert calls == [None]
+
+
+def test_validate_attraction_type_ambiguous_tie_is_dropped(monkeypatch):
+    # Both candidates score 0.875 against the query (one single-char substitution each,
+    # difflib.SequenceMatcher, above _ENTITY_FUZZY_THRESHOLD) -- a genuine tie, not just "both
+    # below threshold" -- so grounding must refuse to guess rather than pick one arbitrarily.
+    def fake_attraction_type_vocab(slug):
+        return {"abcdefgy": "Type Y", "abcdefgz": "Type Z"}
+
+    monkeypatch.setattr(normalize, "_attraction_type_vocab", fake_attraction_type_vocab)
+    out = normalize._validate_extract_field(
+        "required_attraction_types", ["abcdefgh"], _VOCAB, city_slug="beijing"
+    )
+    assert out is None
+
+
+def test_validate_extract_families_threads_city_slug_to_attraction_type(monkeypatch):
+    def fake_attraction_type_vocab(slug):
+        assert slug == "shanghai"
+        return {"art museum": "Art museum"}  # Shanghai's own casing, per the docstring's example
+
+    monkeypatch.setattr(normalize, "_attraction_type_vocab", fake_attraction_type_vocab)
+    out = normalize.validate_extract_families(
+        {"required_attraction_types": ["Art Museum"]}, vocab=_VOCAB, city_slug="shanghai",
+    )
+    assert out == {"required_attraction_types": ["Art museum"]}
 
 
 def test_validate_free_attractions_only_bool_passthrough():

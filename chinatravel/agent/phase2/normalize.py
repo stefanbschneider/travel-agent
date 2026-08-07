@@ -533,6 +533,7 @@ def llm_parse_stub(ir: ParsedIR, query: dict, llm_client) -> ParsedIR:
 _EXTRACT_ROOM_TYPES = frozenset({"single", "double", "twin"})
 _EXTRACT_CUISINE_FIELDS = {"cuisine_preference", "excluded_cuisine_types"}
 _EXTRACT_HOTEL_FEATURE_FIELDS = {"required_hotel_any_types", "required_hotel_all_types", "hotel_amenity"}
+_EXTRACT_ATTRACTION_TYPE_FIELDS = {"required_attraction_types", "excluded_attraction_types"}
 _EXTRACT_RESTAURANTS_GLOB = "chinatravel/environment/database_en/restaurants/**/*.csv"
 _EXTRACT_ACCOMMODATIONS_GLOB = "chinatravel/environment/database_en/accommodations/**/*.csv"
 _EXTRACT_PROJECT_ROOT = None  # resolved lazily in _extract_vocab (import-time __file__ games are fragile)
@@ -555,20 +556,31 @@ def _extract_vocab() -> dict[str, frozenset[str]]:
     (restaurants CSVs' ``cuisine`` column) and hotel feature/type strings (accommodations CSVs'
     ``featurehoteltype`` column, '/'-separated). Case-folded for matching. room_type's vocabulary
     is the regex parser's own fixed 3-value set (``parse_constraints.parse_room_type``). Cached
-    process-wide (module-level dict, not functools.lru_cache, so tests can monkeypatch it)."""
+    process-wide (module-level dict, not functools.lru_cache, so tests can monkeypatch it).
+
+    Also carries a ``*_canonical`` lower-cased-key -> first-seen-CSV-casing map for ``cuisine``
+    and ``hotel_feature`` (P16: grounding, ../../docs/tpc_phase2_roadmap.md#p16). The solver
+    compares constraint values against tool column values case-sensitively
+    (``solver_constraints._normalize_concept_values``'s own docstring), so a value recovered by
+    fuzzy or alias matching -- as opposed to an exact case-insensitive hit, which keeps the
+    caller's own casing for backward compatibility -- must be returned in the environment's own
+    casing or it would silently never match any row."""
     global _extract_vocab_cache
     if _extract_vocab_cache is not None:
         return _extract_vocab_cache
 
     root = _extract_project_root()
     cuisines: set[str] = set()
+    cuisine_canonical: dict[str, str] = {}
     for path in root.glob(_EXTRACT_RESTAURANTS_GLOB):
         with open(path, encoding="utf-8", newline="") as f:
             for row in csv.DictReader(f):
                 c = (row.get("cuisine") or "").strip()
                 if c:
                     cuisines.add(c.lower())
+                    cuisine_canonical.setdefault(c.lower(), c)
     hotel_features: set[str] = set()
+    hotel_feature_canonical: dict[str, str] = {}
     for path in root.glob(_EXTRACT_ACCOMMODATIONS_GLOB):
         with open(path, encoding="utf-8", newline="") as f:
             for row in csv.DictReader(f):
@@ -576,10 +588,13 @@ def _extract_vocab() -> dict[str, frozenset[str]]:
                     part = part.strip()
                     if part:
                         hotel_features.add(part.lower())
+                        hotel_feature_canonical.setdefault(part.lower(), part)
 
     _extract_vocab_cache = {
         "cuisine": frozenset(cuisines),
+        "cuisine_canonical": cuisine_canonical,
         "hotel_feature": frozenset(hotel_features),
+        "hotel_feature_canonical": hotel_feature_canonical,
         "room_type": _EXTRACT_ROOM_TYPES,
     }
     return _extract_vocab_cache
@@ -1123,9 +1138,76 @@ def resolve_entities(variant: dict, query: dict, catalog: dict[str, list[str]] |
     return out
 
 
-def _validate_extract_field(key: str, value, vocab: dict[str, frozenset[str]]):
+def _ground_type_value(raw: str, *, pool: frozenset[str], canonical: dict[str, str],
+                       concept_kind: str) -> str | None:
+    """Ground one free-text category/type value against a closed vocabulary
+    (P16: ../../docs/tpc_phase2_roadmap.md#p16-ground-llm-extracted-values-into-the-closed-vocabulary).
+
+    Three tiers, in order, matching the existing entity-name resolver's own precedence
+    (``_match_catalog_name``): the curated literal alias table
+    (``concept_labels.ENGLISH_CONCEPT_LITERAL_ALIASES``, e.g. ``"cafe" -> "coffee shop"``), then
+    an exact case-insensitive vocabulary hit (returns the caller's own casing, unchanged --
+    backward compatible with the pre-P16 exact-match behavior other code and tests depend on),
+    then a unique best-above-``_ENTITY_FUZZY_THRESHOLD`` fuzzy match (returns the vocabulary's own
+    canonical casing, since the input string deviated from it and the solver compares
+    case-sensitively). Ties or a below-threshold best score return None -- dropping an
+    ungroundable value is the P15-established safe default: a spurious constraint the solver can
+    never satisfy costs the whole query, so refusing to guess beats guessing wrong.
+    """
+    if not isinstance(raw, str):
+        return None
+    text = raw.strip()
+    if not text:
+        return None
+
+    from chinatravel.environment.concept_labels import ENGLISH_CONCEPT_VALUE_ALIASES
+
+    alias_map = ENGLISH_CONCEPT_VALUE_ALIASES.get(concept_kind, {})
+    aliased = alias_map.get(text)
+    if aliased is None:
+        aliased = alias_map.get(text.lower())  # LLM output rarely matches the alias table's exact case
+    if aliased is not None:
+        return aliased
+
+    norm = text.lower()
+    if norm in pool:
+        return text  # exact hit: preserve the caller's casing (pre-P16 behavior)
+
+    if not canonical:
+        return None
+    scored = sorted(
+        ((difflib.SequenceMatcher(None, norm, cand_norm).ratio(), cand_canon)
+         for cand_norm, cand_canon in canonical.items()),
+        key=lambda t: -t[0],
+    )
+    best_score, best_val = scored[0]
+    if best_score < _ENTITY_FUZZY_THRESHOLD:
+        return None
+    if len(scored) > 1 and scored[1][0] >= best_score:
+        return None  # ambiguous tie -- don't guess
+    return best_val
+
+
+def _ground_type_values(value, *, pool: frozenset[str], canonical: dict[str, str],
+                        concept_kind: str) -> list[str] | None:
+    candidates = value if isinstance(value, list) else [value]
+    grounded = [
+        _ground_type_value(v, pool=pool, canonical=canonical, concept_kind=concept_kind)
+        for v in candidates
+    ]
+    items = [g for g in grounded if g is not None]
+    return items or None
+
+
+def _validate_extract_field(key: str, value, vocab: dict[str, frozenset[str]], *,
+                            city_slug: str | None = None):
     """One field's deterministic validation. Returns the cleaned value, or None if nothing about
-    it survives validation (caller drops the key entirely in that case)."""
+    it survives validation (caller drops the key entirely in that case).
+
+    ``city_slug``, when given, scopes attraction-type grounding to one city's own catalog casing
+    (``_attraction_type_vocab``'s docstring explains why: cities occasionally disagree on casing
+    for the same type string). Optional and keyword-only so existing 3-positional-arg callers
+    (unit tests, ``validate_extract_families`` without a query) are unaffected."""
     if key == "free_attractions_only":
         return bool(value) if isinstance(value, bool) else None
     if key == "room_type":
@@ -1133,13 +1215,19 @@ def _validate_extract_field(key: str, value, vocab: dict[str, frozenset[str]]):
             return value.strip().lower()
         return None
     if key in _EXTRACT_CUISINE_FIELDS or key in _EXTRACT_HOTEL_FEATURE_FIELDS:
-        pool = vocab["cuisine"] if key in _EXTRACT_CUISINE_FIELDS else vocab["hotel_feature"]
-        candidates = value if isinstance(value, list) else [value]
-        items = [
-            v.strip() for v in candidates
-            if isinstance(v, str) and v.strip().lower() in pool
-        ]
-        return items or None
+        is_cuisine = key in _EXTRACT_CUISINE_FIELDS
+        pool = vocab["cuisine"] if is_cuisine else vocab["hotel_feature"]
+        canonical = vocab.get("cuisine_canonical" if is_cuisine else "hotel_feature_canonical", {})
+        return _ground_type_values(
+            value, pool=pool, canonical=canonical,
+            concept_kind="restaurant" if is_cuisine else "accommodation",
+        )
+    if key in _EXTRACT_ATTRACTION_TYPE_FIELDS:
+        type_vocab = _attraction_type_vocab(city_slug)  # {normalized: canonical CSV literal}
+        pool = frozenset(type_vocab)
+        return _ground_type_values(
+            value, pool=pool, canonical=type_vocab, concept_kind="attraction",
+        )
     if key in _LLM_PARSE_LIST_KEYS:
         if not isinstance(value, list):
             return None
@@ -1154,11 +1242,16 @@ def _validate_extract_field(key: str, value, vocab: dict[str, frozenset[str]]):
     return None
 
 
-def validate_extract_families(raw_families, *, vocab: dict[str, frozenset[str]] | None = None) -> dict:
+def validate_extract_families(raw_families, *, vocab: dict[str, frozenset[str]] | None = None,
+                              city_slug: str | None = None) -> dict:
     """Deterministic validation layer for an LLM extraction response's ``families`` object: key
     whitelist (``_LLM_PARSE_ALLOWED_KEYS``) + type checks (the existing LIST/DICT/SCALAR key
-    sets) + closed-vocabulary checks for room_type/cuisine/hotel-feature fields. Never raises;
-    an invalid or unrecognized value is dropped, not guessed at."""
+    sets) + closed-vocabulary grounding for room_type/cuisine/hotel-feature/attraction-type
+    fields (P16). Never raises; an invalid or unrecognized value is dropped, not guessed at.
+
+    ``city_slug`` scopes attraction-type grounding (see ``_validate_extract_field``); omit it to
+    fall back to the cross-city vocabulary (``llm_extract_stub`` always supplies it when the
+    query's ``target_city`` resolves)."""
     if not isinstance(raw_families, dict):
         return {}
     vocab = vocab if vocab is not None else _extract_vocab()
@@ -1166,7 +1259,7 @@ def validate_extract_families(raw_families, *, vocab: dict[str, frozenset[str]] 
     for key, value in raw_families.items():
         if key not in _LLM_PARSE_ALLOWED_KEYS:
             continue
-        cleaned = _validate_extract_field(key, value, vocab)
+        cleaned = _validate_extract_field(key, value, vocab, city_slug=city_slug)
         if cleaned is not None:
             validated[key] = cleaned
     return validated
@@ -1286,7 +1379,9 @@ def llm_extract_stub(ir: ParsedIR, query: dict, llm_client, *, fill_only: bool =
     response = llm_client.complete(prompt, cache_key=cache_key)
     payload = _parse_llm_json_blob(response)
 
-    validated = validate_extract_families(payload.get("families"))
+    validated = validate_extract_families(
+        payload.get("families"), city_slug=_city_slug(query.get("target_city")),
+    )
 
     updated = ParsedIR(
         raw=dict(ir.raw),
