@@ -148,10 +148,9 @@ whole-run solve on either host; queue behind them.
 
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **R24** | does a query above `300 s` ever flip? the regime no row has ever measured | nothing; per-query ladder first | ~1 h |
 | R20 | does fill-only LLM extraction plus value grounding convert recall into score? | [P16](tpc_phase2_roadmap.md#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | ~$0 + ~1 h |
 | R21 | does spending the unspent envelope on all queries buy preference points? | [P17](tpc_phase2_roadmap.md#p17--stop-trusting-our-own-satisfied-verdict) | ~1.4 h |
-| R9 | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#work-items) + P2 | ~5 h |
+| R9 | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#work-items) + P2 — **closed by R24, see below** | n/a, closed |
 
 R19 closed GREEN ([closed queue](#the-closed-queue-r1r19)) — familiar-100 confirmed unaffected by the
 phrasing fix, reproducing R17 on every metric. **R22 ran 2026-08-07, first post-P15, GREEN** (see
@@ -160,10 +159,12 @@ it stays off this table because it is a recurring instrument, not a one-shot ite
 the queue at the next parser change. **R23 closed 2026-08-07** (see
 [its own section](#r23--what-else-separates-the-held-out-set-closed-2026-08-07-static-1-h)): kill
 criterion did not fire; top finding is a fully-explained, phrasing-conditional `cuisine_preference`
-extraction blackout on free prose, worth its own follow-up item. R20 stays blocked on unlanded
-Implementation work; **R24 is the item this workstream can run without waiting on another lane.**
+extraction blackout on free prose, worth its own follow-up item. **R24 closed 2026-08-07** (see
+below): zero flips at `900 s`, plans byte-identical to `300 s` — land P4 as a correctness fix only,
+close P5. R20 stays blocked on unlanded Implementation work; R21 and R9(closed) are what remains open
+on this table, both blocked on Implementation landings.
 
-### R24 — does a query above 300 s ever flip? (the owner's question) *(open)*
+### R24 — does a query above 300 s ever flip? (the owner's question) *(closed 2026-08-07)*
 
 **Registered 2026-08-07 because the owner asked whether more time and fresh seeds could fix failing
 constraints, and the honest answer was that we had never tested it.** Across all 25 recorded rows the
@@ -203,6 +204,29 @@ share of clause failures are plausibly clauses we never extracted, and search ca
 that is not in the objective. So a positive ladder result on familiar-100 does **not** imply the same
 gain held-out, and a negative one does not close the question for a *correctly extracted* constraint
 set. This row measures the solver, not the extractor.
+
+**Result** ([`20260807_r24_budget_ladder`](../results/phase2_baselines/screens/20260807_r24_budget_ladder/README.md),
+`git_sha 54be4514`): **`0` flips at `900 s`, and plans are byte-identical to `300 s` modulo the timing
+field** — stronger than "no flips," the solver does not use the extra budget at all.
+`solve_sec` mean `107.8 s` (`300 s` cap) vs `107.4 s` (`900 s` cap), max observed `192 s` either way,
+`0/30` timeouts at both budgets, `overall_true` moved by exactly `0.0000` on every one of the 30
+previously-failing queries. **The `2700 s` arm was not run** — both the doc's own decision table above
+and the pre-registered gate agree it only changes the reading if `900 s` shows flips, and it showed
+zero with byte-identical output, so a `~7.5 h` arm would almost certainly reproduce the same fixed
+point. Per the table: **land P4 as a correctness fix only, and close P5 with this row as the
+evidence** — done here as a recommendation for the Implementation workstream, not landed by this
+Evaluation-workstream row.
+
+**Two methodology notes for whoever reruns this.** (1) The failing subset was derived at **zero solve
+cost** by re-scoring R19's own already-written plans rather than guessing — this independently
+reproduced R19's official `FPR 44.0` exactly (`44/100` passing), which is worth checking first on any
+rerun as a sanity gate. (2) This row calls `agent_env/scripts/solve_phase2.py --budget-sec <B>`
+directly per arm, **not** the `phase2_quick_eval.py --off 0 --on 0` form sketched above: that form
+requires a `--flag`, and an inert flag name still runs two literally-identical arms (baseline and
+candidate configured the same way), doubling wall clock for zero signal — and a *real* promoted flag
+set to `off 0`/`on 0` would deviate from the shipped default in both arms. Calling the per-query
+runner directly, once per budget with a distinct `--method` per arm (avoiding the resume/directory
+collision documented in `_run_whole_run`'s docstring), measures the same thing without either problem.
 
 ### R23 — what else separates the held-out set? *(closed 2026-08-07, static, ~1 h)*
 
@@ -309,7 +333,7 @@ above). Read this row as **per-pass improvement counts**, not as a total: the qu
 re-polishing queries the scheduler believes are finished converts idle time into preference points.
 Acceptance: `overall` up with `FPR` not down. Expected small — preference terms are capped at `FPR`.
 
-### R9 — the falsification run for "spend the idle envelope" *(needs P5)*
+### R9 — the falsification run for "spend the idle envelope" *(closed 2026-08-07 by R24, moot)*
 
 ```bash
 TPC_P2_EXPLORE=1 .venv/bin/python scripts/phase2_full_run.py \
@@ -321,6 +345,12 @@ the question is whether that accumulates over the ~10 passes the idle envelope a
 draws give `5–10` flips (`+1.7..+4.2` overall, promoting P5); an exhausted reachable set gives `1–2`
 and closes the "we aren't using our time" question for good. Demoted below R20–R22: it re-attacks the
 *search*, and the evidence now says the binding limit is *coverage*.
+
+**Closed without running, 2026-08-07.** R9's premise was P5 landing; [R24](#r24--does-a-query-above-300-s-ever-flip-the-owners-question-open)
+found zero flips and byte-identical plans between `300 s` and `900 s` on the failing subset, which per
+R24's own decision table closes P5 rather than landing it. With P5 closed, spending a `5 h` slot to
+measure how *many* flips accumulate over more passes is moot — R24 already shows the accumulation rate
+is `0` per pass, not `~1/68`.
 
 ### What not to spend a slot on
 

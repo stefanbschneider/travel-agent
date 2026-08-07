@@ -421,6 +421,12 @@ explicit operator override, since the per-query development gate depends on it.
 measurement. Read the ordering argument in [P5](#p5--spend-the-idle-envelope-on-fresh-seeds) before
 spending an eval slot: on the held-out distribution, coverage plausibly binds before search does.
 
+**R24 measured this, 2026-08-07** (Evaluation workstream row, not landed here): `0` flips at `900 s`
+against the failing subset, plans byte-identical to `300 s` modulo timing. Per R24's own decision
+table this reads as "land P4 as a correctness fix only" — a wiring/documentation fix, not a search-gain
+fix — since the extra budget was never used at all in the tested range. Implementation still owns
+whether/when to land it.
+
 ### P5 — spend the idle envelope on fresh seeds
 
 **Correction, 2026-08-07: the previous day's demotion was justified with the wrong reason, and that note
@@ -440,8 +446,11 @@ descending strength:
    a few thousand combinations sampled independently. That is what continuing the restart loop already
    does.
 3. **Current measurement.** Post-P1 the repair pass gives ~50 failing queries the full `300 s` and
-   improves `1` (R8 `1/54`, R17 `1/50`); pre-P1 it was `2/66`. Not a pre-P1 artifact — but see P4: `300 s`
-   is the *only* budget this has ever been measured at.
+   improves `1` (R8 `1/54`, R17 `1/50`); pre-P1 it was `2/66`. Not a pre-P1 artifact — and no longer an
+   open question: [R24](tpc_phase2_eval.md#r24--does-a-query-above-300-s-ever-flip-the-owners-question-open)
+   (2026-08-07) tested `300 s` against `900 s` directly on the failing subset and found `0` flips, plans
+   byte-identical modulo timing — the search does not even attempt to use budget past its own fixed
+   point (`~65–190 s`), so raising the cap further would not change this argument's conclusion.
 
 **The owner's Phase 1 experience is real, and it points at the right variant.** Long overnight runs did
 fix hard queries there, under two conditions that do not hold now: oracle constraints were available, so
