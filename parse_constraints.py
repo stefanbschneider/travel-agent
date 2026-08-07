@@ -641,6 +641,142 @@ def parse_required_attractions(text):
     return names if names else None
 
 
+# --- required_attraction_types: free-prose fallback -------------------------
+#
+# P19 (docs/tpc_phase2_roadmap.md#p19--find-the-unidentified-half-of-the-gap) ranked
+# `required_attraction_types` as the single largest family-recall residual (160 released
+# instances, 63.75% missed) -- almost entirely because every pattern above requires a "visit"/
+# "want to visit" verb immediately adjacent to a type phrase, while free prose usually states the
+# same requirement as a bare interest verb ("are interested in cultural attractions", "would like
+# to take walks in parks", "We like Hunan cuisine"-shaped sentences with no "visit X" clause at
+# all). This is a **fallback only**: it runs exclusively when every pattern above found nothing,
+# so it can only turn a `missing` family into `matched`/`wrong_value` -- it never overrides a value
+# an anchored pattern already found, and it never runs on familiar-100 (which always populates this
+# family through the "Include the following attraction types: X" template above), so the
+# familiar-100 floor cannot move by construction (2026-08-07, P20).
+#
+# Every value below is the canonical English string `chinatravel/symbol_verification/concept_func.py`
+# actually returns (`normalize_concept_value` in `concept_labels.py`, cross-checked against
+# `chinatravel/agent/nesy_agent/ast_checker_en.py`'s 13-value vocabulary) -- not the varying
+# casing free text itself uses, since `parsed_verifier._match_text` compares case-insensitively.
+# Ordered most-specific-first so e.g. "cultural and historical sites" is not swallowed by the
+# bare "historical site" entry below it, and "amusement park" by the bare "park" entry.
+# "university campus(es)" is deliberately anchored -- a bare "universit(y|ies)" alternative was
+# tried and measured spurious on hf_human ("We are both university students", "tour universities
+# like Shanghai Jiao Tong University, Fudan University, and Tongji University" -- the latter names
+# specific universities and the oracle records only `required_attractions`, no type clause) -- so
+# the bare form is dropped even though it costs one recoverable hf_easy instance ("visit some
+# universities") (2026-08-07, P20 screen).
+_ATTRACTION_TYPE_FREE_PROSE_VALUES = [
+    (r"cultural\s+and\s+historical\s+(?:attractions?|sites?)", "Cultural Landscape"),
+    (r"(?:historical\s+revolutionary|revolutionary)\s+sites?", "red tourism sites"),
+    (r"amusement\s+parks?|theme\s+parks?", "amusement park/sports entertainment"),
+    (r"sports\s+(?:and\s+)?entertainment\s+venues?", "amusement park/sports entertainment"),
+    (r"garden\s+attractions?|gardens?\b", "Garden"),
+    (r"natural\s+(?:landscapes?|scenery|attractions?)", "natural scenery"),
+    (r"university\s+campus(?:es)?", "university campus"),
+    (r"museums?\s+or\s+memorials?|memorial\s+halls?|museums?\b", "Museum/Memorial Hall"),
+    (r"commercial\s+districts?", "commercial district"),
+    (r"cultural\s+attractions?", "Cultural Tourism Area"),
+    (r"historical\s+sites?", "historical site"),
+    (r"parks?\b", "park"),
+]
+
+# A deliberately bare trigger-verb set (not "want/wish/hope to X", which the free-prose evidence
+# routinely drops -- "would like to [stay in a room ... and] visit garden attractions" has no
+# adjacent "to visit"). Precision is carried by `_negated_before` and `_looks_like_generic_mention`
+# below, not by a narrow trigger.
+_ATTRACTION_TYPE_FREE_PROSE_TRIGGER = re.compile(
+    r"\b(?:visit(?:ing)?|see|explor(?:e|ing)|tour(?:ing)?|interested\s+in|enjoy(?:ing)?|"
+    r"go\s+to|go\s+shopping\s+in|take\s+walks?\s+in|spend\s+(?:some\s+)?(?:leisure\s+)?time\s+in)\b",
+    re.I,
+)
+
+_FREE_PROSE_WINDOW = 80
+
+
+def _looks_like_generic_mention(text, pos):
+    """False when the nearest real word before ``pos`` looks like part of a capitalized
+    proper-noun run (a POI name, e.g. "Three Gorges Museum", "Administrator's Garden") rather
+    than a bare category word ("some museums", "local university campuses"). Cheap and
+    conservative, not a full NER pass -- but skips past bare punctuation/dash/paren separators
+    to the nearest actual word rather than checking only the literal preceding token, since a POI
+    name routinely appends a type word after " - " or "(...)" (familiar-100: "Sichuan University
+    (Wangjiang Campus) - Museum", whose immediately-preceding token is just "-")."""
+    words = re.findall(r"[A-Za-z][\w'&.]*", text[max(0, pos - 60):pos])
+    if not words:
+        return True
+    prev = words[-1]
+    if prev[0].isupper() and prev.lower() not in {"i"}:
+        return False
+    return True
+
+
+_EXAMPLE_MARKER_BEFORE = re.compile(r"(?:such\s+as|e\.g\.,?|for\s+example)\s*$", re.I)
+
+
+def _preceded_by_example_marker(text, pos, window=15):
+    """True when the text immediately before ``pos`` introduces an example ("such as X", "e.g.
+    X"), not a stated requirement -- "try new things, such as Southeast Asian cuisine" is not a
+    cuisine_preference clause; "Southeast Asian cuisine" is offered as one example of "new
+    things", not itself the value asked for (P20's own worked case)."""
+    return bool(_EXAMPLE_MARKER_BEFORE.search(text[max(0, pos - window):pos]))
+
+
+def _free_prose_type_mentions(text, trigger_re, value_table):
+    """Shared scan for both `required_attraction_types` and `cuisine_preference`'s free-prose
+    fallback: for each trigger occurrence, search a bounded window after it against every entry of
+    `value_table` (most-specific-first; a later entry cannot re-match a span an earlier, more
+    specific entry already claimed), skipping negated, proper-noun-looking and example-introduced
+    matches. Returns canonical values in first-found order, deduplicated across the whole text.
+
+    Two or more *distinct* values found within the *same trigger's window* with a bare " or "
+    between their span is an OR-alternative this flat AND-list field cannot express (P20: "never
+    flatten 'A or B' into two simultaneous requirements") -- that window's contribution is dropped
+    entirely rather than guessed, since a dropped extraction stays `missing` (no regression) while
+    a wrong AND-flattening risks making a satisfiable query infeasible (P15's precision trap). The
+    OR check is scoped per-window, not across the whole text, so two *separate* sentences each
+    stating one value (no "or" involved) still both contribute."""
+    found = []
+    for tm in trigger_re.finditer(text):
+        if _negated_before(text, tm.start()):
+            continue
+        window_start = tm.end()
+        window = text[window_start:window_start + _FREE_PROSE_WINDOW]
+        window_found = []  # [(canonical, abs_start, abs_end), ...] for this trigger's window only
+        consumed = []  # spans already claimed by a more specific (earlier-in-table) entry
+        for phrase_re, canonical in value_table:
+            for vm in re.finditer(phrase_re, window, re.I):
+                abs_start = window_start + vm.start()
+                abs_end = window_start + vm.end()
+                if any(abs_start < ce and cs < abs_end for cs, ce in consumed):
+                    continue  # overlaps a more specific match already accepted in this window
+                # The window can run past a *later* negated clause the trigger itself isn't part
+                # of ("visit X and do not want to visit any Museum...": the first, non-negated
+                # "visit" trigger's 80-char window still reaches the second clause's "Museum").
+                # Re-checking negation at the value's own position (not just the trigger's) is
+                # what actually excludes it.
+                if _negated_before(text, abs_start):
+                    continue
+                if not _looks_like_generic_mention(text, abs_start):
+                    continue
+                if _preceded_by_example_marker(text, abs_start):
+                    continue
+                consumed.append((abs_start, abs_end))
+                if canonical not in [c for c, _, _ in window_found]:
+                    window_found.append((canonical, abs_start, abs_end))
+                break
+        if len(window_found) > 1:
+            outer_start = min(s for _, s, _ in window_found)
+            outer_end = max(e for _, _, e in window_found)
+            if re.search(r"\bor\b", text[outer_start:outer_end], re.I):
+                continue
+        for canonical, _, _ in window_found:
+            if canonical not in found:
+                found.append(canonical)
+    return found
+
+
 def parse_required_attraction_types(text):
     """Extract required attraction types."""
     types = []
@@ -711,6 +847,12 @@ def _finish_required_attraction_types(text, types):
     for t in _the_following_items(text, r"attraction\s+types?") or []:
         if t and t not in types:
             types.append(t)
+    if not types:
+        # Free-prose fallback (P20, see the block above `parse_required_attraction_types`): only
+        # when neither the generic "visit X" scan nor the verbatim template above found anything.
+        types = _free_prose_type_mentions(
+            text, _ATTRACTION_TYPE_FREE_PROSE_TRIGGER, _ATTRACTION_TYPE_FREE_PROSE_VALUES
+        )
     return types if types else None
 
 
@@ -1200,10 +1342,88 @@ def parse_excluded_restaurants(text):
     return names if names else None
 
 
+# The four "restaurant type(s)"/"type(s) of restaurant(s)" list patterns below are OR-arms of a
+# numbered requirements block ("1. ... 2. ...") in local/HF free prose, and the released generator
+# does not always end the first arm with a period before the next arm's digit -- "Cantonese cuisine
+# 2. The total budget..." has no sentence boundary between the value and "2.". A bare `.+?` scanning
+# for the next period/semicolon over-captures into the next arm's leading number. This lookahead
+# terminates the capture at that boundary without needing a period there; deliberately local to
+# these cuisine-list patterns rather than added to the shared `_LIST_TERM` (2026-08-07, P20).
+_NUMBERED_ITEM_BOUNDARY = r"(?=\s*\d+\.\s)"
+_CUISINE_LIST_TERM = r"(?:\.|;|" + _NUMBERED_ITEM_BOUNDARY + r"|$)"
+
+
+# --- cuisine_preference: free-prose fallback ---------------------------------
+#
+# P19 ranked `cuisine_preference` the second-largest family-recall residual (127 released
+# instances, 78.74% missed) -- every pattern above requires a "restaurant(s)"/"restaurant type(s)"
+# noun phrase, while free prose almost always states the same requirement as a bare verb + value
+# ("want to eat hotpot", "try Sichuan cuisine", "We like Hunan cuisine") with no "restaurant" word
+# anywhere in the sentence. Fallback-only, same contract as the attraction-type fallback above:
+# only runs when every pattern above found nothing, so it can only turn a `missing` family into
+# `matched`/`wrong_value`, and it never runs on familiar-100 (always populated through the
+# "Include the following restaurant types: X" template), so the familiar-100 floor cannot move by
+# construction (2026-08-07, P20).
+#
+# Values are `chinatravel/agent/nesy_agent/ast_checker_en.py`'s 41-value cuisine vocabulary
+# (cross-checked against `concept_labels.ENGLISH_CONCEPT_VALUE_ALIASES["restaurant"]` for the few
+# that need normalizing, e.g. "cafe" -> "coffee shop"). Several plausible free-prose values are
+# deliberately excluded, not merely unconsidered: "local specialties"/"local cuisine"/"local
+# specialty dishes" name no cuisine at all in the sentence (the oracle value is derived from the
+# destination city, which this file has no access to -- CLAUDE.md's no-oracle-leakage invariant
+# would be violated by guessing it); "such as X" introduces an example, not a stated requirement;
+# a single observed "Huaiyang cuisine" -> Huizhou cuisine instance looks like a released-data
+# translation quirk rather than a general synonym (Huaiyang and Huizhou are different real
+# cuisines) and is not trustworthy from one instance; "sweet foods and bread" and "go
+# drinking"/"drinking" are too ambiguous a signal (the former one instance, the latter easily
+# confused with unrelated "drinks"/"drinking water" mentions) to anchor safely.
+_CUISINE_FREE_PROSE_VALUES = [
+    (r"hot\s*pot", "Hot pot"),
+    (r"sichuan\s+cuisine", "Sichuan cuisine"),
+    (r"cantonese\s+cuisine", "Cantonese cuisine"),
+    (r"hubei\s+cuisine", "Hubei cuisine"),
+    (r"xinjiang\s+cuisine", "Xinjiang cuisine"),
+    (r"hunan\s+cuisine", "Hunan cuisine"),
+    (r"beijing\s+cuisine", "Beijing cuisine"),
+    (r"korean\s+cuisine", "Korean cuisine"),
+    (r"japanese\s+cuisine", "Japanese cuisine"),
+    (r"jiangsu(?:\s+and\s+|-)zhejiang\s+cuisine", "Jiangsu-Zhejiang cuisine"),
+    (r"southeast\s+asian\s+cuisine", "Southeast Asian cuisine"),
+    (r"northeastern\s+chinese\s+cuisine", "Northeastern Chinese cuisine"),
+    (r"western\s+(?:cuisine|food)", "Western cuisine"),
+    (r"halal\s+(?:cuisine|food)", "Halal cuisine"),
+    # "simple meals" is checked against every set's oracle before shipping: it fires zero
+    # spurious cuisine_preference extractions on all five non-familiar sets (2026-08-07 P20
+    # screen), unlike the bare "universit(y|ies)" alternative this file dropped for the same
+    # reason. Kept, unlike that one, but flagged here in case held-out data disagrees.
+    (r"fast\s+food(?:\s+and\s+(?:simple|casual)\s+meals)?|simple\s+meals", "Fast food and casual dining"),
+    (r"seafood", "Seafood"),
+    (r"teahouses?", "Teahouse"),
+    (r"fusion\s+cuisines?", "fusion cuisine"),
+    (r"buffet", "buffet"),
+    (r"snacks?", "Snacks"),
+]
+
+# Same rationale as `_ATTRACTION_TYPE_FREE_PROSE_TRIGGER`: a bare verb set, since the free-prose
+# evidence routinely separates "want/would like to" from the actual food verb ("would like to
+# stay in a room with a large bed, travel by train, and enjoy Jiangsu and Zhejiang cuisine"), plus
+# a bare "We like X"/"We enjoy X" shape that has no "eat/try" verb at all.
+_CUISINE_FREE_PROSE_TRIGGER = re.compile(
+    r"\b(?:eat(?:ing)?|try(?:ing)?|taste|have|like|enjoy(?:ing)?)\b", re.I
+)
+
+
 def parse_cuisine_preference(text):
     """Extract cuisine/restaurant type preference (positive only)."""
     cuisines = []
-    _STOP = {"the", "following", "these", "the following", "of the type", "a"}
+    # A closed set of list lead-in fillers, not a stoplist over cuisine values: the "want to try X
+    # restaurant" pattern below is a non-greedy scan for the *first* " restaurant" it can reach, so
+    # on "want to try one of the following restaurant types: X" it stops at the lead-in words
+    # instead of the real value (2026-08-07, P20 -- the roadmap's own cited example,
+    # `["one of the following", "Japanese cuisine"]`). The list-pattern below this one still
+    # extracts the real value from the same sentence; this only drops the spurious extra entry.
+    _STOP = {"the", "following", "these", "the following", "of the type", "a",
+             "one of the following", "one of these", "any of the following", "any of these"}
     neg_prefix = re.compile(r"(?:do\s+not|don't|didn't|does\s+not|not|avoid|never|no)\s+$", re.I)
     # "want to try a Hot pot restaurant"
     m = re.search(r"(?:want|wish|hope)\s+to\s+try\s+(?:a\s+)?(.+?)\s+restaurant", text, re.I)
@@ -1213,7 +1433,7 @@ def parse_cuisine_preference(text):
             cuisines.append(cuisine)
 
     # "try one of these restaurant types: Beijing cuisine, Barbecue, or Japanese cuisine"
-    m = re.search(r"(?:try|visit)\s+(?:one\s+of\s+)?(?:these|the\s+following)\s+restaurant\s+types?[:\s]+(.+?)(?:\.|;|$)", text, re.I)
+    m = re.search(r"(?:try|visit)\s+(?:one\s+of\s+)?(?:these|the\s+following)\s+restaurant\s+types?[:\s]+(.+?)" + _CUISINE_LIST_TERM, text, re.I)
     if m and not _negated_before(text, m.start()):
         chunk = m.group(1).strip().rstrip(".")
         parts = re.split(r",\s*(?:or\s+)?|\s+or\s+", chunk)
@@ -1224,8 +1444,11 @@ def parse_cuisine_preference(text):
 
     # "try the following types of restaurants: Hot pot and Western cuisine". Negated phrasing
     # ("do not want to try the following types of restaurants: X") maps to excluded_cuisine_types,
-    # not here -- same guard as the "restaurants of type" pattern below.
-    m = re.search(r"(?:try|visit)\s+(?:the\s+following\s+)?types?\s+of\s+restaurants?[:\s]+(.+?)(?:\.|;|$)", text, re.I)
+    # not here -- same guard as the "restaurants of type" pattern below. "one of " is optional
+    # before "the following" (mirrors the sibling pattern above) so "try one of the following types
+    # of restaurants: Hot pot" -- the reversed word order of the same lead-in -- also matches
+    # (2026-08-07, P20).
+    m = re.search(r"(?:try|visit)\s+(?:one\s+of\s+)?(?:the\s+following\s+)?types?\s+of\s+restaurants?[:\s]+(.+?)" + _CUISINE_LIST_TERM, text, re.I)
     if m and not _negated_before(text, m.start()):
         chunk = m.group(1).strip().rstrip(".")
         parts = re.split(r"\s+and\s+|,\s*(?:or\s+)?|\s+or\s+", chunk)
@@ -1240,7 +1463,7 @@ def parse_cuisine_preference(text):
     # ("do not want to try restaurants of the type X") maps to excluded_cuisine_types, not here --
     # use the wider lookback (_negated_before) since "restaurants" isn't adjacent to "do not".
     m = re.search(
-        r"restaurants?\s+of\s+(?:the\s+)?(?:following\s+)?types?[:\s]+(.+?)(?:\.|;|$)", text, re.I
+        r"restaurants?\s+of\s+(?:the\s+)?(?:following\s+)?types?[:\s]+(.+?)" + _CUISINE_LIST_TERM, text, re.I
     )
     if m and not _negated_before(text, m.start()):
         chunk = m.group(1).strip().rstrip(".")
@@ -1267,6 +1490,11 @@ def parse_cuisine_preference(text):
     ) or []:
         if c and c not in cuisines:
             cuisines.append(c)
+
+    if not cuisines:
+        # Free-prose fallback (P20, see the block above this function): only when every anchored
+        # pattern above found nothing.
+        cuisines = _free_prose_type_mentions(text, _CUISINE_FREE_PROSE_TRIGGER, _CUISINE_FREE_PROSE_VALUES)
 
     if len(cuisines) == 1:
         return cuisines[0]
