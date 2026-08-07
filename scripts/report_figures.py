@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate every figure in the technical report, from committed artefacts only.
+"""Generate every figure in the technical report, from committed artifacts only.
 
 The owner's review of report v1 asked for two things this script provides:
 
@@ -40,7 +40,7 @@ OUT = REPO / "report" / "figures"
 
 #: Committed whole-run rows, by the label the report uses for them.
 ROW_SOURCES: dict[str, str] = {
-    "familiar_100": "20260806T115309Z.json",  # R17, the ship candidate
+    "familiar_100": "20260807T152009Z.json",  # R28, current-main baseline
     "local_released_150": "20260806T132917Z.json",  # R18
     "pre_window_anchor": "20260805T081535Z.json",  # R7, one of three bit-identical repeats
     "window_anchor": "20260805T123142Z.json",  # R8
@@ -107,7 +107,7 @@ def load_row(key: str) -> dict[str, Any]:
 
 
 def check_sources() -> None:
-    """Fail loudly if any cited artefact is missing, before plotting anything."""
+    """Fail loudly if any cited artifact is missing, before plotting anything."""
     for key in ROW_SOURCES:
         row = load_row(key)
         scores = row["official_scores"]
@@ -199,16 +199,16 @@ def figure_architecture(path: Path) -> None:
     y = 17.0
     h = 9.5
     stages = [
-        (0.0, 13.0, "query text\n(no oracle\nfields)", "#ffffff", "#888888"),
-        (16.0, 13.0, "extract\nconstraints", solver_fc, solver_ec),
-        (33.0, 14.0, "normalise\nbranch-local\nvariants", solver_fc, solver_ec),
-        (50.0, 14.0, "solve\nbuild +\nrestarts", solver_fc, solver_ec),
+        (0.0, 13.0, '"3 days in Suzhou\nGarden 9--11\nbudget <= 3000"', "#ffffff", "#888888"),
+        (16.0, 13.0, "parsed constraints\ncity=Suzhou\nbudget<=3000\nGarden@9--11", solver_fc, solver_ec),
+        (33.0, 14.0, "normalize\nresolve POI\nkeep OR branches", solver_fc, solver_ec),
+        (50.0, 14.0, "construct itinerary\nbuild · CP-SAT\nrepair · restarts", solver_fc, solver_ec),
     ]
     for x, w, label, fc, ec in stages:
-        box(x, y, w, h, label, fc, ec, fontsize=7.0)
+        box(x, y, w, h, label, fc, ec, fontsize=6.2)
     box(67.0, y, 18.0, h, "acceptance gate\nschema\ncommonsense · logic",
         gate_fc, gate_ec, bold=True, fontsize=6.5)
-    box(88.0, y, 11.0, h, "emit\nplan", "#ffffff", "#888888", fontsize=7.0)
+    box(88.0, y, 11.0, h, "Day 1\n09:00 Garden\n12:00 lunch\n...", "#ffffff", "#888888", fontsize=6.2)
 
     for x1, x2 in [(13.0, 16.0), (29.0, 33.0), (47.0, 50.0), (64.0, 67.0), (85.0, 88.0)]:
         arrow(x1, y + h / 2, x2, y + h / 2)
@@ -237,8 +237,8 @@ def figure_architecture(path: Path) -> None:
     ax.text(
         0.0,
         0.2,
-        "The model is absent from this diagram by measurement, not by omission: it acts in the "
-        "loop that writes this pipeline, not the loop that runs it.",
+        "AI roles: coding agents built the pipeline; optional Qwen parsing reads language; "
+        "the deterministic solver and verifier own the itinerary.",
         fontsize=6.8,
         color="#555555",
         style="italic",
@@ -456,7 +456,7 @@ def main() -> int:
     parser.add_argument(
         "--check",
         action="store_true",
-        help="verify every cited artefact exists and print its value, without plotting",
+        help="verify every cited artifact exists and print its value, without plotting",
     )
     parser.add_argument("--out-dir", type=Path, default=OUT)
     args = parser.parse_args()
