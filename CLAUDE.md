@@ -36,7 +36,7 @@ the team's first official submission under the 2026-08-04 resubmission reset, so
 remains**, due with the technical report on 2026-08-10, 24:00 Beijing Time.
 
 **`33.2473` is roughly half the `64.17` the same code scores locally on familiar-100
-([R17](docs/tpc_phase2_eval.md#the-closed-queue-r1r18), `git_sha efbfea96`), and closing that gap is
+([R17](docs/tpc_phase2_eval.md#the-closed-queue-r1r19), `git_sha efbfea96`), and closing that gap is
 now the work.** The largest identified cause is measured, not suspected: our constraint extraction has
 **zero** clause-level gaps on familiar-100 — the numbered-template split it was built against — and
 **12–29 %** on every differently-phrased released set, so we optimized against the one register we were
