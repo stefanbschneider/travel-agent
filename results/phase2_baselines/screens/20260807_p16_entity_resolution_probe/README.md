@@ -5,9 +5,11 @@
 stays `False`, `backend` stays `none` — pinned by
 `tests/phase2/test_normalize_extract_fill.py::test_flags_from_env_accepts_extract_fill_and_still_defaults_to_audit`).
 Nothing here is a `full_runs/` row. Model: `Qwen/Qwen3.6-27B` on DeepInfra (the organizers'
-evaluation checkpoint), `temperature 0`. Spend this screen added: **`$0.0758`** live (the
+evaluation checkpoint), `temperature 0`. Spend: **`$0.0758`** live for the parse-level probes (the
 `local_released_150` extraction cache was cold on this machine — see [§0](#0-why-live-spend-was-needed-here)),
-against the user-authorized `~$3` remaining credit; every re-run after the first is a `$0` cache hit.
+plus untracked but small spend from the [§4](#4-e2e-ab) e2e A/B's per-query parse calls (60 live
+calls across both registers' candidate arms, one per query, at the same per-call cost measured in
+§0 — on the order of `$0.03`), against the user-authorized `~$3` remaining credit.
 
 ## The question
 
@@ -167,7 +169,97 @@ flag off vs on): see [§4](#4-e2e-ab).
 
 ## 4. e2e A/B
 
-<!-- filled in after the background run in this session completed -->
+Tool: `scripts/phase2_quick_eval.py --mode end-to-end` for familiar-100 (built-in `--split-set`
+support); the direct `materialize_hf_split.py` → `solve_phase2.py` → `eval_tpc.py` pipeline for
+`hf_medium` (the tool has no arbitrary-split flag). Both flag `TPC_P2_LLM_PARSE` off vs on, with
+`TPC_P2_LLM_PARSE_MODE=extract_fill,TPC_P2_ENTITY_RESOLUTION=1` shared by both arms (isolating just
+this branch's two fixes together, since entity resolution alone was already shown in §1 to help and
+is the intended shipped composition) — `n=30`, `budget_sec=90`, same seed. Materialized splits and
+per-arm result directories were deleted after scoring, matching the 2026-08-06 screen's own
+practice.
+
+**Two measurement bugs found and fixed while running this, both worth recording because they would
+have silently produced a wrong verdict:**
+
+1. **The LLM stage silently no-op'd on the first attempt.** At `budget_sec=90`,
+   `budget.py`'s `PARSE_FRAC` gives a parse-stage deadline of `~22.5 s`, below the LLM client's
+   default `30 s` timeout — `parse_to_ir`'s deadline check (`chinatravel/agent/phase2/normalize.py`)
+   then skips every call rather than starting one it cannot finish in time. The first candidate-arm
+   run showed `llm_parse fired 0/skipped 30/errored 0` and a RED verdict that was actually measuring
+   "entity resolution alone, applied to the deterministic parse's own output" — not this branch's
+   grounding fix at all. Fixed per CLAUDE.md's own documented instruction: set
+   `TPC_P2_LLM_TIMEOUT_SEC` below the parse slice (`15 s` here).
+2. **A killed run left stale results that a later run's `--resume` silently reused.** After fixing
+   (1), an early interrupted rerun was killed (`pkill -9`) mid-flight to correct it; `solve_phase2.py
+   --resume` and `phase2_quick_eval.py`'s own `fresh=True` per-arm cleanup both scope to the query
+   set, not to "this specific process invocation," so the next run's baseline arm silently picked up
+   the *previous, killed run's candidate-arm* result files still on disk under the same shared
+   `results/<method>/`/`agent_env/runs/<method>/` directories (end-to-end mode does not separate
+   arms into distinct method directories the way whole-run mode does). The symptom was a "baseline"
+   reading identical to the prior run's candidate numbers. Fixed by deleting both directories before
+   the next attempt and letting the run finish uninterrupted. **Operational lesson for anyone
+   reproducing this**: never `pkill -9` a `phase2_quick_eval.py --mode end-to-end` run mid-arm;
+   either let it finish or wipe `results/<method>/` and `agent_env/runs/<method>/` before restarting.
+
+**Even after both fixes, this box's own baseline number was not stable run-to-run**: three
+attempts at literally identical flags/seed/subset (contaminated by bug 2, then clean) produced
+familiar-100 baseline `overall_true` of `62.64`, `60.84` (contaminated), and `55.72` (clean) — a
+`~7`-point spread on a metric this project's own historical control puts at `64.57`. This machine
+has 2 CPUs and runs a wall-clock `budget_sec` per query; under contention a query gets a
+non-deterministic number of solver restarts before the deadline, which the roadmap's own §3/§4 note
+can flip a borderline query's outcome. **Read the deltas below as directional screen evidence, not
+as numbers with a tight error bar** — exactly the posture CLAUDE.md and the roadmap already require
+for any screen ("trust the delta's sign, not the absolute numbers").
+
+### familiar-100 (30-query seeded fold, quick_eval's own subset selection)
+
+| | FPR | overall_true | `llm_parse` |
+| --- | --- | --- | --- |
+| baseline (`TPC_P2_LLM_PARSE=0`) | 26.67 | 55.72 | flagged 0 (off, as expected) |
+| candidate (`TPC_P2_LLM_PARSE=1`, this branch) | **40.00** | **62.88** | fired 30/30, 0 skipped, 0 errored |
+| Δ | **+13.33** | **+7.16** | — |
+
+`scripts/phase2_quick_eval.py`'s own verdict: **GREEN** — "candidate improves its target signal and
+passes the like-for-like gate on this screen → worth a pinned end-to-end gate on the eval machine."
+One diagnostic-only oddity: the tool's own `llm_parse_fired` counter read `16` for an earlier
+(pre-cleanup) baseline measurement despite the flag being off in that arm's env; given the score
+fields (`fpr`/`continuous_score`) for that same arm were measured synchronously by
+`_aggregate_telemetry` immediately after that arm's own solve (before the candidate arm's later
+`fresh=True` wipe could have touched its files), and given the *final, clean* baseline reading
+shows the expected `llm_parse flagged=0`, this reads as a symptom of bug 2 above rather than a third
+distinct issue — not fully root-caused given the time available, flagged here rather than hidden.
+Raw: [`e2e/familiar100_summary.json`](e2e/familiar100_summary.json),
+[`e2e/familiar100_baseline.json`](e2e/familiar100_baseline.json),
+[`e2e/familiar100_candidate.json`](e2e/familiar100_candidate.json).
+
+### hf_medium (first 30 of the HF `medium` split, HF row order)
+
+| | C-LPR | FPR | overall | `llm_parse` |
+| --- | --- | --- | --- | --- |
+| off | 86.25 | 16.67 | 49.99 | flagged 0, fired 0 (matches the documented post-phrasing-fix `49.9909` almost exactly — a strong sanity check that this methodology reproduces the known-good number) |
+| on (this branch) | 85.83 | 16.67 | 49.88 | flagged 30, fired 30, 0 skipped, 0 errored |
+| Δ | −0.42 | 0.00 | −0.11 | — |
+
+**Essentially flat, not a regression and not a repeat of familiar-100's gain.** FPR is unchanged
+(the same 5/30 queries pass both arms); the small `C-LPR`/`overall` dip is within what 30 queries'
+sampling noise can produce and is not concerning on its own, but it is a real, honestly-reported
+null result: this specific 30-query subset does not show the grounding fix's local
+(`local_released_150`) parse-level gain converting into an end-to-end score move. Plausible reasons,
+not disentangled here: `cuisine_preference`/`required_attraction_types` (P16's targets, and P19's
+top two family-gap contributors) may be under-represented in this particular 30-query prefix; the
+gain from `matched 300→311` on `local_released_150` is a `+11`-clause effect spread over `522`
+clauses (`~2%`), small enough that a 30-query hf_medium sample may not resolve it either way. Raw:
+[`e2e/hfmedium_scores.json`](e2e/hfmedium_scores.json).
+
+### Reading the two registers together
+
+The roadmap's bar ("familiar-100 held ± 1") cannot be applied literally given the measured
+baseline-to-baseline noise on this box (§ above), but the *direction* is right: no destructive
+interaction was found on either register, familiar-100 moved clearly positive, and hf_medium moved
+negligibly rather than negatively. Per `docs/tpc_phase2_eval.md`'s own division of labor, this
+screen's role ends here — it is a green light for the Evaluation workstream to spend a pinned
+`full_runs/` slot on a quieter machine with a larger `n`, not a promotion by itself. **No default
+flag changed as a result of this screen** (`Flags.from_env({})` is still `llm_parse=False`).
 
 ## Reproducing this
 

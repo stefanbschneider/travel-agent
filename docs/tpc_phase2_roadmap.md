@@ -180,8 +180,8 @@ the previous ranking:
 
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
-| **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | 1 day | a measured `40–65 %` recall gain currently converting to nothing; the largest single lever left | **open, top of the queue** |
-| **P19** | [Find the unidentified half of the gap](#p19--find-the-unidentified-half-of-the-gap) | 1 h | held-out C-LPR is below our worst local register, so phrasing alone does not explain it | **open, cheap, do alongside** |
+| **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | 1 day | a measured `40–65 %` recall gain currently converting to nothing; the largest single lever left | **landed 2026-08-07 (library default off); kill criterion met, e2e screen GREEN on familiar-100, flat on hf_medium — see screen** |
+| **P19** | [Find the unidentified half of the gap](#p19--find-the-unidentified-half-of-the-gap) | 1 h | held-out C-LPR is below our worst local register, so phrasing alone does not explain it | **closed 2026-08-07 — kill criterion not met, ranked list delivered, see screen** |
 | **P15** | [Finish phrasing-robust extraction](#p15--finish-phrasing-robust-extraction) | half day | the measured residual beyond budget/room-type; compounds through the FPR threshold | **landed (partial) 2026-08-07; residual re-scoped, see below** |
 | **P4** | [The per-query cap is 300 s by accident](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass) | 1–2 h | **re-opened 2026-08-07**: no query has ever run above `300 s` on this path because the code cannot. Near-zero risk (keep-best), unlocks an untested regime | **open, promoted** |
 | P17 | [Stop trusting our own "satisfied" verdict](#p17--stop-trusting-our-own-satisfied-verdict) | half day (a), 2 h (b) | (a) re-aims the repair queue, worth more under large parse gaps; (b) idle envelope, worth ~0 until FPR > 0 | open, (a) only |
@@ -276,6 +276,40 @@ CJK-literal-only wobbles (screen §3).
 
 ### P16 — ground LLM-extracted values into the closed vocabulary
 
+**Landed 2026-08-07** (`chinatravel/agent/phase2/normalize.py`;
+[screen](../results/phase2_baselines/screens/20260807_p16_entity_resolution_probe/README.md)). Two
+independent fixes, both needed:
+
+1. **The 2026-08-06 LLM-arms screen measured with name grounding structurally absent.**
+   `scripts/phase2_llm_parse_arms_probe.py` never threaded `entity_resolution` through to
+   `query_variants`, so the LLM arm's proposed POI names were compared to the oracle completely
+   unresolved — not a confirmation that grounding fails, an explanation of why the screen couldn't
+   show it. Composing the *existing* `TPC_P2_ENTITY_RESOLUTION` flag with
+   `TPC_P2_LLM_PARSE_MODE=extract_fill` (no new code) recovers `10` of the `20`-`matched` deficit on
+   `local_released_150` alone.
+2. **New: `_ground_type_value`/`_ground_type_values`** ground category/type values (cuisine, hotel
+   feature, attraction type) against the environment's closed vocabulary — alias table → exact
+   case-insensitive hit → unique best-above-`0.85` fuzzy match, dropping a tie or a below-threshold
+   value rather than guessing. Attraction-type grounding is new entirely (previously no vocab check
+   at all) and city-scoped (`_attraction_type_vocab`'s own casing-disagreement note).
+
+Both fixes together: `matched` on `local_released_150` `300 → 311` (`extract_fill`,
+`entity_resolution` on), `spurious` improving `38 → 37` rather than trading away. **Kill criterion
+met** against the roadmap's original `309` line (this tree's own deterministic floor moved to `320`
+in the interim from the P15 landing, so `311` is short of *that* bar — see the screen for the full
+number). e2e A/B: familiar-100 **GREEN** (`FPR 26.67→40.0`, `overall 55.72→62.88`, though this box's
+own baseline showed `~7`-point run-to-run noise, so read the sign not the magnitude); `hf_medium`
+**flat** (`overall 49.99→49.88`, `FPR` unchanged) — not a regression, but this branch's headline gain
+did not reproduce on this particular 30-query free-prose subset. Two measurement bugs were found and
+fixed while running the e2e screen (an LLM-timeout-vs-parse-deadline trap matching CLAUDE.md's own
+documented warning, and a stale-result-reuse bug from killing a run mid-flight) — both are recorded
+in the screen so they don't recur. **Library default unchanged**: `Flags.from_env({})` still gives
+`llm_parse=False, backend=none`; this is not a default flip, it is evidence for the Evaluation
+workstream to spend a pinned `full_runs/` slot on a quieter machine.
+
+The section below is preserved as the original diagnosis and is still accurate; only the "open" framing
+is stale.
+
 **The highest-value open experiment, and the cheapest to resolve: every prompt response is cached, so
 re-measuring a policy costs `$0`.**
 
@@ -315,6 +349,20 @@ default flips. Note the deployment constraint: the organizers' endpoint caps con
 `--max-running-requests 8`, below our worker count, so any LLM stage must throttle to ≤8 in flight.
 
 ### P19 — find the unidentified half of the gap
+
+**Closed 2026-08-07** ([screen](../results/phase2_baselines/screens/20260807_p19_unidentified_gap/README.md),
+`scripts/phase2_density_family_gap_analysis.py`). Kill criterion not met: `hf_medium`'s dense tail
+(`≥10` clauses, the only free-prose set with any queries this dense, `n=27`) has a coverage ceiling
+of `74.91` — `15` points below its own overall average, real and directional, but `~20` points short
+of held-out's `55.20`, so density alone does not explain the residual. No family is completely
+unproduced on every set. The families-ranked-by-`instances × miss_rate` list is dominated by
+`required_attraction_types` (`160` instances, `63.75%` miss) and `cuisine_preference` (`127`
+instances, `78.74%` miss) by a wide margin over the rest of the ranking — **independent confirmation
+that [P16](#p16--ground-llm-extracted-values-into-the-closed-vocabulary)'s targets are the largest
+concrete residual**, found from a completely separate analysis. Deliverable (the ranked list with
+estimated C-LPR cost) is in the screen; no further P19 work is open without new held-out evidence.
+
+The section below is preserved as the original brief.
 
 **Cheap, static, and it decides where the *next* half-day goes.** Opened by the 2026-08-07 leaderboard
 breakdown, which qualified the phrasing diagnosis rather than confirming it outright: held-out C-LPR is
@@ -618,7 +666,7 @@ Tests: `tests/phase2/test_parser_phrasing_generalization.py` (50 cases), `test_p
 
 | Flag | Status |
 | --- | --- |
-| `TPC_P2_LLM_PARSE_MODE=extract_fill` | fill-only LLM extraction merge: may populate an absent family, never overwrite a regex one. Strictly better than `extract` on every set, and the only merge policy that leaves familiar-100 intact. Blocked on [P16](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) — recall rises, `matched` does not |
+| `TPC_P2_LLM_PARSE_MODE=extract_fill` | fill-only LLM extraction merge: may populate an absent family, never overwrite a regex one. Strictly better than `extract` on every set, and the only merge policy that leaves familiar-100 intact. [P16](#p16--ground-llm-extracted-values-into-the-closed-vocabulary)'s grounding (landed 2026-08-07, `TPC_P2_ENTITY_RESOLUTION=1` composed with this) now moves `matched` too; e2e screen GREEN on familiar-100, flat on `hf_medium`. Still library-default off pending a pinned `full_runs/` gate |
 | `TPC_CASCADE_TIMED_WINDOWS` | forward-only cascading shift. Gated at `900 s`: its own target axis flat. Superseded by `TPC_WINDOW_ANCHOR` |
 | `TPC_REPAIR_DROP_TRAILING_STAY` | 1 of 3 target uids fully clears; the other 2 have a deeper defect no forward-only repair can reach. Screen was RED, probably because its `_pack_plan` gate also activates general endpoint re-grounding on every query |
 | `TPC_PACK_DAV` / `TPC_PACK_DDR` / `TPC_PACK_ATT` / `TPC_DENSIFY_COMPRESS_BEFORE` | preference packing; evidence predates the evaluator sync. See [what not to spend time on](#what-not-to-spend-time-on) |
