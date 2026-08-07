@@ -854,7 +854,7 @@ a quarter of its envelope, and it silently disabled a mechanism the design inten
   **is** scheduled. Reproduce both halves with `pass_budget_sec(13000, 50, workers=3, fraction=0.5,
   cap_sec=300 | 900)`.
 
-**This means [§3](#3-the-solver-is-bimodal-and-more-search-does-not-help) overclaimed, and the record is
+**This means [§3](#3-the-current-fixed-search-saturates-deeper-search-is-not-yet-tested) overclaimed, and the record is
 corrected here.** Across **all 25 recorded rows** `budget_sec` is `300.0` and no pass ever exceeded
 `300 s`. So "more search does not help" is established for `25 s → 62 s`, for `120 s → 300 s`, and for
 the whole-envelope `1/3/5 h` ladder — but **no query has ever been solved above `300 s` on the whole-run
@@ -996,6 +996,7 @@ ratcheted from this same PR), not an Evaluation-workstream measurement row -- un
 in that directory, a future change to it should land with the parser change it ratchets, in the same
 PR, not from a separate eval-machine run.
 
+<<<<<<< HEAD
 **Why it was worth an hour:** a parser change that improves familiar-100 while worsening free prose is
 a regression, and before this only a human reading two screens would notice. The seed run's window
 spans three landed items (P16, P19, P20), but its README checks attribution (`git diff --stat` over
@@ -1004,6 +1005,22 @@ exercises, so the improvement is P20's alone -- every free-prose set's gap count
 (`hf_easy 127->97`, `hf_medium 126->78`, `hf_human 99->81`, `hf_preference_base50 19->14`,
 `local_released_150 6->5`), `familiar_100` stayed `0/1109` -- see the screen for the full before/after
 table and the attribution check.
+=======
+**Why it is worth an hour:** a parser change that improves familiar-100 while worsening free prose is a
+regression, and right now only a human reading two screens would notice.
+
+**Two conditions to add while it is being built, both cheap and both now instrumented** (2026-08-07;
+if P18 has already landed by the time you read this, add them as a follow-up commit):
+
+- **No query may carry an unsatisfiable required-POI name.** `scripts/phase2_unsatisfiable_names_probe.py`
+  reports it per set; the check fails when any set's count *rises*. This is the tripwire that would
+  have caught [§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves) at any point in the
+  last month, and it costs the same two minutes.
+- **`spurious` may not rise on any set.** The existing tripwire text requires only that *gap counts*
+  do not rise, so a precision regression passes it silently — which is exactly the half of the problem
+  [P24](#p24--stop-inventing-satisfiable-but-unrequested-constraints) is about. The probe already emits
+  per-set `spurious`; assert on it.
+>>>>>>> 6edad74b (Fix a stale section anchor in the roadmap (§3 was renamed by R24/R25))
 
 ### P6 — validator-in-loop Qwen repair
 
