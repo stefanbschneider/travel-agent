@@ -314,7 +314,7 @@ def load_hf_queries(config: str = "default", splits: list[str] | None = None):
 
 
 def query_variants(query: dict, *, disjunction: bool = False, llm_parse: bool = False, llm_client=None,
-                   entity_resolution: bool = False):
+                   entity_resolution: bool = False, llm_parse_mode: str | None = None):
     """Return (parsed_no_oracle_variants, oracle_variants) in the shared solver-dict schema.
 
     When ``disjunction`` is True, the parsed side is produced through the Phase 2 normalize layer
@@ -339,6 +339,10 @@ def query_variants(query: dict, *, disjunction: bool = False, llm_parse: bool = 
         from chinatravel.agent.phase2.orchestrator import Flags
 
         flags = Flags(disjunction=disjunction, llm_parse=llm_parse, entity_resolution=entity_resolution)
+        if llm_parse_mode:
+            # "audit" (patch the regex parse) vs "extract" (LLM-first families). Explicit rather
+            # than env-derived so a caller measuring both modes in one process cannot mix them up.
+            flags.llm_parse_mode = llm_parse_mode
         ir = normalize.parse_to_ir(query, llm_client=llm_client, flags=flags)
         parsed = normalize.ir_to_solver_variants(ir, query, flags=flags)
     else:
@@ -352,10 +356,11 @@ def query_variants(query: dict, *, disjunction: bool = False, llm_parse: bool = 
 
 
 def compute_query_diff(query: dict, *, disjunction: bool = False, branch_aware: bool = False,
-                       llm_parse: bool = False, llm_client=None, entity_resolution: bool = False) -> dict:
+                       llm_parse: bool = False, llm_client=None, entity_resolution: bool = False,
+                       llm_parse_mode: str | None = None) -> dict:
     parsed_variants, oracle_variants = query_variants(
         query, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client,
-        entity_resolution=entity_resolution,
+        entity_resolution=entity_resolution, llm_parse_mode=llm_parse_mode,
     )
     dv = diff_variants(parsed_variants=parsed_variants, oracle_variants=oracle_variants,
                        branch_aware=branch_aware, people_number=query.get("people_number"))

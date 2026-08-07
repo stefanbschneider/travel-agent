@@ -1,0 +1,221 @@
+{
+  "familiar_100 (control)": {
+    "label": "familiar_100 (control)",
+    "source": {
+      "kind": "local",
+      "name": "tpc_phase2_familiar_100"
+    },
+    "fix_kinds": [
+      "cost_accommodation",
+      "cost_attraction",
+      "cost_restaurant",
+      "cost_total",
+      "cost_transport",
+      "room_type"
+    ],
+    "n": 100,
+    "n_clauses": 1109,
+    "parse_gap": 0,
+    "parse_gap_after_fix": 0,
+    "parse_gap_cjk_literal": 0,
+    "parse_gap_ascii_literal": 0,
+    "parse_gap_ascii_literal_after_fix": 0,
+    "queries_with_gap": 0,
+    "queries_with_gap_after_fix": 0,
+    "clpr_ceiling_now": 100.0,
+    "clpr_ceiling_after_fix": 100.0,
+    "fpr_ceiling_now": 100.0,
+    "fpr_ceiling_after_fix": 100.0,
+    "residual_by_kind": {},
+    "residual_by_kind_ascii_literal_only": {}
+  },
+  "local_released_150": {
+    "label": "local_released_150",
+    "source": {
+      "kind": "local",
+      "name": "tpc_phase2_test"
+    },
+    "fix_kinds": [
+      "cost_accommodation",
+      "cost_attraction",
+      "cost_restaurant",
+      "cost_total",
+      "cost_transport",
+      "room_type"
+    ],
+    "n": 150,
+    "n_clauses": 522,
+    "parse_gap": 17,
+    "parse_gap_after_fix": 15,
+    "parse_gap_cjk_literal": 0,
+    "parse_gap_ascii_literal": 17,
+    "parse_gap_ascii_literal_after_fix": 15,
+    "queries_with_gap": 17,
+    "queries_with_gap_after_fix": 15,
+    "clpr_ceiling_now": 96.74,
+    "clpr_ceiling_after_fix": 97.13,
+    "fpr_ceiling_now": 88.67,
+    "fpr_ceiling_after_fix": 90.0,
+    "residual_by_kind": {
+      "restaurant_name": 4,
+      "inner_transport_set": 3,
+      "attraction_name": 2,
+      "restaurant_type": 2,
+      "activity_time_window": 2,
+      "attraction_type": 1,
+      "accommodation_type": 1
+    },
+    "residual_by_kind_ascii_literal_only": {
+      "restaurant_name": 4,
+      "inner_transport_set": 3,
+      "attraction_name": 2,
+      "restaurant_type": 2,
+      "activity_time_window": 2,
+      "attraction_type": 1,
+      "accommodation_type": 1
+    }
+  },
+  "hf_easy": {
+    "label": "hf_easy",
+    "source": {
+      "kind": "hf",
+      "name": "easy"
+    },
+    "fix_kinds": [
+      "cost_accommodation",
+      "cost_attraction",
+      "cost_restaurant",
+      "cost_total",
+      "cost_transport",
+      "room_type"
+    ],
+    "n": 300,
+    "n_clauses": 1579,
+    "parse_gap": 219,
+    "parse_gap_after_fix": 131,
+    "parse_gap_cjk_literal": 131,
+    "parse_gap_ascii_literal": 88,
+    "parse_gap_ascii_literal_after_fix": 0,
+    "queries_with_gap": 200,
+    "queries_with_gap_after_fix": 131,
+    "clpr_ceiling_now": 86.13,
+    "clpr_ceiling_after_fix": 91.7,
+    "fpr_ceiling_now": 33.33,
+    "fpr_ceiling_after_fix": 56.33,
+    "residual_by_kind": {
+      "restaurant_type": 30,
+      "restaurant_name": 30,
+      "accommodation_type": 21,
+      "attraction_type": 21,
+      "accommodation_name": 18,
+      "attraction_name": 11
+    },
+    "residual_by_kind_ascii_literal_only": {}
+  },
+  "hf_medium": {
+    "label": "hf_medium",
+    "source": {
+      "kind": "hf",
+      "name": "medium"
+    },
+    "fix_kinds": [
+      "cost_accommodation",
+      "cost_attraction",
+      "cost_restaurant",
+      "cost_total",
+      "cost_transport",
+      "room_type"
+    ],
+    "n": 150,
+    "n_clauses": 1264,
+    "parse_gap": 363,
+    "parse_gap_after_fix": 89,
+    "parse_gap_cjk_literal": 89,
+    "parse_gap_ascii_literal": 274,
+    "parse_gap_ascii_literal_after_fix": 0,
+    "queries_with_gap": 150,
+    "queries_with_gap_after_fix": 71,
+    "clpr_ceiling_now": 71.28,
+    "clpr_ceiling_after_fix": 92.96,
+    "fpr_ceiling_now": 0.0,
+    "fpr_ceiling_after_fix": 52.67,
+    "residual_by_kind": {
+      "restaurant_type": 33,
+      "attraction_type": 28,
+      "attraction_name": 17,
+      "accommodation_type": 11
+    },
+    "residual_by_kind_ascii_literal_only": {}
+  },
+  "hf_human": {
+    "label": "hf_human",
+    "source": {
+      "kind": "hf",
+      "name": "human"
+    },
+    "fix_kinds": [
+      "cost_accommodation",
+      "cost_attraction",
+      "cost_restaurant",
+      "cost_total",
+      "cost_transport",
+      "room_type"
+    ],
+    "n": 154,
+    "n_clauses": 687,
+    "parse_gap": 146,
+    "parse_gap_after_fix": 97,
+    "parse_gap_cjk_literal": 97,
+    "parse_gap_ascii_literal": 49,
+    "parse_gap_ascii_literal_after_fix": 0,
+    "queries_with_gap": 100,
+    "queries_with_gap_after_fix": 79,
+    "clpr_ceiling_now": 78.75,
+    "clpr_ceiling_after_fix": 85.88,
+    "fpr_ceiling_now": 35.06,
+    "fpr_ceiling_after_fix": 48.7,
+    "residual_by_kind": {
+      "attraction_type": 52,
+      "restaurant_type": 27,
+      "attraction_name": 15,
+      "accommodation_type": 3
+    },
+    "residual_by_kind_ascii_literal_only": {}
+  },
+  "hf_preference_base50": {
+    "label": "hf_preference_base50",
+    "source": {
+      "kind": "hf",
+      "name": "preference_base50"
+    },
+    "fix_kinds": [
+      "cost_accommodation",
+      "cost_attraction",
+      "cost_restaurant",
+      "cost_total",
+      "cost_transport",
+      "room_type"
+    ],
+    "n": 50,
+    "n_clauses": 260,
+    "parse_gap": 32,
+    "parse_gap_after_fix": 20,
+    "parse_gap_cjk_literal": 20,
+    "parse_gap_ascii_literal": 12,
+    "parse_gap_ascii_literal_after_fix": 0,
+    "queries_with_gap": 31,
+    "queries_with_gap_after_fix": 20,
+    "clpr_ceiling_now": 87.69,
+    "clpr_ceiling_after_fix": 92.31,
+    "fpr_ceiling_now": 38.0,
+    "fpr_ceiling_after_fix": 60.0,
+    "residual_by_kind": {
+      "restaurant_name": 8,
+      "restaurant_type": 7,
+      "attraction_type": 3,
+      "attraction_name": 1,
+      "accommodation_type": 1
+    },
+    "residual_by_kind_ascii_literal_only": {}
+  }
+}

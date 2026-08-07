@@ -1256,7 +1256,7 @@ def build_llm_extract_prompt(query: dict) -> str:
     )
 
 
-def llm_extract_stub(ir: ParsedIR, query: dict, llm_client) -> ParsedIR:
+def llm_extract_stub(ir: ParsedIR, query: dict, llm_client, *, fill_only: bool = False) -> ParsedIR:
     """LLM-first structured extraction with strict deterministic fallback (same contract as
     ``llm_parse_stub``: any error keeps ``ir`` unchanged by raising, so the orchestrator's
     try/except degrades to the deterministic parse). Merge policy is additive-only:
@@ -1267,6 +1267,16 @@ def llm_extract_stub(ir: ParsedIR, query: dict, llm_client) -> ParsedIR:
       plan-1 gap B6, the audit's failure mode);
     - or_arms are only used when the deterministic splitter found fewer than 2 branches (same
       precedence as the audit path).
+
+    ``fill_only=True`` (flag value ``llm_parse_mode="extract_fill"``) additionally forbids the
+    overwrite: the LLM may only populate a family -- or a ``budgets`` sub-key -- the deterministic
+    parse left empty. Measured motivation
+    (``results/phase2_baselines/screens/20260806_llm_arms/``): on the free-prose released sets
+    LLM-first extraction closes 40-65 % of the deterministic parse gaps and breaks none, but its
+    family *values* are less accurate than the regex's, so overwriting costs precision everywhere
+    and is strictly harmful on ``tpc_phase2_familiar_100``, where the regex is already perfect
+    (family F1 0.955 -> 0.757, 72/100 queries worse). Fill-only keeps the recall gain where the
+    regex is silent and the regex's values where it is not.
     """
     if llm_client is None or not hasattr(llm_client, "complete"):
         return ir
@@ -1298,8 +1308,15 @@ def llm_extract_stub(ir: ParsedIR, query: dict, llm_client) -> ParsedIR:
     for key, value in validated.items():
         if key in _LLM_PARSE_DICT_KEYS and isinstance(updated.raw.get(key), dict):
             merged = dict(updated.raw[key])
-            merged.update(value)
+            if fill_only:
+                # Only sub-keys the deterministic parse does not already carry.
+                for sub_key, sub_value in value.items():
+                    merged.setdefault(sub_key, sub_value)
+            else:
+                merged.update(value)
             updated.raw[key] = merged
+        elif fill_only and updated.raw.get(key) not in (None, [], {}, "", ()):
+            continue
         else:
             updated.raw[key] = value
 
@@ -1386,7 +1403,15 @@ def parse_to_ir(query: dict, *, llm_client=None, flags=None, deadline: float | N
             ir.llm_parse_skipped_deadline = True
         else:
             mode = getattr(flags, "llm_parse_mode", "audit")
-            stub = llm_extract_stub if mode == "extract" else llm_parse_stub
+            if mode == "extract":
+                stub = llm_extract_stub
+            elif mode == "extract_fill":
+                # Fill-only: the LLM may populate a family the regex left empty, never overwrite
+                # one it filled. See llm_extract_stub's docstring for the measurement behind it.
+                def stub(ir_, query_, client_):
+                    return llm_extract_stub(ir_, query_, client_, fill_only=True)
+            else:
+                stub = llm_parse_stub
             try:
                 ir = stub(ir, query, llm_client)
             except Exception as exc:

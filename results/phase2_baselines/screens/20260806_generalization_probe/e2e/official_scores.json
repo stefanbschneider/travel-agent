@@ -1,0 +1,93 @@
+{
+  "git_sha": "966a9f956de5137487d6d541f3110ddcb273660b",
+  "git_dirty_tracked_files": false,
+  "branch": "report-v2",
+  "contract": "DIAGNOSTIC SCREEN - not a promotion row. Whole-run scheduler shape (triage/repair/polish) at a reduced envelope; n=30 subsets; not comparable to full_runs/ rows.",
+  "total_budget_sec": 1800,
+  "workers": 3,
+  "n": 30,
+  "lang": "en",
+  "evaluator_parity": "c89cfca",
+  "llm": "off (zero LLM calls, deterministic default flags)",
+  "machine": {
+    "platform": "macOS-26.6-arm64-arm-64bit",
+    "cpu_count": 10
+  },
+  "runs": {
+    "familiar_100_first30": {
+      "split": "tpc_phase2_familiar_100 (first 30 uids)",
+      "method": "probe_fam30",
+      "official": {
+        "MicEPR": 100.0,
+        "MacEPR": 100.0,
+        "C-LPR": 91.6923076923077,
+        "FPR": 43.333333333333336,
+        "DAV": 25.833333333333336,
+        "ATT": 33.77018214693284,
+        "DDR": 26.574074074074073,
+        "overall": 64.56528973412726
+      },
+      "self_score": {
+        "self_overall_mean": 68.0507,
+        "self_fpr_mean": 50.0
+      },
+      "scheduler_budget_unspent_sec": 989.2
+    },
+    "hf_human_probe30": {
+      "split": "HF LAMDA-NeSy/ChinaTravel default:human (first 30 uids)",
+      "method": "probe_hfhuman30",
+      "official": {
+        "MicEPR": 100.0,
+        "MacEPR": 100.0,
+        "C-LPR": 75.0,
+        "FPR": 33.33333333333333,
+        "DAV": 23.27777777777778,
+        "ATT": 29.535430550563042,
+        "DDR": 23.185185185185183,
+        "overall": 55.883253009009636
+      },
+      "self_score": {
+        "self_overall_mean": 81.8865,
+        "self_fpr_mean": 76.6667
+      },
+      "scheduler_budget_unspent_sec": 1406.7
+    },
+    "hf_medium_probe30": {
+      "split": "HF LAMDA-NeSy/ChinaTravel default:medium (first 30 uids)",
+      "method": "probe_hfmedium30",
+      "official": {
+        "MicEPR": 100.0,
+        "MacEPR": 100.0,
+        "C-LPR": 72.5,
+        "FPR": 6.666666666666667,
+        "DAV": 4.166666666666666,
+        "ATT": 6.656084656084656,
+        "DDR": 5.740740740740741,
+        "overall": 41.619841269841274
+      },
+      "self_score": {
+        "self_overall_mean": 88.1697,
+        "self_fpr_mean": 86.6667
+      },
+      "scheduler_budget_unspent_sec": 1545.6
+    }
+  },
+  "reference_full_rows": {
+    "familiar_100_full": {
+      "row": "results/phase2_baselines/full_runs/20260806T115309Z.json",
+      "overall": 64.17251838310492,
+      "C-LPR": 90.08115419296664,
+      "FPR": 44.0
+    },
+    "local_released_150": {
+      "row": "results/phase2_baselines/full_runs/20260806T132917Z.json",
+      "overall": 90.5602691742775,
+      "C-LPR": 96.93486590038314,
+      "FPR": 90.66666666666666
+    }
+  },
+  "official_heldout_v1": {
+    "overall": 33.2473,
+    "source": "organizer reply, single aggregate number only"
+  }
+}

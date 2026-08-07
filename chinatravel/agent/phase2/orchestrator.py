@@ -90,7 +90,10 @@ class Flags:
     # Master switch stays llm_parse; this selects the strategy only when it is enabled.
     # "audit" (default): today's corrective-audit stub, everything round-trips through the regex.
     # "extract": LLM-first structured extraction + deterministic validation/merge, independent of
-    # the regex parse. Any other value falls back to "audit".
+    # the regex parse. "extract_fill": the same, but the LLM may only fill a family the regex left
+    # empty -- never overwrite one it filled (measured 2026-08-06: overwriting closes 40-65 % of
+    # the free-prose parse gaps but costs precision on every set, and is strictly harmful on
+    # familiar-100 where the regex is already perfect). Any other value falls back to "audit".
     llm_parse_mode: str = "audit"
 
     @classmethod
@@ -101,7 +104,7 @@ class Flags:
             llm_backend=str(env_map.get("TPC_P2_LLM_BACKEND", "none") or "none").lower(),
             disjunction=_truthy(env_map.get("TPC_P2_DISJUNCTION", "0")),
             llm_parse=_truthy(env_map.get("TPC_P2_LLM_PARSE", "0")),
-            llm_parse_mode=raw_mode if raw_mode in ("audit", "extract") else "audit",
+            llm_parse_mode=raw_mode if raw_mode in ("audit", "extract", "extract_fill") else "audit",
             llm_refine=_truthy(env_map.get("TPC_P2_LLM_REFINE", "0")),
             dynamic_budget=_truthy(env_map.get("TPC_P2_DYNAMIC_BUDGET", "0")),
             entity_resolution=_truthy(env_map.get("TPC_P2_ENTITY_RESOLUTION", "0")),

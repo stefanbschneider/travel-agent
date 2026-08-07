@@ -1,0 +1,1688 @@
+{
+  "sets": [
+    {
+      "label": "familiar_100 (control)",
+      "source": {
+        "kind": "cost_restaurant",
+        "name": "tpc_phase2_familiar_100"
+      },
+      "n": 100,
+      "inventory": {
+        "nl_chars_mean": 883.9,
+        "nl_chars_median": 877.5,
+        "oracle_clauses_mean": 11.09,
+        "oracle_clauses_median": 11.0,
+        "oracle_clauses_min": 9,
+        "oracle_clauses_max": 13,
+        "pct_with_numbered_requirements_list": 100.0,
+        "pct_with_bracket_header": 0.0,
+        "numbered_items_mean": 11.09
+      },
+      "family_parse": {
+        "precision": 0.9552,
+        "recall": 0.9552,
+        "f1": 0.9552,
+        "value_accuracy": 0.9552,
+        "totals": {
+          "matched": 661,
+          "missing": 0,
+          "spurious": 0,
+          "wrong_value": 30,
+          "defaulted": 87
+        },
+        "queries_with_any_missing_family": 0,
+        "pct_queries_with_any_missing_family": 0.0,
+        "disjunction_flattened": 0
+      },
+      "clause_coverage": {
+        "n_oracle_clauses": 1109,
+        "n_metadata_guaranteed": 311,
+        "n_covered": 1042,
+        "n_uncovered": 67,
+        "clause_coverage": 0.9396,
+        "clpr_ceiling_if_unextracted_fail": 93.96,
+        "n_parse_gap": 0,
+        "n_schema_gap": 67,
+        "parse_gap_rate": 0.0,
+        "clpr_ceiling_parse_gap_only": 100.0,
+        "parse_gap_by_kind": {},
+        "n_queries_with_parse_gap": 0,
+        "pct_queries_with_parse_gap": 0.0,
+        "fpr_ceiling_from_parse_gaps": 100.0,
+        "macro_clause_coverage": 0.9406,
+        "by_kind_total": {
+          "activity_time_window": 149,
+          "days": 100,
+          "people": 100,
+          "tickets_match_people": 100,
+          "inner_transport_set": 83,
+          "attraction_name": 77,
+          "accommodation_name": 71,
+          "restaurant_name": 71,
+          "attraction_type": 69,
+          "restaurant_type": 67,
+          "accommodation_type": 67,
+          "cost_accommodation": 31,
+          "cost_transport": 28,
+          "intercity_transport": 19,
+          "cost_total": 16,
+          "cost_restaurant": 16,
+          "taxi_cars": 13,
+          "cost_attraction": 12,
+          "rooms": 11,
+          "room_type": 9
+        },
+        "by_kind_uncovered": {
+          "accommodation_type": 41,
+          "intercity_transport": 19,
+          "inner_transport_set": 7
+        }
+      },
+      "family_stats": [
+        {
+          "family": "excluded_hotels",
+          "matched": 39,
+          "missing": 0,
+          "spurious": 0,
+          "wrong_value": 16,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": [
+            "phase2_familiar_20250321155107635610_00035",
+            "phase2_familiar_20250321210015834839_00021",
+            "phase2_familiar_20250322165435882231_00085",
+            "phase2_familiar_20250322181512021463_00056",
+            "phase2_familiar_20250322184829394258_00094"
+          ]
+        },
+        {
+          "family": "excluded_restaurants",
+          "matched": 48,
+          "missing": 0,
+          "spurious": 0,
+          "wrong_value": 5,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": [
+            "phase2_familiar_20250324082131674535_00083",
+            "phase2_familiar_20250324205935312282_00020",
+            "phase2_familiar_20250324213114489746_00045",
+            "phase2_familiar_20250324220050355278_00077",
+            "phase2_familiar_m20241028164747208761_00099"
+          ]
+        },
+        {
+          "family": "required_attractions",
+          "matched": 19,
+          "missing": 0,
+          "spurious": 0,
+          "wrong_value": 4,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": [
+            "phase2_familiar_20250322120414354584_00052",
+            "phase2_familiar_20250322165435882231_00085",
+            "phase2_familiar_20250323022540312612_00032",
+            "phase2_familiar_e20241028160321868761_00024"
+          ]
+        },
+        {
+          "family": "required_restaurants",
+          "matched": 15,
+          "missing": 0,
+          "spurious": 0,
+          "wrong_value": 3,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": [
+            "phase2_familiar_20250322035350348919_00015",
+            "phase2_familiar_20250322111042021223_00006",
+            "phase2_familiar_20250325015641074558_00031"
+          ]
+        },
+        {
+          "family": "excluded_attractions",
+          "matched": 52,
+          "missing": 0,
+          "spurious": 0,
+          "wrong_value": 2,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": [
+            "phase2_familiar_20250322115606690734_00057",
+            "phase2_familiar_m20241028164624886634_00043"
+          ]
+        }
+      ],
+      "examples": [
+        {
+          "uid": "phase2_familiar_20250321012512564936_00022",
+          "days": 2,
+          "people_number": 2,
+          "n_oracle_clauses": 11,
+          "nature_language": "We are 2 people traveling from Nanjing to Guangzhou for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 2 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 2 travelers.\n4. Do not include any of these attraction types: Red tourism sites.\n5. Keep the accommodation cost within 342.\n6. Do not include any of these hotels: Guangzhou Huadu Financial Center Atour Hotel and Guangzhou Jingge Hotel.\n7. Do not include any of these restaurants: Guangzhou Shangri-La Hotel Summer Palace Chinese Restaurant and Leap·Yue Modern Cantonese Cuisine.\n"
+        },
+        {
+          "uid": "phase2_familiar_20250321032641509206_00005",
+          "days": 2,
+          "people_number": 3,
+          "n_oracle_clauses": 13,
+          "nature_language": "We are 3 people traveling from Chengdu to Suzhou for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Do not include any of these attraction types: commercial district and Amusement Park/Sports Entertainment.\n5. Visit Maple Bridge Scenic Area between 08:15 and 10:05.\n6. Do not include any of these restaurants: Moon Pavilion (Guanqian Branch).\n7. Use only metro and taxi for transportation within the destination city.\n8. Keep the accommodation cost within 461.\n9. Di"
+        },
+        {
+          "uid": "phase2_familiar_20250321040138918100_00001",
+          "days": 2,
+          "people_number": 3,
+          "n_oracle_clauses": 11,
+          "nature_language": "We are 3 people traveling from Nanjing to Chongqing for 2 days.\nRequirements:\n1. The trip must last 2 days.\n2. The plan must be for 3 travelers.\n3. Tickets for attractions, intercity transport, and metro rides must match 3 travelers.\n4. Do not include any of these attractions: Golden Buddha Mountain and Nanshan Scenic Area.\n5. Visit Bear Grandma's Garden between 17:57 and 19:47.\n6. Do not include any of these hotels: Xinshan Hotel King Shinning (Chongqing Jiefangbei Hongyadong Shop).\n7. Do not include any of these attraction types: historical site.\n8. Dine at Wyndham Grand Plaza Royale Huayu H"
+        }
+      ]
+    },
+    {
+      "label": "local_released_150",
+      "source": {
+        "kind": "cost_attraction",
+        "name": "tpc_phase2_test"
+      },
+      "n": 150,
+      "inventory": {
+        "nl_chars_mean": 211.0,
+        "nl_chars_median": 207.0,
+        "oracle_clauses_mean": 3.48,
+        "oracle_clauses_median": 5.0,
+        "oracle_clauses_min": 1,
+        "oracle_clauses_max": 6,
+        "pct_with_numbered_requirements_list": 15.3,
+        "pct_with_bracket_header": 0.0,
+        "numbered_items_mean": 0.97
+      },
+      "family_parse": {
+        "precision": 0.8063,
+        "recall": 0.7852,
+        "f1": 0.7956,
+        "value_accuracy": 0.8821,
+        "totals": {
+          "matched": 309,
+          "missing": 43,
+          "spurious": 42,
+          "wrong_value": 41,
+          "defaulted": 127
+        },
+        "queries_with_any_missing_family": 39,
+        "pct_queries_with_any_missing_family": 26.0,
+        "disjunction_flattened": 19
+      },
+      "clause_coverage": {
+        "n_oracle_clauses": 522,
+        "n_metadata_guaranteed": 231,
+        "n_covered": 497,
+        "n_uncovered": 25,
+        "clause_coverage": 0.9521,
+        "clpr_ceiling_if_unextracted_fail": 95.21,
+        "n_parse_gap": 15,
+        "n_schema_gap": 10,
+        "parse_gap_rate": 0.0287,
+        "clpr_ceiling_parse_gap_only": 97.13,
+        "parse_gap_by_kind": {
+          "restaurant_name": 4,
+          "cost_attraction": 3,
+          "inner_transport_set": 3,
+          "attraction_name": 2,
+          "restaurant_type": 2,
+          "activity_time_window": 2,
+          "attraction_type": 1,
+          "cost_transport": 1
+        },
+        "n_queries_with_parse_gap": 15,
+        "pct_queries_with_parse_gap": 10.0,
+        "fpr_ceiling_from_parse_gaps": 90.0,
+        "macro_clause_coverage": 0.9493,
+        "by_kind_total": {
+          "days": 77,
+          "people": 77,
+          "tickets_match_people": 77,
+          "taxi_cars": 77,
+          "restaurant_type": 22,
+          "inner_transport_set": 21,
+          "attraction_type": 19,
+          "cost_restaurant": 19,
+          "cost_total": 19,
+          "room_type": 18,
+          "activity_time_window": 18,
+          "intercity_endpoint_mode": 17,
+          "accommodation_name": 17,
+          "cost_transport": 16,
+          "restaurant_name": 15,
+          "attraction_name": 14,
+          "cost_attraction": 14,
+          "accommodation_type": 14,
+          "cost_accommodation": 13,
+          "unclassified": 9,
+          "spatial_hotel_distance": 9,
+          "stay_duration": 2,
+          "required_order": 1
+        },
+        "by_kind_uncovered": {
+          "unclassified": 9,
+          "cost_attraction": 4,
+          "restaurant_name": 4,
+          "inner_transport_set": 3,
+          "attraction_name": 2,
+          "restaurant_type": 2,
+          "activity_time_window": 2,
+          "attraction_type": 1,
+          "cost_transport": 1
+        }
+      },
+      "family_stats": [
+        {
+          "family": "cuisine_preference",
+          "matched": 7,
+          "missing": 3,
+          "spurious": 4,
+          "wrong_value": 8,
+          "example_missing_uids": [
+            "20250322130847337844",
+            "20250322174632709770",
+            "20250322175216115859"
+          ],
+          "example_wrong_value_uids": [
+            "20250322120628752145",
+            "20250322122812261533",
+            "20250322155650799736",
+            "20250322162846822521",
+            "20250322164802003431"
+          ]
+        },
+        {
+          "family": "required_hotels",
+          "matched": 7,
+          "missing": 1,
+          "spurious": 4,
+          "wrong_value": 8,
+          "example_missing_uids": [
+            "20250322194458260914"
+          ],
+          "example_wrong_value_uids": [
+            "20250321211519984127",
+            "20250322155650799736",
+            "20250322164053425056",
+            "20250322200936553702",
+            "20250322212110159665"
+          ]
+        },
+        {
+          "family": "poi_distance_hotel",
+          "matched": 0,
+          "missing": 0,
+          "spurious": 0,
+          "wrong_value": 9,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": [
+            "20250323094730230054",
+            "20250323095147120434",
+            "20250323095841362897",
+            "20250323110221959432",
+            "20250323114048262328"
+          ]
+        },
+        {
+          "family": "budgets",
+          "matched": 77,
+          "missing": 6,
+          "spurious": 2,
+          "wrong_value": 1,
+          "example_missing_uids": [
+            "20250322114824594241",
+            "20250322121924375133",
+            "20250323002958084846",
+            "20250324221951174148",
+            "20250324225301554257"
+          ],
+          "example_wrong_value_uids": [
+            "20250325010937607077"
+          ]
+        },
+        {
+          "family": "required_attractions",
+          "matched": 5,
+          "missing": 2,
+          "spurious": 6,
+          "wrong_value": 4,
+          "example_missing_uids": [
+            "20250321211519984127",
+            "20250324083022806437"
+          ],
+          "example_wrong_value_uids": [
+            "20250322020241140095",
+            "20250322072436176919",
+            "20250324075652034944",
+            "20250324082922869744"
+          ]
+        },
+        {
+          "family": "required_restaurants",
+          "matched": 1,
+          "missing": 3,
+          "spurious": 12,
+          "wrong_value": 2,
+          "example_missing_uids": [
+            "20250322170953173480",
+            "20250323114048262328",
+            "20250324214731716167"
+          ],
+          "example_wrong_value_uids": [
+            "20250322150025121412",
+            "20250322151253768635"
+          ]
+        },
+        {
+          "family": "excluded_inner_transport",
+          "matched": 16,
+          "missing": 5,
+          "spurious": 1,
+          "wrong_value": 0,
+          "example_missing_uids": [
+            "20250322103652290807",
+            "20250322184829394258",
+            "20250323001735264616",
+            "20250323190504274874",
+            "20250324200943774601"
+          ],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "position_presence",
+          "matched": 16,
+          "missing": 4,
+          "spurious": 0,
+          "wrong_value": 1,
+          "example_missing_uids": [
+            "20250322122731296343",
+            "20250322200936553702",
+            "20250323222907668212",
+            "20250324082922869744"
+          ],
+          "example_wrong_value_uids": [
+            "20250322131031099056"
+          ]
+        },
+        {
+          "family": "required_hotel_all_types",
+          "matched": 5,
+          "missing": 2,
+          "spurious": 3,
+          "wrong_value": 2,
+          "example_missing_uids": [
+            "20250322180344489669",
+            "20250324004250012727"
+          ],
+          "example_wrong_value_uids": [
+            "20250322213901723017",
+            "20250322221022354837"
+          ]
+        },
+        {
+          "family": "required_hotel_any_types",
+          "matched": 1,
+          "missing": 4,
+          "spurious": 2,
+          "wrong_value": 0,
+          "example_missing_uids": [
+            "20250322211542694780",
+            "20250322213425694680",
+            "20250322213855894929",
+            "20250322214707379941"
+          ],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "activity_time_windows",
+          "matched": 14,
+          "missing": 3,
+          "spurious": 0,
+          "wrong_value": 1,
+          "example_missing_uids": [
+            "20250322122731296343",
+            "20250323222907668212",
+            "20250324082922869744"
+          ],
+          "example_wrong_value_uids": [
+            "20250322131031099056"
+          ]
+        },
+        {
+          "family": "required_attraction_types",
+          "matched": 11,
+          "missing": 0,
+          "spurious": 3,
+          "wrong_value": 3,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": [
+            "20250322103652290807",
+            "20250322114924953868",
+            "20250322122731296343"
+          ]
+        },
+        {
+          "family": "excluded_restaurants",
+          "matched": 6,
+          "missing": 3,
+          "spurious": 0,
+          "wrong_value": 0,
+          "example_missing_uids": [
+            "20250322120300879962",
+            "20250322150411173164",
+            "20250322152104796797"
+          ],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "excluded_attractions",
+          "matched": 1,
+          "missing": 1,
+          "spurious": 2,
+          "wrong_value": 1,
+          "example_missing_uids": [
+            "20250324091253666121"
+          ],
+          "example_wrong_value_uids": [
+            "20250322070031331863"
+          ]
+        },
+        {
+          "family": "excluded_attraction_types",
+          "matched": 3,
+          "missing": 2,
+          "spurious": 1,
+          "wrong_value": 0,
+          "example_missing_uids": [
+            "20250322101949422756",
+            "20250322105748349364"
+          ],
+          "example_wrong_value_uids": []
+        }
+      ],
+      "examples": [
+        {
+          "uid": "20250320174446059265",
+          "days": 5,
+          "people_number": 2,
+          "n_oracle_clauses": 5,
+          "nature_language": "We are 2 people traveling from Shanghai to Chengdu for 5 days. Requirements: We want to visit Iron Statue Temple Water Street."
+        },
+        {
+          "uid": "20250320190641665548",
+          "days": 2,
+          "people_number": 3,
+          "n_oracle_clauses": 5,
+          "nature_language": "We are 3 people, departing from Nanjing, traveling to Shenzhen for 2 days, with the following requirement: do not wish to visit Museum/Memorial Hall."
+        },
+        {
+          "uid": "20250320195336101208",
+          "days": 2,
+          "people_number": 4,
+          "n_oracle_clauses": 5,
+          "nature_language": "We are 4 people traveling from Wuhan to Beijing for 2 days. We only want to visit free attractions."
+        }
+      ]
+    },
+    {
+      "label": "hf_easy",
+      "source": {
+        "kind": "taxi_cars",
+        "name": "easy"
+      },
+      "n": 300,
+      "inventory": {
+        "nl_chars_mean": 153.2,
+        "nl_chars_median": 156.5,
+        "oracle_clauses_mean": 5.26,
+        "oracle_clauses_median": 5.0,
+        "oracle_clauses_min": 5,
+        "oracle_clauses_max": 7,
+        "pct_with_numbered_requirements_list": 0.0,
+        "pct_with_bracket_header": 0.0,
+        "numbered_items_mean": 0
+      },
+      "family_parse": {
+        "precision": 0.6961,
+        "recall": 0.7156,
+        "f1": 0.7057,
+        "value_accuracy": 0.9233,
+        "totals": {
+          "matched": 391,
+          "missing": 132,
+          "spurious": 177,
+          "wrong_value": 49,
+          "defaulted": 0
+        },
+        "queries_with_any_missing_family": 131,
+        "pct_queries_with_any_missing_family": 43.7,
+        "disjunction_flattened": 0
+      },
+      "clause_coverage": {
+        "n_oracle_clauses": 1579,
+        "n_metadata_guaranteed": 930,
+        "n_covered": 1417,
+        "n_uncovered": 162,
+        "clause_coverage": 0.8974,
+        "clpr_ceiling_if_unextracted_fail": 89.74,
+        "n_parse_gap": 132,
+        "n_schema_gap": 30,
+        "parse_gap_rate": 0.0836,
+        "clpr_ceiling_parse_gap_only": 91.64,
+        "parse_gap_by_kind": {
+          "restaurant_type": 30,
+          "restaurant_name": 30,
+          "accommodation_type": 21,
+          "attraction_type": 21,
+          "accommodation_name": 18,
+          "attraction_name": 11,
+          "room_type": 1
+        },
+        "n_queries_with_parse_gap": 131,
+        "pct_queries_with_parse_gap": 43.7,
+        "fpr_ceiling_from_parse_gaps": 56.33,
+        "macro_clause_coverage": 0.8983,
+        "by_kind_total": {
+          "days": 300,
+          "people": 300,
+          "tickets_match_people": 300,
+          "taxi_cars": 300,
+          "cost_total": 60,
+          "intercity_transport": 51,
+          "restaurant_type": 30,
+          "restaurant_name": 30,
+          "rooms": 30,
+          "room_type": 30,
+          "accommodation_type": 30,
+          "accommodation_name": 30,
+          "attraction_type": 30,
+          "attraction_name": 30,
+          "unclassified": 28
+        },
+        "by_kind_uncovered": {
+          "restaurant_type": 30,
+          "restaurant_name": 30,
+          "unclassified": 28,
+          "accommodation_type": 21,
+          "attraction_type": 21,
+          "accommodation_name": 18,
+          "attraction_name": 11,
+          "intercity_transport": 2,
+          "room_type": 1
+        }
+      },
+      "family_stats": [
+        {
+          "family": "required_attractions",
+          "matched": 0,
+          "missing": 11,
+          "spurious": 105,
+          "wrong_value": 19,
+          "example_missing_uids": [
+            "m20241028164824112842",
+            "m20241028164825618732",
+            "m20241028164827054321",
+            "m20241028164828899127",
+            "m20241028164831226675"
+          ],
+          "example_wrong_value_uids": [
+            "m20241028164822843097",
+            "m20241028164830108978",
+            "m20241028164835034738",
+            "m20241028164836175101",
+            "m20241028164837927103"
+          ]
+        },
+        {
+          "family": "required_hotels",
+          "matched": 0,
+          "missing": 18,
+          "spurious": 14,
+          "wrong_value": 12,
+          "example_missing_uids": [
+            "m20241028164948918926",
+            "m20241028164951181054",
+            "m20241028164953193047",
+            "m20241028164954033603",
+            "m20241028164956243805"
+          ],
+          "example_wrong_value_uids": [
+            "m20241028164947135130",
+            "m20241028164949891147",
+            "m20241028164954860610",
+            "m20241028165003809657",
+            "m20241028165005397280"
+          ]
+        },
+        {
+          "family": "required_attraction_types",
+          "matched": 0,
+          "missing": 21,
+          "spurious": 9,
+          "wrong_value": 9,
+          "example_missing_uids": [
+            "m20241028164620332052",
+            "m20241028164623257189",
+            "m20241028164624886634",
+            "m20241028164626006100",
+            "m20241028164627218521"
+          ],
+          "example_wrong_value_uids": [
+            "m20241028164622142080",
+            "m20241028164633505983",
+            "m20241028164747208761",
+            "m20241028164748425604",
+            "m20241028164750006178"
+          ]
+        },
+        {
+          "family": "cuisine_preference",
+          "matched": 0,
+          "missing": 30,
+          "spurious": 0,
+          "wrong_value": 0,
+          "example_missing_uids": [
+            "m20241028164637595271",
+            "m20241028164638852401",
+            "m20241028164640040111",
+            "m20241028164641561951",
+            "m20241028164642633824"
+          ],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "required_hotel_all_types",
+          "matched": 0,
+          "missing": 21,
+          "spurious": 0,
+          "wrong_value": 9,
+          "example_missing_uids": [
+            "h20241204223651527057",
+            "m20241028164659379868",
+            "m20241028164700651701",
+            "m20241028164702515882",
+            "m20241028164704059677"
+          ],
+          "example_wrong_value_uids": [
+            "m20241028164708678530",
+            "m20241028164712892867",
+            "m20241028164714075557",
+            "m20241028164715213722",
+            "m20241028164724408368"
+          ]
+        },
+        {
+          "family": "required_restaurants",
+          "matched": 0,
+          "missing": 30,
+          "spurious": 0,
+          "wrong_value": 0,
+          "example_missing_uids": [
+            "m20241028164905266860",
+            "m20241028164906595512",
+            "m20241028164908007773",
+            "m20241028164909526065",
+            "m20241028164911083678"
+          ],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "room_type",
+          "matched": 31,
+          "missing": 1,
+          "spurious": 0,
+          "wrong_value": 0,
+          "example_missing_uids": [
+            "m20241028164807696509"
+          ],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "intercity_mode",
+          "matched": 0,
+          "missing": 0,
+          "spurious": 49,
+          "wrong_value": 0,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": []
+        }
+      ],
+      "examples": [
+        {
+          "uid": "e20241028160248698752",
+          "days": 1,
+          "people_number": 1,
+          "n_oracle_clauses": 5,
+          "nature_language": "Current location: Shanghai. I want to travel to Hangzhou alone for a day with a budget of 1500 RMB. Please provide me with a travel plan."
+        },
+        {
+          "uid": "e20241028160251109186",
+          "days": 1,
+          "people_number": 1,
+          "n_oracle_clauses": 5,
+          "nature_language": "Current location: Guangzhou. I want to go to Shenzhen alone for a day, with a budget of 1000 RMB. Please provide me with a travel plan."
+        },
+        {
+          "uid": "e20241028160253742452",
+          "days": 1,
+          "people_number": 1,
+          "n_oracle_clauses": 5,
+          "nature_language": "Current location: Chongqing. I want to travel to Chengdu alone for one day with a budget of 1200 RMB. Please provide me with a travel plan."
+        }
+      ]
+    },
+    {
+      "label": "hf_medium",
+      "source": {
+        "kind": "taxi_cars",
+        "name": "medium"
+      },
+      "n": 150,
+      "inventory": {
+        "nl_chars_mean": 205.1,
+        "nl_chars_median": 214.0,
+        "oracle_clauses_mean": 8.43,
+        "oracle_clauses_median": 8.0,
+        "oracle_clauses_min": 7,
+        "oracle_clauses_max": 12,
+        "pct_with_numbered_requirements_list": 0.0,
+        "pct_with_bracket_header": 0.0,
+        "numbered_items_mean": 0
+      },
+      "family_parse": {
+        "precision": 0.7737,
+        "recall": 0.7596,
+        "f1": 0.7665,
+        "value_accuracy": 0.9332,
+        "totals": {
+          "matched": 390,
+          "missing": 117,
+          "spurious": 122,
+          "wrong_value": 38,
+          "defaulted": 0
+        },
+        "queries_with_any_missing_family": 71,
+        "pct_queries_with_any_missing_family": 47.3,
+        "disjunction_flattened": 0
+      },
+      "clause_coverage": {
+        "n_oracle_clauses": 1264,
+        "n_metadata_guaranteed": 599,
+        "n_covered": 1083,
+        "n_uncovered": 181,
+        "clause_coverage": 0.8568,
+        "clpr_ceiling_if_unextracted_fail": 85.68,
+        "n_parse_gap": 127,
+        "n_schema_gap": 54,
+        "parse_gap_rate": 0.1005,
+        "clpr_ceiling_parse_gap_only": 89.95,
+        "parse_gap_by_kind": {
+          "restaurant_type": 33,
+          "attraction_type": 28,
+          "attraction_name": 17,
+          "cost_total": 14,
+          "room_type": 14,
+          "accommodation_type": 11,
+          "cost_restaurant": 10
+        },
+        "n_queries_with_parse_gap": 71,
+        "pct_queries_with_parse_gap": 47.3,
+        "fpr_ceiling_from_parse_gaps": 52.67,
+        "macro_clause_coverage": 0.8707,
+        "by_kind_total": {
+          "days": 150,
+          "people": 150,
+          "tickets_match_people": 150,
+          "taxi_cars": 150,
+          "rooms": 149,
+          "cost_total": 148,
+          "room_type": 120,
+          "intercity_transport": 85,
+          "attraction_name": 41,
+          "restaurant_type": 33,
+          "attraction_type": 31,
+          "unclassified": 21,
+          "accommodation_type": 21,
+          "cost_restaurant": 13,
+          "cost_accommodation": 1,
+          "restaurant_name": 1
+        },
+        "by_kind_uncovered": {
+          "restaurant_type": 33,
+          "intercity_transport": 33,
+          "attraction_type": 28,
+          "unclassified": 21,
+          "attraction_name": 17,
+          "cost_total": 14,
+          "room_type": 14,
+          "accommodation_type": 11,
+          "cost_restaurant": 10
+        }
+      },
+      "family_stats": [
+        {
+          "family": "required_attractions",
+          "matched": 0,
+          "missing": 17,
+          "spurious": 25,
+          "wrong_value": 24,
+          "example_missing_uids": [
+            "e20241028160956304302",
+            "e20241028161022415715",
+            "e20241028161228110024",
+            "e20241028161256713544",
+            "e20241028161302837074"
+          ],
+          "example_wrong_value_uids": [
+            "e20241028161012012769",
+            "e20241028161223030634",
+            "e20241028161225372884",
+            "e20241028161230900633",
+            "e20241028161232523372"
+          ]
+        },
+        {
+          "family": "cuisine_preference",
+          "matched": 0,
+          "missing": 33,
+          "spurious": 0,
+          "wrong_value": 0,
+          "example_missing_uids": [
+            "e20241028160845920703",
+            "e20241028160855113315",
+            "e20241028160904677400",
+            "e20241028160908981620",
+            "e20241028160911184742"
+          ],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "required_attraction_types",
+          "matched": 0,
+          "missing": 28,
+          "spurious": 1,
+          "wrong_value": 3,
+          "example_missing_uids": [
+            "e20241028160902013119",
+            "e20241028160906602324",
+            "e20241028160920077469",
+            "e20241028160937967706",
+            "e20241028160939613971"
+          ],
+          "example_wrong_value_uids": [
+            "e20241028160934978800",
+            "e20241028161249891005",
+            "e20241028161314922311"
+          ]
+        },
+        {
+          "family": "required_hotel_all_types",
+          "matched": 1,
+          "missing": 11,
+          "spurious": 1,
+          "wrong_value": 9,
+          "example_missing_uids": [
+            "e20241028161302837074",
+            "e20241028161318465643",
+            "e20241028161341975729",
+            "e20241028161343498529",
+            "e20241028161345670208"
+          ],
+          "example_wrong_value_uids": [
+            "e20241028161223030634",
+            "e20241028161236945933",
+            "e20241028161241981481",
+            "e20241028161244805289",
+            "e20241028161347428726"
+          ]
+        },
+        {
+          "family": "budgets",
+          "matched": 133,
+          "missing": 14,
+          "spurious": 0,
+          "wrong_value": 1,
+          "example_missing_uids": [
+            "e20241028161256713544",
+            "e20241028161302837074",
+            "e20241028161304176860",
+            "e20241028161333580458",
+            "e20241028161340383778"
+          ],
+          "example_wrong_value_uids": [
+            "e20241028161353723055"
+          ]
+        },
+        {
+          "family": "room_type",
+          "matched": 106,
+          "missing": 14,
+          "spurious": 0,
+          "wrong_value": 0,
+          "example_missing_uids": [
+            "e20241028161256713544",
+            "e20241028161302837074",
+            "e20241028161304176860",
+            "e20241028161333580458",
+            "e20241028161334777418"
+          ],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "required_restaurants",
+          "matched": 0,
+          "missing": 0,
+          "spurious": 8,
+          "wrong_value": 1,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": [
+            "e20241028161036243215"
+          ]
+        },
+        {
+          "family": "intercity_mode",
+          "matched": 0,
+          "missing": 0,
+          "spurious": 52,
+          "wrong_value": 0,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "required_hotels",
+          "matched": 0,
+          "missing": 0,
+          "spurious": 35,
+          "wrong_value": 0,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": []
+        }
+      ],
+      "examples": [
+        {
+          "uid": "e20241028160842228543",
+          "days": 3,
+          "people_number": 2,
+          "n_oracle_clauses": 8,
+          "nature_language": "Current location: Shanghai. My friend and I are planning to visit Beijing for three days with a budget of 6000 RMB. We will primarily use the subway for transportation within the city and plan to book a single-bed room. Could you provide me with a travel itinerary?"
+        },
+        {
+          "uid": "e20241028160845920703",
+          "days": 2,
+          "people_number": 1,
+          "n_oracle_clauses": 8,
+          "nature_language": "Current location: Shenzhen. I plan to visit Guangzhou for two days with a budget of 1000 RMB. I want to eat hotpot and book a single-bed room. Please provide me with a travel plan."
+        },
+        {
+          "uid": "e20241028160848776495",
+          "days": 2,
+          "people_number": 4,
+          "n_oracle_clauses": 8,
+          "nature_language": "Current location: Guangzhou. Four of us are planning to visit Hangzhou for two days, traveling by train, with a budget of 5600 RMB. We will book two twin-bed rooms. Please provide a travel plan."
+        }
+      ]
+    },
+    {
+      "label": "hf_human",
+      "source": {
+        "kind": "taxi_cars",
+        "name": "human"
+      },
+      "n": 154,
+      "inventory": {
+        "nl_chars_mean": 282.7,
+        "nl_chars_median": 283.5,
+        "oracle_clauses_mean": 4.46,
+        "oracle_clauses_median": 4.0,
+        "oracle_clauses_min": 3,
+        "oracle_clauses_max": 9,
+        "pct_with_numbered_requirements_list": 0.0,
+        "pct_with_bracket_header": 100.0,
+        "numbered_items_mean": 0.07
+      },
+      "family_parse": {
+        "precision": 0.7958,
+        "recall": 0.6649,
+        "f1": 0.7245,
+        "value_accuracy": 0.9058,
+        "totals": {
+          "matched": 192,
+          "missing": 99,
+          "spurious": 49,
+          "wrong_value": 29,
+          "defaulted": 0
+        },
+        "queries_with_any_missing_family": 82,
+        "pct_queries_with_any_missing_family": 53.2,
+        "disjunction_flattened": 0
+      },
+      "clause_coverage": {
+        "n_oracle_clauses": 687,
+        "n_metadata_guaranteed": 315,
+        "n_covered": 545,
+        "n_uncovered": 142,
+        "clause_coverage": 0.7933,
+        "clpr_ceiling_if_unextracted_fail": 79.33,
+        "n_parse_gap": 101,
+        "n_schema_gap": 41,
+        "parse_gap_rate": 0.147,
+        "clpr_ceiling_parse_gap_only": 85.3,
+        "parse_gap_by_kind": {
+          "attraction_type": 52,
+          "restaurant_type": 27,
+          "attraction_name": 15,
+          "cost_total": 4,
+          "accommodation_type": 3
+        },
+        "n_queries_with_parse_gap": 82,
+        "pct_queries_with_parse_gap": 53.2,
+        "fpr_ceiling_from_parse_gaps": 46.75,
+        "macro_clause_coverage": 0.8193,
+        "by_kind_total": {
+          "days": 154,
+          "people": 154,
+          "taxi_cars": 154,
+          "attraction_type": 62,
+          "cost_total": 51,
+          "intercity_transport": 32,
+          "restaurant_type": 27,
+          "attraction_name": 23,
+          "rooms": 7,
+          "intercity_departure_time": 6,
+          "activity_time_window": 6,
+          "accommodation_type": 5,
+          "cost_accommodation": 5,
+          "unclassified": 4,
+          "room_type": 3
+        },
+        "by_kind_uncovered": {
+          "attraction_type": 52,
+          "restaurant_type": 27,
+          "intercity_transport": 27,
+          "attraction_name": 15,
+          "cost_total": 7,
+          "intercity_departure_time": 6,
+          "activity_time_window": 6,
+          "unclassified": 4,
+          "accommodation_type": 3,
+          "cost_accommodation": 1
+        }
+      },
+      "family_stats": [
+        {
+          "family": "required_attraction_types",
+          "matched": 0,
+          "missing": 50,
+          "spurious": 2,
+          "wrong_value": 10,
+          "example_missing_uids": [
+            "h20241029143458760702",
+            "h20241029143500599951",
+            "h20241029143504074288",
+            "h20241029143506461809",
+            "h20241029143515190249"
+          ],
+          "example_wrong_value_uids": [
+            "h20241029143521646393",
+            "h20241029143551657496",
+            "h20241029143617975256",
+            "h20241029143628653733",
+            "h20241029143648613072"
+          ]
+        },
+        {
+          "family": "cuisine_preference",
+          "matched": 0,
+          "missing": 27,
+          "spurious": 0,
+          "wrong_value": 0,
+          "example_missing_uids": [
+            "h20241029143451793119",
+            "h20241029143458760702",
+            "h20241029143500599951",
+            "h20241029143502525564",
+            "h20241029143512507336"
+          ],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "required_attractions",
+          "matched": 0,
+          "missing": 15,
+          "spurious": 25,
+          "wrong_value": 8,
+          "example_missing_uids": [
+            "h20241029143457494209",
+            "h20241029143509607671",
+            "h20241029143536587211",
+            "h20241029143645157524",
+            "h20241029143659983667"
+          ],
+          "example_wrong_value_uids": [
+            "h20241029143504074288",
+            "h20241029143510880048",
+            "h20241029143646523600",
+            "h20241029143709097610",
+            "h20241029143722458026"
+          ]
+        },
+        {
+          "family": "taxi_cars_equals",
+          "matched": 147,
+          "missing": 0,
+          "spurious": 0,
+          "wrong_value": 7,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": [
+            "h20241029143632058747",
+            "h20241029143633338303",
+            "h20241029143736524841",
+            "h20241029143807949268",
+            "h20241029143834377206"
+          ]
+        },
+        {
+          "family": "budgets",
+          "matched": 42,
+          "missing": 4,
+          "spurious": 6,
+          "wrong_value": 2,
+          "example_missing_uids": [
+            "h20241029143521646393",
+            "h20241029143617975256",
+            "h20241029143846901147",
+            "h20241029143858969810"
+          ],
+          "example_wrong_value_uids": [
+            "h20241029143718654427",
+            "h20241029143812547929"
+          ]
+        },
+        {
+          "family": "required_hotel_all_types",
+          "matched": 0,
+          "missing": 3,
+          "spurious": 0,
+          "wrong_value": 2,
+          "example_missing_uids": [
+            "h20241029143709097610",
+            "h20241029143720725398",
+            "h20241029143911770965"
+          ],
+          "example_wrong_value_uids": [
+            "h20241029143701815147",
+            "h20241029143920003060"
+          ]
+        },
+        {
+          "family": "required_hotels",
+          "matched": 0,
+          "missing": 0,
+          "spurious": 6,
+          "wrong_value": 0,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "intercity_mode",
+          "matched": 0,
+          "missing": 0,
+          "spurious": 5,
+          "wrong_value": 0,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "required_restaurants",
+          "matched": 0,
+          "missing": 0,
+          "spurious": 5,
+          "wrong_value": 0,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": []
+        }
+      ],
+      "examples": [
+        {
+          "uid": "h20241029143447759844",
+          "days": 3,
+          "people_number": 2,
+          "n_oracle_clauses": 3,
+          "nature_language": "[Current location: Shanghai, Destination: Suzhou, Number of travelers: 2, Number of travel days: 3] I want to take my eldest son from Shanghai to Suzhou for a three-day trip. We want a light and free travel experience, not a rigorous one. Please help me plan it."
+        },
+        {
+          "uid": "h20241029143450090032",
+          "days": 3,
+          "people_number": 2,
+          "n_oracle_clauses": 3,
+          "nature_language": "[Current location: Shanghai, Destination: Chongqing, Number of travelers: 2, Travel days: 3] My girlfriend and I are planning to travel from Shanghai to Chongqing for about three days. We want the most time-efficient city transportation, with a travel budget of 4000. Please help me plan the itinerary."
+        },
+        {
+          "uid": "h20241029143451793119",
+          "days": 4,
+          "people_number": 4,
+          "n_oracle_clauses": 4,
+          "nature_language": "[Current location: Nanjing, Destination: Chongqing, Number of travelers: 4, Number of travel days: 4] I want to go to Chongqing to eat local, affordable, and delicious food. Do you have any recommendations?"
+        }
+      ]
+    },
+    {
+      "label": "hf_preference_base50",
+      "source": {
+        "kind": "taxi_cars",
+        "name": "preference_base50"
+      },
+      "n": 50,
+      "inventory": {
+        "nl_chars_mean": 162.3,
+        "nl_chars_median": 160.5,
+        "oracle_clauses_mean": 5.2,
+        "oracle_clauses_median": 5.0,
+        "oracle_clauses_min": 5,
+        "oracle_clauses_max": 7,
+        "pct_with_numbered_requirements_list": 0.0,
+        "pct_with_bracket_header": 0.0,
+        "numbered_items_mean": 0
+      },
+      "family_parse": {
+        "precision": 0.6617,
+        "recall": 0.7333,
+        "f1": 0.6957,
+        "value_accuracy": 0.93,
+        "totals": {
+          "matched": 62,
+          "missing": 20,
+          "spurious": 32,
+          "wrong_value": 7,
+          "defaulted": 0
+        },
+        "queries_with_any_missing_family": 20,
+        "pct_queries_with_any_missing_family": 40.0,
+        "disjunction_flattened": 0
+      },
+      "clause_coverage": {
+        "n_oracle_clauses": 260,
+        "n_metadata_guaranteed": 151,
+        "n_covered": 231,
+        "n_uncovered": 29,
+        "clause_coverage": 0.8885,
+        "clpr_ceiling_if_unextracted_fail": 88.85,
+        "n_parse_gap": 20,
+        "n_schema_gap": 9,
+        "parse_gap_rate": 0.0769,
+        "clpr_ceiling_parse_gap_only": 92.31,
+        "parse_gap_by_kind": {
+          "restaurant_name": 8,
+          "restaurant_type": 7,
+          "attraction_type": 3,
+          "attraction_name": 1,
+          "accommodation_type": 1
+        },
+        "n_queries_with_parse_gap": 20,
+        "pct_queries_with_parse_gap": 40.0,
+        "fpr_ceiling_from_parse_gaps": 60.0,
+        "macro_clause_coverage": 0.8905,
+        "by_kind_total": {
+          "days": 50,
+          "people": 50,
+          "tickets_match_people": 50,
+          "taxi_cars": 50,
+          "cost_total": 11,
+          "intercity_transport": 11,
+          "unclassified": 9,
+          "restaurant_name": 8,
+          "restaurant_type": 7,
+          "attraction_type": 5,
+          "attraction_name": 5,
+          "accommodation_name": 1,
+          "rooms": 1,
+          "room_type": 1,
+          "accommodation_type": 1
+        },
+        "by_kind_uncovered": {
+          "unclassified": 9,
+          "restaurant_name": 8,
+          "restaurant_type": 7,
+          "attraction_type": 3,
+          "attraction_name": 1,
+          "accommodation_type": 1
+        }
+      },
+      "family_stats": [
+        {
+          "family": "required_restaurants",
+          "matched": 0,
+          "missing": 8,
+          "spurious": 0,
+          "wrong_value": 0,
+          "example_missing_uids": [
+            "m20241028164944055132",
+            "m20241028164913584976",
+            "m20241028164927523772",
+            "m20241028164922818260",
+            "m20241028164936662445"
+          ],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "cuisine_preference",
+          "matched": 0,
+          "missing": 7,
+          "spurious": 0,
+          "wrong_value": 0,
+          "example_missing_uids": [
+            "m20241028164647615645",
+            "m20241028164641561951",
+            "m20241028164637595271",
+            "m20241028164741002971",
+            "m20241028164642633824"
+          ],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "required_attractions",
+          "matched": 0,
+          "missing": 1,
+          "spurious": 20,
+          "wrong_value": 4,
+          "example_missing_uids": [
+            "m20241028164843213370"
+          ],
+          "example_wrong_value_uids": [
+            "m20241028164822843097",
+            "m20241028164830108978",
+            "m20241028164854688667",
+            "m20241028164901591817"
+          ]
+        },
+        {
+          "family": "required_attraction_types",
+          "matched": 0,
+          "missing": 3,
+          "spurious": 1,
+          "wrong_value": 2,
+          "example_missing_uids": [
+            "m20241028164800617250",
+            "m20241028164623257189",
+            "m20241028164746091821"
+          ],
+          "example_wrong_value_uids": [
+            "m20241028164804685984",
+            "m20241028164748425604"
+          ]
+        },
+        {
+          "family": "required_hotel_all_types",
+          "matched": 0,
+          "missing": 1,
+          "spurious": 0,
+          "wrong_value": 0,
+          "example_missing_uids": [
+            "m20241028164814314214"
+          ],
+          "example_wrong_value_uids": []
+        },
+        {
+          "family": "required_hotels",
+          "matched": 0,
+          "missing": 0,
+          "spurious": 0,
+          "wrong_value": 1,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": [
+            "m20241028165012424316"
+          ]
+        },
+        {
+          "family": "intercity_mode",
+          "matched": 0,
+          "missing": 0,
+          "spurious": 11,
+          "wrong_value": 0,
+          "example_missing_uids": [],
+          "example_wrong_value_uids": []
+        }
+      ],
+      "examples": [
+        {
+          "uid": "e20241028160428605482",
+          "days": 1,
+          "people_number": 1,
+          "n_oracle_clauses": 5,
+          "nature_language": "Current location: Guangzhou. I want to travel to Chongqing alone for one day with a budget of 1300 RMB. Please provide me with a travel plan."
+        },
+        {
+          "uid": "m20241028165012424316",
+          "days": 2,
+          "people_number": 2,
+          "n_oracle_clauses": 5,
+          "nature_language": "Current location: Wuhan. My friend and I want to visit Shenzhen for 2 days and stay at the Zhonghui Youya Hotel (Shenzhen Nanshan Science and Technology Park branch). Please provide us with a travel plan."
+        },
+        {
+          "uid": "t20241206211714065799",
+          "days": 3,
+          "people_number": 3,
+          "n_oracle_clauses": 6,
+          "nature_language": "Current location: Beijing. My two friends and I are planning to visit Shenzhen for three days. We have chosen to travel by train and use subway for intra-city transportation. Please provide me with a travel itinerary."
+        }
+      ]
+    }
+  ],
+  "fix_headroom": [
+    {
+      "label": "familiar_100 (control)",
+      "source": {
+        "kind": "local",
+        "name": "tpc_phase2_familiar_100"
+      },
+      "fix_kinds": [
+        "cost_accommodation",
+        "cost_attraction",
+        "cost_restaurant",
+        "cost_total",
+        "cost_transport",
+        "room_type"
+      ],
+      "n": 100,
+      "n_clauses": 1109,
+      "parse_gap": 0,
+      "parse_gap_after_fix": 0,
+      "parse_gap_cjk_literal": 0,
+      "parse_gap_ascii_literal": 0,
+      "parse_gap_ascii_literal_after_fix": 0,
+      "queries_with_gap": 0,
+      "queries_with_gap_after_fix": 0,
+      "clpr_ceiling_now": 100.0,
+      "clpr_ceiling_after_fix": 100.0,
+      "fpr_ceiling_now": 100.0,
+      "fpr_ceiling_after_fix": 100.0,
+      "residual_by_kind": {},
+      "residual_by_kind_ascii_literal_only": {}
+    },
+    {
+      "label": "local_released_150",
+      "source": {
+        "kind": "local",
+        "name": "tpc_phase2_test"
+      },
+      "fix_kinds": [
+        "cost_accommodation",
+        "cost_attraction",
+        "cost_restaurant",
+        "cost_total",
+        "cost_transport",
+        "room_type"
+      ],
+      "n": 150,
+      "n_clauses": 522,
+      "parse_gap": 15,
+      "parse_gap_after_fix": 14,
+      "parse_gap_cjk_literal": 0,
+      "parse_gap_ascii_literal": 15,
+      "parse_gap_ascii_literal_after_fix": 14,
+      "queries_with_gap": 15,
+      "queries_with_gap_after_fix": 14,
+      "clpr_ceiling_now": 97.13,
+      "clpr_ceiling_after_fix": 97.32,
+      "fpr_ceiling_now": 90.0,
+      "fpr_ceiling_after_fix": 90.67,
+      "residual_by_kind": {
+        "restaurant_name": 4,
+        "inner_transport_set": 3,
+        "attraction_name": 2,
+        "restaurant_type": 2,
+        "activity_time_window": 2,
+        "attraction_type": 1
+      },
+      "residual_by_kind_ascii_literal_only": {
+        "restaurant_name": 4,
+        "inner_transport_set": 3,
+        "attraction_name": 2,
+        "restaurant_type": 2,
+        "activity_time_window": 2,
+        "attraction_type": 1
+      }
+    },
+    {
+      "label": "hf_easy",
+      "source": {
+        "kind": "hf",
+        "name": "easy"
+      },
+      "fix_kinds": [
+        "cost_accommodation",
+        "cost_attraction",
+        "cost_restaurant",
+        "cost_total",
+        "cost_transport",
+        "room_type"
+      ],
+      "n": 300,
+      "n_clauses": 1579,
+      "parse_gap": 132,
+      "parse_gap_after_fix": 131,
+      "parse_gap_cjk_literal": 131,
+      "parse_gap_ascii_literal": 1,
+      "parse_gap_ascii_literal_after_fix": 0,
+      "queries_with_gap": 131,
+      "queries_with_gap_after_fix": 131,
+      "clpr_ceiling_now": 91.64,
+      "clpr_ceiling_after_fix": 91.7,
+      "fpr_ceiling_now": 56.33,
+      "fpr_ceiling_after_fix": 56.33,
+      "residual_by_kind": {
+        "restaurant_type": 30,
+        "restaurant_name": 30,
+        "accommodation_type": 21,
+        "attraction_type": 21,
+        "accommodation_name": 18,
+        "attraction_name": 11
+      },
+      "residual_by_kind_ascii_literal_only": {}
+    },
+    {
+      "label": "hf_medium",
+      "source": {
+        "kind": "hf",
+        "name": "medium"
+      },
+      "fix_kinds": [
+        "cost_accommodation",
+        "cost_attraction",
+        "cost_restaurant",
+        "cost_total",
+        "cost_transport",
+        "room_type"
+      ],
+      "n": 150,
+      "n_clauses": 1264,
+      "parse_gap": 127,
+      "parse_gap_after_fix": 89,
+      "parse_gap_cjk_literal": 89,
+      "parse_gap_ascii_literal": 38,
+      "parse_gap_ascii_literal_after_fix": 0,
+      "queries_with_gap": 71,
+      "queries_with_gap_after_fix": 71,
+      "clpr_ceiling_now": 89.95,
+      "clpr_ceiling_after_fix": 92.96,
+      "fpr_ceiling_now": 52.67,
+      "fpr_ceiling_after_fix": 52.67,
+      "residual_by_kind": {
+        "restaurant_type": 33,
+        "attraction_type": 28,
+        "attraction_name": 17,
+        "accommodation_type": 11
+      },
+      "residual_by_kind_ascii_literal_only": {}
+    },
+    {
+      "label": "hf_human",
+      "source": {
+        "kind": "hf",
+        "name": "human"
+      },
+      "fix_kinds": [
+        "cost_accommodation",
+        "cost_attraction",
+        "cost_restaurant",
+        "cost_total",
+        "cost_transport",
+        "room_type"
+      ],
+      "n": 154,
+      "n_clauses": 687,
+      "parse_gap": 101,
+      "parse_gap_after_fix": 97,
+      "parse_gap_cjk_literal": 97,
+      "parse_gap_ascii_literal": 4,
+      "parse_gap_ascii_literal_after_fix": 0,
+      "queries_with_gap": 82,
+      "queries_with_gap_after_fix": 79,
+      "clpr_ceiling_now": 85.3,
+      "clpr_ceiling_after_fix": 85.88,
+      "fpr_ceiling_now": 46.75,
+      "fpr_ceiling_after_fix": 48.7,
+      "residual_by_kind": {
+        "attraction_type": 52,
+        "restaurant_type": 27,
+        "attraction_name": 15,
+        "accommodation_type": 3
+      },
+      "residual_by_kind_ascii_literal_only": {}
+    },
+    {
+      "label": "hf_preference_base50",
+      "source": {
+        "kind": "hf",
+        "name": "preference_base50"
+      },
+      "fix_kinds": [
+        "cost_accommodation",
+        "cost_attraction",
+        "cost_restaurant",
+        "cost_total",
+        "cost_transport",
+        "room_type"
+      ],
+      "n": 50,
+      "n_clauses": 260,
+      "parse_gap": 20,
+      "parse_gap_after_fix": 20,
+      "parse_gap_cjk_literal": 20,
+      "parse_gap_ascii_literal": 0,
+      "parse_gap_ascii_literal_after_fix": 0,
+      "queries_with_gap": 20,
+      "queries_with_gap_after_fix": 20,
+      "clpr_ceiling_now": 92.31,
+      "clpr_ceiling_after_fix": 92.31,
+      "fpr_ceiling_now": 60.0,
+      "fpr_ceiling_after_fix": 60.0,
+      "residual_by_kind": {
+        "restaurant_name": 8,
+        "restaurant_type": 7,
+        "attraction_type": 3,
+        "attraction_name": 1,
+        "accommodation_type": 1
+      },
+      "residual_by_kind_ascii_literal_only": {}
+    }
+  ]
+}
