@@ -97,7 +97,7 @@ FPR is the fraction of queries passing *every* constraint, and the three prefere
 any query that fails. **One FPR point is worth about `0.85` overall; perfecting all three preference
 terms at today's FPR is worth `~1.5` in total.** Preference work is not where the points are.
 
-### 3. The solver is bimodal, and more search does not help
+### 3. The current fixed search saturates; deeper search is not yet tested
 
 Per-query telemetry from a 1 h diagnostic (`n=42`, triage, `25 s`/query):
 
@@ -107,30 +107,39 @@ Per-query telemetry from a 1 h diagnostic (`n=42`, triage, `25 s`/query):
 | restarts used, median | **0** | **39** |
 | solve seconds, median | **3.2** | **22.7** of `~23 s` |
 
-A query that gets solved is solved by the **first constructed plan**. A query that does not spends its
-whole slice on ~39 randomized restarts. **There is no middle population that "just needed more time."**
+A query that gets solved in this short regime is solved by the **first constructed plan**. A query that
+does not spends its whole slice on ~39 randomized restarts. There is no measured middle population that
+"just needed a little more time" in this regime.
 Giving the failures `2.5×` the budget raised restarts to a median of 166 and flipped **one query in
 68**; the 5 h reference run agrees (repair improved `2 of 66`, polish `11 of 34`), which is why
 `1/3/5 h` score `57.35 / 57.86 / 57.99`.
 
-**Why more restarts cannot help.** A restart resamples one parameter tuple (`_random_params`):
+**What that does and does not establish.** A restart resamples one parameter tuple (`_random_params`):
 attraction offset, hotel index, attractions per day, visit minutes, a forced transport mode, optional
 intercity preferences, a meal offset. Extra budget, a raised `TPC_MAX_RESTARTS`, more workers,
-within-query parallelism *and* a fresh seed salt are all the same intervention: **draw more tuples from
-that space.** The space does not contain a fix for these queries.
+within-query parallelism and a fresh seed salt all draw more tuples from that same small representation.
+That explains why a new move beat more draws. It does **not** prove mathematical infeasibility.
 
-> **⚠ Scope correction, 2026-08-07.** This section previously read as though the budget question were
-> settled at every scale. It is not. Across **all 25 recorded rows** the per-query cap is `300.0 s` and
-> no pass ever exceeded it, because
-> [P4](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass)
-> makes a higher budget structurally unreachable on this path. What is measured is `25 s → 62 s`,
-> `120 s → 300 s`, and the whole-envelope `1/3/5 h` ladder (the last of these pre-P1). **No query has
-> ever been solved above `300 s` here.** The conclusion above may well survive that test; it has not had
-> it, and the honest statement is "flat over the range we could measure".
+**R24's sharper scope correction (2026-08-07).** Raising the outer per-query budget from `300 s` to
+`900 s` produced byte-identical plans because both arms stopped naturally near `107 s`. The reason is
+visible in code: `TPC_MAX_RESTARTS` stays fixed at `400`, so both arms replay the same deterministic
+400-restart sequence, while CP-SAT still gets at most `30 s` by default (`min(30, remaining / 2)`).
+An unchanged one-hour run would therefore also stop early; it would not perform one hour of search.
+R24 rejects "raise only the outer timeout." It does **not** test `4000` restarts, a longer CP-SAT
+slice, fresh configurations, or a validator-guided portfolio. CP-SAT also selects sets of POIs,
+hotels and transport rather than the exact timed itinerary; greedy reconstruction can reject a
+feasible assignment, so a timeout or `INFEASIBLE` status there is not a proof about the full problem.
 
-**So the idle time is a symptom, not the problem** — with two corrections. Part of it is the scheduler
-idling on queries it wrongly believes are done (§1), and part of it is the P4 cap defect making a second
-repair pass impossible regardless of how much envelope is left.
+The next discriminating measurement is
+[R25](tpc_phase2_eval.md#r25--separate-the-cp-restart-and-outer-budget-limits): vary the CP limit and
+restart cap independently on R24's failing subset. Until it runs, the honest statement is "the fixed
+30-second-CP/400-restart configuration saturates; deeper or more diverse search is unmeasured."
+
+**So the idle time is usable capacity, not evidence of score headroom by itself.** Part of it is the
+scheduler idling on queries it wrongly believes are done (§1), part is the P4 cap defect, and part is
+the internal 400-restart/30-second-CP boundary R24 never changed. Phase 1 used comparable capacity by
+trying different seeds, configurations, targeted repairs and densification behind monotonic merge;
+the Phase 2 analogue is a keep-best portfolio, not one unchanged hour-long call.
 
 ### 4. One constraint family accounted for almost all of the in-distribution loss
 
@@ -159,7 +168,7 @@ quality being mistaken for a property of the component.
 
 ## Work items
 
-Ranked. `P0`…`P18` are stable identifiers. Nothing below is on a critical path to an upload, because
+Ranked. `P0`…`P20` are stable identifiers. Nothing below is on a critical path to an upload, because
 [there is no scheduled upload](tpc_phase2_eval.md#submission-policy-owners-instruction-2026-08-06);
 they are ranked by expected effect on the held-out score.
 
@@ -180,15 +189,14 @@ the previous ranking:
 
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
-| **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | 1 day | a measured `40–65 %` recall gain currently converting to nothing; the largest single lever left | **landed 2026-08-07 (library default off); kill criterion met, e2e screen GREEN on familiar-100, flat on hf_medium — see screen** |
-| **P19** | [Find the unidentified half of the gap](#p19--find-the-unidentified-half-of-the-gap) | 1 h | held-out C-LPR is below our worst local register, so phrasing alone does not explain it | **closed 2026-08-07 — kill criterion not met, ranked list delivered, see screen** |
+| **P20** | [Close the two dominant family-recall gaps](#p20--close-the-two-dominant-family-recall-gaps) | half day | P19 attributes `202` released clause misses to `required_attraction_types` and `cuisine_preference`, over 2x the next family | **open, first implementation item** |
+| **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | landed | detects unfamiliar requirements, but current-tree `matched 311 < 320` deterministic and `hf_medium` e2e is flat | **landed, library default off; not promoted** |
+| **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | 1 h | prevents the recurrence of the failure that cost this cycle | **open; independent of P20/P6** |
+| **P6** | [Validator-in-loop Qwen repair](#p6--validator-in-loop-qwen-repair) | 1 day spike | tests the successful Kiro/Claude interaction shape without allowing generated facts or unchecked plans | **open; independent spike, default off** |
 | **P15** | [Finish phrasing-robust extraction](#p15--finish-phrasing-robust-extraction) | half day | the measured residual beyond budget/room-type; compounds through the FPR threshold | **landed (partial) 2026-08-07; residual re-scoped, see below** |
-| **P4** | [The per-query cap is 300 s by accident](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass) | 1–2 h | **re-opened 2026-08-07**: no query has ever run above `300 s` on this path because the code cannot. Near-zero risk (keep-best), unlocks an untested regime | **open, promoted** |
+| **P4/P5** | [Use the idle envelope as a keep-best portfolio](#p5--spend-the-idle-envelope-on-fresh-seeds) | half day | Phase 1's successful pattern; value depends on whether CP time, more restarts or configuration diversity flips R24 failures | **open, blocked on R25** |
 | P17 | [Stop trusting our own "satisfied" verdict](#p17--stop-trusting-our-own-satisfied-verdict) | half day (a), 2 h (b) | (a) re-aims the repair queue, worth more under large parse gaps; (b) idle envelope, worth ~0 until FPR > 0 | open, (a) only |
-| P18 | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | 1 h | prevents the recurrence of the failure that cost this cycle | open |
-| P5 | [Spend the idle envelope on fresh seeds](#p5--spend-the-idle-envelope-on-fresh-seeds) | half day | genuinely open, and **second in line rather than parked**: search cannot satisfy a clause we never extracted, so coverage first | open, after coverage |
-| P6 | LLM-backed repair/move proposer | 1–2 days | **weakened by measurement**: LLM-only planning scores `2.64` with `MacEPR 0.00` | open, low |
-| P6 | LLM-backed repair/move proposer | 1–2 days | **weakened by measurement**: LLM-only planning scores `2.64` with `MacEPR 0.00` | open, low |
+| **P19** | [Find the unidentified half of the gap](#p19--find-the-unidentified-half-of-the-gap) | 1 h | produced the density and family ranking that defines P20 | **closed 2026-08-07** |
 | ~~P1~~ | ~~`timed_visit_named_poi` window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **promoted 2026-08-05**: `overall +5.83`, `FPR +11.0` | landed |
 | ~~P8/P9~~ | ~~Window push / absent-POI insert~~ | — | **promoted 2026-08-06** (R14 GREEN, `+0.5471`); fire rarely | landed |
 | ~~P10~~ | ~~Scheduler self-scoring uses the solver's exact variants~~ | — | **landed 2026-08-06**, default-on; R16 GREEN | landed |
@@ -294,18 +302,19 @@ independent fixes, both needed:
    at all) and city-scoped (`_attraction_type_vocab`'s own casing-disagreement note).
 
 Both fixes together: `matched` on `local_released_150` `300 → 311` (`extract_fill`,
-`entity_resolution` on), `spurious` improving `38 → 37` rather than trading away. **Kill criterion
-met** against the roadmap's original `309` line (this tree's own deterministic floor moved to `320`
-in the interim from the P15 landing, so `311` is short of *that* bar — see the screen for the full
-number). e2e A/B: familiar-100 **GREEN** (`FPR 26.67→40.0`, `overall 55.72→62.88`, though this box's
+`entity_resolution` on), `spurious` improving `38 → 37` rather than trading away. It clears the
+roadmap's stale pre-P15 threshold of `309`, but **does not clear the contemporaneous deterministic
+floor of `320` measured in the same run**. Promotion decisions compare same-tree arms, so the honest
+gate result is not yet GREEN. e2e A/B: familiar-100 **GREEN** (`FPR 26.67→40.0`, `overall
+55.72→62.88`, though this box's
 own baseline showed `~7`-point run-to-run noise, so read the sign not the magnitude); `hf_medium`
-**flat** (`overall 49.99→49.88`, `FPR` unchanged) — not a regression, but this branch's headline gain
-did not reproduce on this particular 30-query free-prose subset. Two measurement bugs were found and
+has a **negligible negative delta within that noise** (`overall 49.99→49.88`, `FPR` unchanged), so
+this branch's headline gain did not reproduce on this particular 30-query free-prose subset. Two measurement bugs were found and
 fixed while running the e2e screen (an LLM-timeout-vs-parse-deadline trap matching CLAUDE.md's own
 documented warning, and a stale-result-reuse bug from killing a run mid-flight) — both are recorded
 in the screen so they don't recur. **Library default unchanged**: `Flags.from_env({})` still gives
-`llm_parse=False, backend=none`; this is not a default flip, it is evidence for the Evaluation
-workstream to spend a pinned `full_runs/` slot on a quieter machine.
+`llm_parse=False, backend=none`; this is not a default flip, and R20 requires a new parse-level arm
+to beat the contemporaneous deterministic floor before spending a pinned `full_runs/` slot.
 
 The section below is preserved as the original diagnosis and is still accurate; only the "open" framing
 is stale.
@@ -334,19 +343,23 @@ family, never overwrite a regex one. The overwrite policy corrupts `budgets` in 
 `6/126` free-prose gaps against extraction's `50/126` and damages familiar-100 family F1
 `0.955 → 0.917`.
 
-**Kill criterion, fixed in advance:** `matched` on `local_released_150` must exceed `309`. If a
-grounding fix does not restore that count, stop — the approach does not convert recall into score, and
-that is a publishable finding rather than a failure.
+**Kill criterion, corrected for intervening parser changes:** `matched` on `local_released_150` must
+exceed the deterministic arm measured on the same tree and same query set. A historical absolute
+number cannot remain the floor after P15 moves that arm. P16 currently reads `311 < 320`; it remains
+available for [R20](tpc_phase2_eval.md#r20--does-grounded-fill-only-llm-extraction-convert), but it is
+not promotable from the merged screen.
 
 **Residual risk to watch.** Family *precision* falls with LLM extraction (`0.958 → 0.894` familiar,
 `0.883 → 0.808` medium) because the model adds families the oracle lacks. Per P15's trap, a spurious
 constraint can make a query infeasible, so precision is not a cosmetic metric here.
 
 **Bar.** Flag, default off, byte-identical library floor (`Flags.from_env({})` must keep
-`llm_parse=False, backend=none`), the `matched` criterion above, then a paired e2e A/B on the same
-30-query free-prose pair **and** the familiar-100 first-30 control, then a `full_runs/` row before any
-default flips. Note the deployment constraint: the organizers' endpoint caps concurrency at
-`--max-running-requests 8`, below our worker count, so any LLM stage must throttle to ≤8 in flight.
+`llm_parse=False, backend=none`), the contemporaneous `matched` criterion above, then a paired e2e A/B
+on free prose enriched for P19's two dominant families **and** the familiar-100 control, then a
+`full_runs/` row before any default flips. The free-prose arm must improve; familiar-only evidence
+cannot promote a parser after v1. Note the deployment constraint: the organizers' endpoint caps
+concurrency at `--max-running-requests 8`, below our worker count, so any LLM stage must throttle to
+at most 8 in flight.
 
 ### P19 — find the unidentified half of the gap
 
@@ -394,6 +407,37 @@ family hunting.
 metrics, already recorded in
 [`heldout/20260807_v1_leaderboard.json`](../results/phase2_baselines/heldout/20260807_v1_leaderboard.json).
 
+### P20 — close the two dominant family-recall gaps
+
+**Immediate implementation item; independent of R20/R25 and safe to run on a separate machine.** P19
+ranks `required_attraction_types` (`102` misses) and `cuisine_preference` (`100` misses) more than
+twice above the next family. P16 can ground values only after a family exists; it cannot repair the
+`missing` bucket, and `extract_fill` deliberately cannot overwrite a deterministic family already
+populated with garbage. The merged P16 screen gives the concrete example:
+`cuisine_preference = ["one of the following", "Japanese cuisine"]`.
+
+**Implement exactly this slice in `parse_constraints.py`:**
+
+1. Use P19's released-data report to list English-visible clauses in the two families. Treat CJK
+  oracle literals paired with English text as unmeasurable, not parser failures to fit.
+2. In the cuisine parser, strip only anchored list lead-ins such as "one of the following
+  restaurant types" before splitting alternatives. Do not add a global stoplist and do not change
+  another family's precedence.
+3. Add lexically anchored free-prose alternatives for attraction categories and cuisines. Preserve
+  OR alternatives as branch-local lists; never flatten "A or B" into two simultaneous requirements.
+4. Add focused tests for every new phrase, the prefix-garbage regression, one negative sentence per
+  pattern, and an OR-branch case. Keep the two familiar-100 floor tests byte-identical.
+
+**Required screen and acceptance:** run R22 over all six released sets. Familiar-100 stays `0/1109`;
+neither total parse gaps nor spurious clauses may rise on any free-prose set; each target family's
+`matched` count must rise on at least one English-literal set. Then run
+[R26](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets). A static recall gain without an
+e2e C-LPR/FPR gain does not promote the change. Commit the R22 screen beside the parser change, plus
+`target_uids.txt` listing the released English-visible target clauses used by R26.
+
+**Do not bundle:** distance-value formatting, activity end-window semantics, P17 scheduler coverage,
+or LLM merge policy. They have different failure and precision risks.
+
 ### P17 — stop trusting our own "satisfied" verdict
 
 Two halves. **(a) is the real fix. (b) was the safe one, and the 2026-08-07 breakdown demoted it to
@@ -431,7 +475,7 @@ separately, plus `overall`/`FPR` on both registers. If it fires on familiar-100 
 
 ### P4 — the per-query cap is 300 s by accident, and it structurally forbids a second repair pass
 
-**Re-opened and promoted 2026-08-07, after the owner challenged the demotion and was right.**
+**Re-opened 2026-08-07, now blocked on R25.**
 Previously filed as a score-neutral tidy-up. It is not a tidy-up: it is why every run stops at roughly
 a quarter of its envelope, and it silently disabled a mechanism the design intended to have.
 
@@ -469,11 +513,12 @@ explicit operator override, since the per-query development gate depends on it.
 measurement. Read the ordering argument in [P5](#p5--spend-the-idle-envelope-on-fresh-seeds) before
 spending an eval slot: on the held-out distribution, coverage plausibly binds before search does.
 
-**R24 measured this, 2026-08-07** (Evaluation workstream screen under `results/phase2_baselines/screens/`,
-not a `full_runs/`/`runs/` row, and not landed here): `0` flips at `900 s` against the failing subset,
-plans byte-identical to `300 s` modulo timing. Per R24's own decision table this reads as "land P4 as a
-correctness fix only" — a wiring/documentation fix, not a search-gain fix — since the extra budget was
-never used at all in the tested range. Implementation still owns whether/when to land it.
+**R24 measured the outer cap only, 2026-08-07** (Evaluation screen, not a promotion row): `0` flips at
+`900 s`, plans byte-identical to `300 s`. Both arms still used the same deterministic seed, the same
+`TPC_MAX_RESTARTS=400`, and the same default CP-SAT cap of `30 s`; both stopped around `107 s`.
+Therefore P4 alone is a correctness fix that schedules more identical work. Implement it together
+with P5's pass diversity only if [R25](tpc_phase2_eval.md#r25--separate-the-cp-restart-and-outer-budget-limits)
+shows which internal axis can produce a flip.
 
 ### P5 — spend the idle envelope on fresh seeds
 
@@ -495,10 +540,9 @@ descending strength:
    does.
 3. **Current measurement.** Post-P1 the repair pass gives ~50 failing queries the full `300 s` and
    improves `1` (R8 `1/54`, R17 `1/50`); pre-P1 it was `2/66`. Not a pre-P1 artifact — and no longer an
-   open question: [R24](tpc_phase2_eval.md#r24--does-a-query-above-300-s-ever-flip-the-owners-question-open)
-   (2026-08-07) tested `300 s` against `900 s` directly on the failing subset and found `0` flips, plans
-   byte-identical modulo timing — the search does not even attempt to use budget past its own fixed
-   point (`~65–190 s`), so raising the cap further would not change this argument's conclusion.
+  outer-budget question: [R24](tpc_phase2_eval.md#r24--does-a-query-above-300-s-ever-flip-the-owners-question-open)
+  found `0` flips because it changed neither the 400-restart cap nor the 30-second CP cap. The
+  internal-limit question remains open and is isolated by R25.
 
 **The owner's Phase 1 experience is real, and it points at the right variant.** Long overnight runs did
 fix hard queries there, under two conditions that do not hold now: oracle constraints were available, so
@@ -508,9 +552,11 @@ the objective was *correct*; and the gain came from a monotonic merge across man
 found paid — `+11` FPR from one new *move*, `~0` from more draws of the same one. If the idle envelope is
 to be spent, spend it on configurations before salts.
 
-**Sequencing, which is the actionable part.** Coverage first (P15 partially landed, P16, P19). **Once the
-objective is right and the scheduler queues the right queries, the idle envelope becomes worth spending,
-and P4 and this item move up rather than staying parked.** Second in line, not closed.
+**Sequencing, which is the actionable part.** R25 may run now in parallel with P20 because it is a
+solver diagnostic on familiar-100, where extraction is clean. Implementation of the shipping
+portfolio waits for both: R25 must identify a productive axis, and coverage work must make the
+held-out objective less incomplete. If neither CP time nor restart breadth flips a query, do not add
+blind seed passes; spend the envelope on configuration-changing repairs or P6 instead.
 
 **Where.** `chinatravel/agent/phase2/sweeps.py`: add `SweepConfig.explore_passes` (env `TPC_P2_EXPLORE`,
 **default off**); have `solve_one(task)` read `task["seed_salt"]` and set `TPC_SEED_SALT` for the solve
@@ -524,7 +570,8 @@ the envelope is exhausted; each pass hands out a different salt; `TPC_P2_EXPLORE
 pass sequence exactly.
 
 **Depends on** P0 and P2 (both landed — without the attempt ledger, flips cannot be counted per pass,
-and that is the only signal separating the two readings).
+and that is the only signal separating the two readings), plus a positive R25 arm before default-on
+implementation.
 
 **Considered and dropped: warm-starting later passes.** `solve_one` does not receive the incumbent plan,
 so repair and polish re-solve from scratch. Threading plan state through the worker boundary and
@@ -546,29 +593,64 @@ skip cleanly (not fail) when the cache is absent, and say which condition it ski
 **Why it is worth an hour:** a parser change that improves familiar-100 while worsening free prose is a
 regression, and right now only a human reading two screens would notice.
 
+### P6 — validator-in-loop Qwen repair
+
+**Pure unchecked LLM planning is closed; grounded tool-guided planning is not.** The measured `Act`
+arm queried `WorldEnv` for 34-42 turns and then emitted itinerary JSON directly. It had no schema or
+commonsense feedback, no grounded edit API, and no keep-best loop; all 16 plans failed commonsense.
+That is not the interaction that made manual Kiro/Claude repair useful.
+
+Build a bounded experimental loop behind `TPC_P2_LLM_REPAIR_LOOP=1`, library default off:
+
+1. Start from TPCAgent's best grounded candidate. Run only for queries that remain self-failing after
+  deterministic solve; never spend calls on an already accepted plan.
+2. Prompt with the visible query, compact current plan, parsed branch-local requirements and
+  `_describe_check_failure` output. Assert in a unit test that no oracle/verifier-only key can enter
+  the prompt.
+3. Accept typed edits only. Reuse `refine.py`, `apply_refine_edits` and `ground_and_check`; add an
+  insertion/replacement op only through a `WorldEnv` lookup, never as free-form plan JSON. Keep the
+  first spike to six rounds and six edits per round.
+4. After each rejected batch, return the compact deterministic rejection reason to the next round.
+  Keep the incumbent unless the exact existing checker and self-score ordering accept the trial;
+  never weaken schema, commonsense or parsed-logic acceptance.
+5. Record calls, rounds, proposed/grounded/rejected/committed edits, stop reason, wall time and token
+  use per query. Throttle to at most eight concurrent requests for organizer parity.
+
+**Cheap falsification screen:** R27, ten deterministic failures split across timed-window,
+name/type and transport/budget blockers, `temperature=0`, at most six calls/query. Continue only if at
+least one previously failing query becomes accepted, `MacEPR` does not fall, all emitted facts ground,
+and the call/timeout counters prove the loop ran. A partial-score move with zero accepted flips is a
+RED result. Do not enable thinking mode.
+
+This can be implemented in parallel with P20/P18. It reuses P16's grounding but does not depend on
+LLM parsing being promoted.
+
 ## What not to spend time on
 
 - **Anything justified by a familiar-100 number alone.** That is the error that cost this cycle. Pair
   it with a free-prose measurement or it does not count.
-- **`audit`-mode LLM parsing, LLM-only planning, LLM plan refine.** All measured, all at or below the
-  deterministic floor. LLM-only planning scores `2.64` with `MacEPR 0.00` — not one of 16 plans passed
-  commonsense.
+- **`audit`-mode LLM parsing, free-form LLM-only JSON planning, or another one-shot refine prompt.**
+  All measured at or below the deterministic floor. This does not exclude P6's bounded
+  validator-in-loop edit proposer; that experiment has deterministic grounding and rejection
+  feedback the measured arms lacked.
 - **Thinking mode on the planning loop.** `75 s` per one-line call, `~$1.1`/query extrapolated,
   timeouts. Measured and rejected.
-- **Within-query parallelism.** More draws from the space §3 measured as exhausted, now competing for
-  cores the whole-run scheduler already uses across queries. Its one screen came back RED.
+- **Within-query parallelism before R25 identifies a productive axis.** Blindly parallelizing the
+  same 400 draws competes with query-level workers. If R25 identifies CP or restart breadth as useful,
+  schedule that diversity across passes first and preserve outer query parallelism.
 - **Preference packing (`TPC_PACK_*`).** Bounded by FPR; `~1.5` overall if all three were perfected
   against `~0.85` for one FPR point. `TPC_PACK_HOTEL_BREAKFAST` is permanently off — upstream PR #29
   made a repeated meal type a commonsense failure.
-- **More whole-envelope sensitivity runs at the current cap.** `1/3/5 h` is flat and §3 explains why —
-  but see the scope correction in §3: a *raised per-query cap* is a different question and is untested
-  ([P4](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass)).
+- **More whole-envelope or outer-timeout sensitivity with unchanged internals.** `1/3/5 h` is flat,
+  and R24 shows a `900 s` outer cap still replays the same 400-restart/30-second-CP search. R25's
+  independently raised CP and restart limits are the remaining compute experiment.
 - **Improving the empty-itinerary fallback for score.** `empty_plans` is `0` on every real run. It is
   insurance against a cut-off run, not points.
 - **`arrive_no_later` emitted from `end_before`.** Tried; its ceiling prunes proper transport, and
   since the evaluator sync a transport-less plan also scores ATT `0`.
-- **An agentic loop on Stage 3 refine.** Both refine variants show `improve_committed=0`. Revisit only
-  if a screen ever shows `improve_committed > 0`.
+- **More calls around the existing one-shot Stage 3 prompt.** Both refine variants show
+  `improve_committed=0`. P6 is allowed to revisit the architecture only because it adds deterministic
+  rejection feedback and a bounded typed-edit loop; R27 still requires an accepted flip.
 
 ## Landed and promoted
 
