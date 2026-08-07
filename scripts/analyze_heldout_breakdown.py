@@ -9,9 +9,11 @@ Three things this establishes, each printed with the arithmetic that supports it
 
 1. The published breakdown reproduces the published aggregate exactly, so the number is internally
    consistent and there is nothing to suspect about the scoring itself.
-2. ``FPR = 0.0000`` is the *arithmetic consequence* of ``C-LPR = 55.2`` at familiar-100's clause
-   density, not a separate failure. A query needs every clause to pass, so a 58% per-clause rate
-   over ~11 clauses gives a fraction of a query per hundred. Do not go hunting for a second bug.
+2. ``FPR = 0.0000`` is consistent with ``C-LPR = 55.2`` at familiar-100's clause density, and needs
+   no separate failure to explain it. A query passes only if every clause passes, so a 58%
+   per-clause rate over ~11 clauses predicts an FPR of about ``0.26`` on the 0-100 scale -- a
+   quarter of one query in a hundred. An expectation that far below one query makes *observing*
+   exactly zero the single most likely outcome. Do not go hunting for a second bug.
 3. Because FPR carries weight 0.40 and gates all three preference terms, **55% of the total weight
    currently yields exactly zero**, and it stays near zero until the per-clause pass rate reaches
    roughly 0.75. That makes partial coverage fixes worth much less than a linear reading suggests,
@@ -120,6 +122,13 @@ def main() -> int:
         default=FAMILIAR_CLAUSES_PER_QUERY,
         help="assumed held-out clause density (default: familiar-100's measured %(default)s)",
     )
+    parser.add_argument(
+        "--queries",
+        type=int,
+        default=100,
+        help="assumed held-out query count, which the organizers have not published "
+        "(default: %(default)s, familiar-100's size)",
+    )
     args = parser.parse_args()
     k = args.clauses_per_query
 
@@ -170,14 +179,31 @@ def main() -> int:
     print("4. FPR = 0.0000 is a consequence of C-LPR, not a separate bug")
     print("=" * 78)
     print(f"   per-clause pass rate on a scored plan: p = {p_held:.4f}")
-    print(f"   {'clauses/query':>14} {'p^k':>10} {'expected all-pass per 100':>27}")
-    for kk in (5, 8, 11, 14):
-        print(f"   {kk:>14} {p_held**kk:>10.5f} {100 * p_held**kk:>27.2f}")
-    k_needed = math.log(0.005) / math.log(p_held)
-    print(f"   -> FPR rounds to 0.0000 once k > {k_needed:.1f}; familiar-100 measures "
-          f"{FAMILIAR_CLAUSES_PER_QUERY} clauses/query.")
-    print("      So do not hunt for a second failure: one clause per query is enough to")
-    print("      zero the query, and we miss ~42% of clauses.")
+    print(f"   assumed held-out query count n = {args.queries} (UNKNOWN - see the artifact)")
+    print()
+    print("   FPR is on the 0-100 scale, so the model's prediction is 100*p^k, and the")
+    print("   expected NUMBER of fully-passing queries is n*p^k:")
+    print(f"   {'clauses/query':>14} {'predicted FPR':>14} {'expected passes':>16} "
+          f"{'P(observe 0)':>13}")
+    for kk in (5, 8, 9, 11, 14):
+        expected = args.queries * (p_held**kk)
+        p_zero = (1 - p_held**kk) ** args.queries
+        print(f"   {kk:>14} {100 * p_held**kk:>14.2f} {expected:>16.2f} {p_zero:>13.1%}")
+    print()
+    print("   So the honest statement is NOT that the model predicts 0.0000. At k=11 it")
+    print(f"   predicts FPR ~ {100 * p_held**11:.2f} - that is {args.queries * p_held**11:.2f} "
+          f"passing queries out of {args.queries}. Because that")
+    print(f"   expectation is well below one query, OBSERVING exactly zero is the single")
+    print(f"   most likely outcome ({(1 - p_held**11) ** args.queries:.0%} of the time).")
+    # Density at which observing zero becomes more likely than not.
+    k_even = math.log(1 - 0.5 ** (1 / args.queries)) / math.log(p_held)
+    print(f"   Observing zero becomes more likely than not once k > {k_even:.1f} clauses/query;")
+    print(f"   familiar-100 measures {FAMILIAR_CLAUSES_PER_QUERY}.")
+    print("   Either way the conclusion stands: one failed clause zeroes a query, we miss")
+    print("   ~42% of clauses, and no separate per-query failure needs to exist to explain")
+    print("   an observed 0.0000. Within-query correlation and the true held-out density are")
+    print("   both unknown and both push this estimate around, so treat it as an")
+    print("   order-of-magnitude consistency check rather than a point prediction.")
 
     correlation = calibrate_correlation(local, k)
     print()

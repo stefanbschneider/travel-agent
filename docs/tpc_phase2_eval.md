@@ -41,12 +41,16 @@ entire collapse is in *knowing what to satisfy*. That is the constraint-extracti
 confirmed on the axis that matters — and it **definitively kills the crashed-run hypothesis**, because
 empty or fallback plans cannot score EPR-micro `99.5`.
 
-**2. `FPR = 0.0000` is an arithmetic consequence of `C-LPR`, not a separate bug.** Do not go looking
+**2. `FPR = 0.0000` needs no second bug to explain it.** Do not go looking
 for a second failure. C-LPR is conditional on commonsense, so the per-clause pass rate on a scored
 plan is `55.1966 / 95.0 = 58.1 %`. A query passes only if *every* clause passes, so at familiar-100's
-`11.09` clauses per query even independent failures give `0.581^11 ≈ 0.26` queries per hundred — which
-rounds to `0.0000`. The same model on familiar-100 predicts `FPR 39.3` against a measured `44.0`, so
-it is calibrated and slightly conservative.
+`11.09` clauses per query the model predicts `FPR ≈ 0.25` on the 0–100 scale — a quarter of one query
+in a hundred. **An expectation that far below one query makes *observing* exactly zero the single most
+likely outcome** (`≈ 78 %` at `n = 100`), and zero becomes more likely than not at any density above
+`~9.2` clauses per query. The same model predicts `39.3` on familiar-100 against a measured `44.0`, so
+it is calibrated and slightly conservative. Held-out density, query count and within-query correlation
+are all unknown and all move this estimate, so read it as an order-of-magnitude consistency check
+rather than a prediction.
 
 **3. `55 %` of the total weight currently yields exactly zero.** FPR is `0.40` on its own and gates all
 three preference terms (`0.15`), since a failing query scores `0` on each. Everything in our `33.2473`

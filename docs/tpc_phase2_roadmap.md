@@ -42,10 +42,13 @@ change your plans:
    we emit still resolves in the environment on unseen queries. So none of the solver's grounding,
    packing or repair machinery is implicated, and a crashed-run explanation is excluded outright —
    empty plans cannot score EPR-micro `99.5`.
-2. **`FPR = 0.0000` is arithmetic, not a second bug.** Per-clause pass rate on a scored plan is
-   `55.20/95.0 = 58.1 %`; a query needs *all* ~11 clauses, and `0.581^11 ≈ 0.0026`. The same model
+2. **`FPR = 0.0000` needs no second bug to explain it.** Per-clause pass rate on a scored plan is
+   `55.20/95.0 = 58.1 %`; a query needs *all* ~11 clauses, so the model predicts `FPR ≈ 0.25` on the
+   0–100 scale — a quarter of one query in a hundred. An expectation that far below one query makes
+   *observing* exactly zero the likeliest single outcome (`≈ 78 %` at `n = 100`). The same model
    predicts `39.3` against familiar-100's measured `44.0`, so it is calibrated. **Do not spend time
-   looking for a systematic single-query failure.**
+   looking for a systematic single-query failure**; density, query count and clause correlation are
+   unknown, so this is a consistency check rather than a prediction.
 3. **`55 %` of the total weight yields exactly zero, and it unlocks at a threshold.** FPR is `0.40`
    alone and gates the `0.15` of preference terms. Because FPR is multiplicative in the per-clause
    rate, it is flat below `p ≈ 0.75` and steep above it: `p = 0.70 → overall 37`, `p = 0.80 → 43`,

@@ -42,7 +42,7 @@ now the work.** The leaderboard published the per-metric breakdown on 2026-08-07
 aggregate: EPR-micro `99.48` (vs `99.67` locally — **grounding generalizes**), EPR-macro `95.00`,
 C-LPR **`55.20`** (vs `90.08`), **FPR `0.0000`** (vs `44.0`), all three preference terms `0`. Three
 things follow, and every agent should read them before choosing work: the failure is *only* in knowing
-what to satisfy, not in grounding it; `FPR = 0` is the arithmetic consequence of a `58 %` per-clause
+what to satisfy, not in grounding it; `FPR = 0` is the expected consequence of a `58 %` per-clause
 rate over ~11 clauses, **not a second bug to hunt**; and `55 %` of the total weight yields exactly zero
 and unlocks at a *threshold* (`p ≈ 0.8`), so rank work by whether it can cross that, not by how many
 clauses it fixes. The largest identified cause is measured: our constraint extraction has **zero**

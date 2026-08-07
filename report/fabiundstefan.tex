@@ -237,12 +237,12 @@ fraction of itineraries satisfying \emph{every} requirement $44 \rightarrow \mat
 generalised; knowing what to ground did not. That also rules out a crashed run, since empty plans
 cannot score 99.5 on validity.
 
-The exact zero is arithmetic, not a second defect: a query passes only if all eleven of its
-requirements do, and a 58\% per-requirement rate leaves a quarter of a query per hundred. One
-consequence shaped what we did next. The pass rate carries weight 0.4 and zeroes all three preference
-terms, so \textbf{55\% of the total weight currently returns nothing}, and it stays near zero until the
-per-requirement rate reaches roughly 0.8. Partial coverage fixes earn only their per-requirement share;
-crossing that threshold is worth several times more.
+The exact zero is expected, not a second defect: a query passes only if all eleven of its requirements
+do, and a 58\% per-requirement rate leaves a quarter of a query per hundred, which makes observing zero
+the likeliest single outcome. One consequence shaped what we did next. The pass rate carries weight 0.4
+and zeroes all three preference terms, so \textbf{55\% of the total weight currently returns nothing},
+and it stays near zero until the per-requirement rate reaches roughly 0.8. Partial coverage fixes earn
+only their per-requirement share; crossing that threshold is worth several times more.
 
 \paragraph{The largest identified cause is our own measurement.}
 Our rule-based extraction has \textbf{zero} clause-level gaps on the released set we developed
