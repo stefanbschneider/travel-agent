@@ -2,40 +2,33 @@
 
 The Phase 2 technical report for team `fabiundstefan`, in the official IJCAI template.
 
-`fabiundstefan.pdf` is **version 2** (2026-08-06), 4 pages, built from `fabiundstefan.tex`. It
-supersedes the v1 draft. The owner's annotated review of v1 is kept at
-[`feedback/fabiundstefan_v1.pdf`](feedback/fabiundstefan_v1.pdf) and every comment in it is addressed
+`fabiundstefan.pdf` is **version 3** (2026-08-07), 3 pages, built from
+`fabiundstefan.tex`. It supersedes v2. The owner's annotated review of v2 is kept at
+[`feedback/fabiundstefan_v2.pdf`](feedback/fabiundstefan_v2.pdf); every annotation is addressed
 below.
 
-**What changed structurally in v2, and why.** v1 was built around a local score. That framing did not
-survive the organizers' returned score, which came back at roughly half the local number. v2 is built
-around that gap instead: the generalization failure, its measured cause (our constraint extraction was
-developed and gated against a single phrasing style), and the process error that hid it. This is a
-stronger report than v1, not a weaker one — the honest failure is the most transferable thing we have,
-and it supports the measurement-discipline argument the review asked to keep.
+**What changed structurally in v3.** The report now presents the final pipeline first, then the
+evaluation, then the measured division of labor between coding agents, Qwen parsing, and deterministic
+optimization. It incorporates the official per-metric v1 result, the current-main R28 baseline, the
+latest phrasing-robust extraction work, and P22's static precision result without claiming the pending
+end-to-end gain.
 
-Still open, listed as `OPEN QUESTIONS` at the end of the `.tex`: the system name, whether to quote the
-held-out score absolutely, and the unexplained residual of the gap.
+## v2 review comments and how each is addressed
 
-## Review comments and how each is addressed
-
-| # | Comment (v1 review) | Resolution in v2 |
+| # | Comment group | Resolution in v3 |
 | --- | --- | --- |
-| 1 | Title too long, not "sexy" enough; suggested *Agentic Travel Planning: Where the AI Helped ...* | Adopted, without "We Measured" per the suggestion |
-| 2 | "Is the solver really deterministic?" | Stated precisely in §2: randomized restarts, seeded from the query id, so a run is bit-for-bit repeatable; three independent five-hour runs scored identically. The old salted-hash bug is named |
-| 3 | Too much competition detail too early; avoid challenge jargon, split names and meaningless absolute numbers; prefer relative comparisons; add motivation and relevance; make it meaningful to an outside reader | Abstract and §1 rewritten to open on the general task shape (open-ended intent + hard constraints), using the organizers' own framing. No split names anywhere in the body. Results are stated relatively ("about half", "roughly twice", "$41.6 \rightarrow 50.0$") |
-| 4 | LLM contribution is far more than 172 commits — close to 100% of the code; human owned architecture, approach, eval pipeline for fast feedback, parallelization, token/model allocation | §5 now says nearly all of the ~55k lines and 1100 tests were agent-written, and names the human contributions including the strong-model-plans / cheap-model-implements split |
-| 5 | Most surprising finding: the LLM is worse than a regex parser at extraction — "not sure we really got this right" | We did not, and v2 says so. That screen ran on the template style where the rules are already perfect, so it could not have shown a gain. Re-measured on free prose, the model recovers 40–65% of what the rules miss; the residual is value grounding into a closed vocabulary |
-| 6 | We never tested the most obvious thing: the LLM planning alone with tools, no solver | Measured and reported: autonomous multi-turn tool use, up to 45 steps, scores ≈2 of 100 against our ≈48–68 on the same queries, with **zero** plans passing environmental validity |
-| 7 | Avoid long, complex sentences | Rewritten throughout; the paragraph called out in the review is gone |
-| 8 | Match the owner's writing style | Direct, active, short sentences; punchy colon title; claim-then-evidence paragraph openings |
-| 9 | Drop "Phase 1 / Phase 2" terminology | Removed. The earlier stage is "the challenge's earlier offline stage", mentioned once |
-| 10 | Should the system get a name? | Three candidates proposed in the `.tex` open questions (GroundPlan, VeriTrip, Anchor); deliberately unnamed in this draft per instruction |
-| 11 | If a score is quoted, say it is out of 100 and point to the metric description; consider dropping the offline-stage score and keeping second place | §1 states "a single number out of 100" with the weighting and a forward reference. The offline-stage score is dropped; second place is kept without a number |
-| 12 | Start the intro with context/motivation, then the benchmark, then details | Done, in that order |
-| 13 | Include an architecture/pipeline figure | Figure 1, full width |
-| 14 | Prefer plots to tables; commit the numbers and plotting scripts so the evaluation is reproducible | Figure 2 replaces v1's headline table. All figures are generated by `scripts/report_figures.py`, which reads committed rows and fails loudly if a cited artefact is missing (`--check`) |
-| 15 | Compare against the baseline agents shipped in the official repo | Done: the upstream neuro-symbolic baseline is in Table 1 and §5, measured on identical queries |
+| 1 | Remove Stefan's work affiliation; use the Outlook address; put the authors in separate columns | The title block now has two columns, no Stefan affiliation, and `stefanbschneider@outlook.com` |
+| 2 | Use American English, consistent “itinerary” terminology, positive verifier wording, and simpler sentences | Rewritten throughout; the abstract says the gate can only emit confirmed-valid itineraries |
+| 3 | Link and cite the challenge, retain the example query, and explain environmental validity concretely | The introduction links the challenge, cites ChinaTravel, keeps the Suzhou example, and names sandbox entities, hours, transportation, and costs |
+| 4 | Expand the system section into pipeline, parsing, solver, and repair/densification; clarify the fallback | Section 2 now has four subsections. Figure 1 follows query → parsed constraints → simplified itinerary. The text states that an empty schema-valid fallback still scores zero |
+| 5 | Distinguish the constrained agent phase from the earlier offline phase; explain the two-submission policy | The introduction contrasts the phases; §3 explains that the better of two harness versions is retained and v1 was submitted early for held-out feedback |
+| 6 | Reduce journal-style chronology, internal split names, and number density; do not portray the in-distribution measurement choice as foolish | The body is organized around the final system and findings. Dataset descriptions are reader-facing, and §3 explains why prioritizing the advertised in-distribution set was reasonable |
+| 7 | Include current-main improvements and evaluation | R28 and the official metric breakdown are in Table 1; current recall fixes and P22's zero-residual static screen are reported with their limits |
+| 8 | Answer “why not just use the free LLM for parsing?” and discuss prompting, tools, and database vocabularies | §4 reports both extraction experiments, explains the value-grounding bottleneck, and describes direct catalog/tool or MCP access as the right next interface |
+| 9 | Cite the neuro-symbolic baseline and make clear that reported experiments were run | RuleNeSy is cited through the ChinaTravel paper; §3 states the matched sample sizes and observed outcomes rather than extrapolating an unrun arm |
+| 10 | Distinguish coding agents from the organizer-hosted Qwen model and remove questionable repository-history counts | §4 treats coding agents, model-based parsing, and Qwen itinerary generation separately; commit and line-count claims are removed |
+| 11 | Broaden the conclusion to transferable lessons, production APIs, and personalized objectives | The conclusion covers agentic engineering, grounded language understanding, deterministic optimization, live APIs/MCP, replanning, and user-specific preferences |
+| 12 | There are no post-submission competition next steps | Pending evaluation is described only to bound the P22 claim; outside-challenge work appears as production-oriented future work |
 
 ## What the organizers require
 
@@ -66,8 +59,7 @@ cd report && PATH="/Library/TeX/texbin:$PATH" make
 ```
 
 `make` prints a loud warning above 4 pages and still writes the PDF. **Check for that warning before
-submitting** — v2 currently builds at exactly 4 pages, so any addition needs a matching cut, and the
-`.tex` lists cut candidates in priority order.
+submitting** — v3 currently builds at 3 pages.
 
 Needs a TeX installation providing `pdflatex`, `bibtex` and the packages the report loads (`times`,
 `url`, `hyperref`, `caption`, `graphicx`, `amsmath`, `amsthm`, `booktabs`). On Debian/Ubuntu:
@@ -82,7 +74,7 @@ a number changes:
 
 ```bash
 .venv/bin/python scripts/report_figures.py            # writes report/figures/*.pdf
-.venv/bin/python scripts/report_figures.py --check    # verify every cited artefact, plot nothing
+.venv/bin/python scripts/report_figures.py --check    # verify every cited artifact, plot nothing
 ```
 
 The figure script uses matplotlib (in `requirements.txt`, not in the submission requirements) and
@@ -96,6 +88,7 @@ deliberately avoids TikZ, so the report needs no extra TeX packages.
 | `fabiundstefan.pdf` | built output — the file that gets submitted |
 | `figures/*.pdf` | generated by `../scripts/report_figures.py`; committed so the build needs no Python |
 | `feedback/fabiundstefan_v1.pdf` | the owner's annotated review of v1 |
+| `feedback/fabiundstefan_v2.pdf` | the owner's annotated review of v2 |
 | `ijcai26.sty`, `named.bst`, `ijcai26.bib` | official [IJCAI author kit](https://www.ijcai.org/authors_kit), unmodified |
 | `template/` | the kit's own instructions and Word template, kept for reference |
 
@@ -103,7 +96,7 @@ Do not edit `ijcai26.sty` or `named.bst` — the formatting is part of the requi
 
 ## Writing it
 
-Take numbers only from committed artefacts under
+Take numbers only from committed artifacts under
 [`../results/phase2_baselines/`](../results/phase2_baselines/) — never from an uncommitted local run,
 and never compare across an evaluator sync (each row records its `evaluator_parity`).
 [`../docs/tpc_phase2_eval.md`](../docs/tpc_phase2_eval.md) defines what a comparable row is and, since
