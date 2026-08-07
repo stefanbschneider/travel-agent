@@ -42,8 +42,15 @@ SETS = [
     ("hf_preference_base50", "hf", "preference_base50"),
 ]
 
-# Every family name the schema knows about (covering side of CLAUSE_KIND_RULES, deduplicated) --
-# this is the vocabulary a clause could possibly need.
+# NOT the full solver-dict family vocabulary: only the families CLAUSE_KIND_RULES's covering tuples
+# name. Some real families are legitimately absent from that list -- e.g. free_attractions_only,
+# which satisfies an oracle clause through an OR-arm CLAUSE_KIND_RULES credits to a different family
+# entirely (see the P15 screen's note on this exact gap) -- so a family missing from
+# ALL_KNOWN_FAMILIES is not evidence it is unproducible, only that no clause-kind rule cites it as a
+# cover. `known_families_never_parsed_anywhere` (built from this list) is therefore a weaker check
+# than `oracle_required_families_never_parsed_anywhere` (built from the real oracle-side family sets
+# via `_families()`, independent of CLAUSE_KIND_RULES) -- the latter is the one this screen's README
+# treats as the load-bearing "ruled out" evidence.
 ALL_KNOWN_FAMILIES = sorted({f for _kind, _markers, fams in probe.CLAUSE_KIND_RULES for f in fams})
 
 

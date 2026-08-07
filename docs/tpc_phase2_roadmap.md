@@ -421,11 +421,11 @@ explicit operator override, since the per-query development gate depends on it.
 measurement. Read the ordering argument in [P5](#p5--spend-the-idle-envelope-on-fresh-seeds) before
 spending an eval slot: on the held-out distribution, coverage plausibly binds before search does.
 
-**R24 measured this, 2026-08-07** (Evaluation workstream row, not landed here): `0` flips at `900 s`
-against the failing subset, plans byte-identical to `300 s` modulo timing. Per R24's own decision
-table this reads as "land P4 as a correctness fix only" — a wiring/documentation fix, not a search-gain
-fix — since the extra budget was never used at all in the tested range. Implementation still owns
-whether/when to land it.
+**R24 measured this, 2026-08-07** (Evaluation workstream screen under `results/phase2_baselines/screens/`,
+not a `full_runs/`/`runs/` row, and not landed here): `0` flips at `900 s` against the failing subset,
+plans byte-identical to `300 s` modulo timing. Per R24's own decision table this reads as "land P4 as a
+correctness fix only" — a wiring/documentation fix, not a search-gain fix — since the extra budget was
+never used at all in the tested range. Implementation still owns whether/when to land it.
 
 ### P5 — spend the idle envelope on fresh seeds
 

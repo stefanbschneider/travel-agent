@@ -65,11 +65,16 @@ static-only scope; flagging it, not running it here).
 
 Across all six released sets combined, **every** oracle-required solver-dict family is produced by
 our parser on *some* set; **zero** families are unreachable everywhere
-(`density_report.json`'s `global.known_families_never_parsed_anywhere` and
-`.oracle_required_families_never_parsed_anywhere` are both `[]`). "Constraint families we have no
-local example of" is not supported as a cause — locally, our extractor's vocabulary is exhaustive
-relative to every released oracle. (This cannot rule out the held-out set containing something no
-released set has either — it only shows the hypothesis isn't *needed* to explain any local gap.)
+(`density_report.json`'s `global.oracle_required_families_never_parsed_anywhere` is `[]` — built from
+the real oracle-side family sets via `_families()`, independent of any clause-classification rule, so
+this is the load-bearing check). The companion field
+`global.known_families_never_parsed_anywhere` is also `[]` but is the weaker of the two: it is scoped
+to `CLAUSE_KIND_RULES`'s covering-tuple vocabulary, which is not the full solver-dict family list (see
+`r23_density_probe.py`'s comment on `ALL_KNOWN_FAMILIES`) — its emptiness corroborates the finding
+without carrying it. "Constraint families we have no local example of" is not supported as a cause —
+locally, our extractor's vocabulary is exhaustive relative to every released oracle. (This cannot rule
+out the held-out set containing something no released set has either — it only shows the hypothesis
+isn't *needed* to explain any local gap.)
 
 ## 4. A cleaner finding the exercise turned up: total family blackout on free prose
 

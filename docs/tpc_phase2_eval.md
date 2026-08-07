@@ -154,16 +154,17 @@ whole-run solve on either host; queue behind them.
 
 R19 closed GREEN ([closed queue](#the-closed-queue-r1r19)) — familiar-100 confirmed unaffected by the
 phrasing fix, reproducing R17 on every metric. **R22 ran 2026-08-07, first post-P15, GREEN** (see
-[R22's own section](#r22--the-standing-phrasing-tripwire-recurring-2-min-run-with-every-parser-change)) —
+[R22's own section](#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change)) —
 it stays off this table because it is a recurring instrument, not a one-shot item, and belongs back on
 the queue at the next parser change. **R23 closed 2026-08-07** (see
-[its own section](#r23--what-else-separates-the-held-out-set-closed-2026-08-07-static-1-h)): kill
+[its own section](#r23--what-else-separates-the-held-out-set-open-static-1-h)): kill
 criterion did not fire; top finding is a fully-explained, phrasing-conditional `cuisine_preference`
 extraction blackout on free prose, worth its own follow-up item. **R24 closed 2026-08-07** (see
 below): zero flips at `900 s`, plans byte-identical to `300 s` — land P4 as a correctness fix only,
 close P5. R20 stays blocked on unlanded Implementation work; R21 and R9(closed) are what remains open
 on this table, both blocked on Implementation landings.
 
+<a id="r24--does-a-query-above-300-s-ever-flip-the-owners-question-open"></a>
 ### R24 — does a query above 300 s ever flip? (the owner's question) *(closed 2026-08-07)*
 
 **Registered 2026-08-07 because the owner asked whether more time and fresh seeds could fix failing
@@ -173,15 +174,24 @@ per-query cap is `300.0 s` and no pass ever exceeded it — not by choice but be
 makes a higher budget structurally unreachable. This row measures the untested regime.
 
 **Cheapest form first — a per-query ladder, not a whole run.** `--budget-sec` is already the per-query
-cap, so no code change is needed to measure it:
+cap, so no code change is needed to measure it. Call the per-query runner directly rather than
+`phase2_quick_eval.py` — that tool requires `--flag` for its paired A/B design, and an inert flag still
+runs two identical arms per budget (double the wall clock for no signal); a single-arm ladder is a
+plain sweep over budgets, so call `solve_phase2.py` once per budget with a distinct `--method` per arm
+(no `--resume`, so each arm always re-solves fresh rather than risking one budget's plan being reused
+by another — see `_run_whole_run`'s docstring on the same collision):
 
 ```bash
 for B in 300 900 2700; do
-  .venv/bin/python scripts/phase2_quick_eval.py --mode end-to-end \
-    --n 30 --budget-sec $B --parallel 3 --off 0 --on 0 \
-    --out results/phase2_quick_eval/budget_ladder_$B
+  .venv/bin/python agent_env/scripts/solve_phase2.py \
+    --split tpc_phase2_familiar_100 --method "phase2_e2e_r24_ladder_b${B}" \
+    --uids-file <failing-30-uids.txt> --budget-sec "$B" --lang en
 done
 ```
+
+(Shown as one process for clarity; the closed row below split the 30 uids across `cores − 1` concurrent
+`solve_phase2.py` subprocesses per budget arm — one uid per subprocess — since the per-query mode has
+no internal parallelism of its own.)
 
 Run it on the **failing** subset, not a random one: take the uids that fail their constraints in
 [R19](#the-closed-queue-r1r19)'s plan directory, since a query that already passes at `120 s` tells you
@@ -228,6 +238,7 @@ set to `off 0`/`on 0` would deviate from the shipped default in both arms. Calli
 runner directly, once per budget with a distinct `--method` per arm (avoiding the resume/directory
 collision documented in `_run_whole_run`'s docstring), measures the same thing without either problem.
 
+<a id="r23--what-else-separates-the-held-out-set-open-static-1-h"></a>
 ### R23 — what else separates the held-out set? *(closed 2026-08-07, static, ~1 h)*
 
 The leaderboard closed the "is it phrasing?" question with a qualified yes, and opened a sharper one:
@@ -272,6 +283,7 @@ density is the answer, and the action is to re-tune against dense queries rather
 Not run here (out of this screen's static scope, flagged as the natural follow-up): a scored e2e pass
 on `hf_medium`'s 27-query dense tail, to replace the ceiling proxy with real C-LPR.
 
+<a id="r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change"></a>
 ### R22 — the standing phrasing tripwire *(recurring, ~2 min, run with every parser change)*
 
 The process failure behind the held-out gap was that **no gate could see a phrasing dependency**. This
