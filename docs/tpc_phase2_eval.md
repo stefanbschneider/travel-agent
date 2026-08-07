@@ -164,26 +164,27 @@ spending.
 Priority order. Every item states its own acceptance criterion so it can be executed without
 re-deriving the argument.
 
-**Current state, 2026-08-07 (second revision).** `main`'s tip carries P16, **P18**, P19, **P20**, R25
-and **R26**. P16 lands useful grounding machinery but is **not promoted** (same-tree parse arm
+**Current state, 2026-08-07 (third revision).** `main`'s tip carries P16, **P18**, P19, **P20**, R25,
+**R26** and **R28**. P16 lands useful grounding machinery but is **not promoted** (same-tree parse arm
 `matched 311 < 320` deterministic, `hf_medium` e2e flat). P19 closed the residual diagnosis. R24
 changed only the outer timeout; **R25 is closed** — both internal limits were tested directly and
 neither flips a query, so do not schedule the combined `CP=300/restarts=4000` 30-uid arm. **R26 is
-closed GREEN** (below): P20's parser fix is precision-safe on every register measured, it also moves
+closed GREEN**: P20's parser fix is precision-safe on every register measured, it also moves
 one `required_attraction_types` clause locally (a disjunctive branch P20's own partition script didn't
 enumerate), and its flat 3-uid e2e arm is a power problem — all 3 queries already passed regardless of
 the bug — not evidence the fix is inert. P18's tripwire is now an executable gate inside
 `pytest tests/phase2`, with two precision conditions still to add (see
-[R22](#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change)).
+[R22](#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change)). **R28 is now
+closed too** (below): the current-`main` whole-run row is byte-identical to R19 on all seven metrics
+and on all 100 plan files — the drift is closed, and this row is now the baseline for every later
+gate.
 
-**Three things changed the queue since the last revision, and the first is a blocker.**
+**The queue's blocker is resolved; two things remain open.**
 
-1. **No whole-run row exists on the current `main`.** The best row, R19 `20260807T043142Z`, is
-   `git_sha ae0bd319` — before P15, P16, P18, P19 and P20. So there is presently **no like-for-like
-   baseline to gate anything against**, and "promote" is not an available verb. R26's GREEN
-   [authorizes exactly one such row](#r26--gate-p20-on-the-registers-it-targets), which is
-   [R28](#r28--a-whole-run-row-on-the-current-main): it is therefore both authorized and blocking, and
-   it is the evaluation machine's first slot.
+1. **A whole-run row now exists on the current `main`.** [R28](#r28--a-whole-run-row-on-the-current-main)
+   (`20260807T152009Z`, `git_sha aed4363e`) replaces R19 `ae0bd319` as the baseline every later
+   candidate is gated against — same host, same config, byte-identical score. "Promote" is available
+   again.
 2. **A landed, default-off, zero-LLM flag turns out to be the strongest promotion candidate we have,
    and it had never been measured on its own.** Every prior arm for `TPC_P2_ENTITY_RESOLUTION`
    composed it with LLM `extract_fill`. Isolated deterministically it moves familiar-100 parse F1
@@ -200,27 +201,22 @@ the bug — not evidence the fix is inert. P18's tripwire is now an executable g
 
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **R28** | what does the current `main` actually score on the whole-run contract? | nothing — authorized by R26, **run this first** | 1.4 h of a 5 h envelope |
-| **R29** | does deterministic entity resolution convert end-to-end? | [P21](tpc_phase2_roadmap.md#p21--promote-deterministic-entity-resolution) — no code needed | ~1 h, two registers |
+| **R29** | does deterministic entity resolution convert end-to-end? | [P21](tpc_phase2_roadmap.md#p21--promote-deterministic-entity-resolution) — no code needed, **run this first** | ~1 h, two registers |
 | **R30** | does dropping unsatisfiable required names flip queries? | [P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints) | ~1 h after merge |
 | R31 | with the oracle literals translated, what is our real free-prose FPR? | [P23](tpc_phase2_roadmap.md#p23--make-the-free-prose-register-scoreable) | ~1 h after merge |
 | R27 | can bounded Qwen edits plus deterministic rejection feedback flip a failure? | [P6](tpc_phase2_roadmap.md#p6--validator-in-loop-qwen-repair) | `n=10`, at most 60 calls |
 | R20 | should grounded fill-only LLM extraction become a harness default? | no code blocker; current evidence is HOLD | no cold-cache rerun yet |
 | R21 | does spending the unspent envelope on all queries buy preference points? | P17(b), parked until FPR is nonzero | ~1.4 h, low priority |
-| R27 | can bounded Qwen edits plus deterministic rejection feedback flip a failure? | [P6](tpc_phase2_roadmap.md#p6--validator-in-loop-qwen-repair) | `n=10`, at most 60 calls |
-| R20 | should grounded fill-only LLM extraction become a harness default? | no code blocker; current evidence is HOLD | no cold-cache rerun yet |
-| R21 | does spending the unspent envelope on all queries buy preference points? | P17(b), parked until FPR is nonzero | ~1.4 h, low priority |
 
-**Parallel execution plan.** The evaluation machine's order is **R28, then R29** — R28 is the row R26
-authorized and every later gate needs it as a baseline, and R29 needs no implementation work at all
-since the flag is already on `main`. Then R30/R31 as P22 and P23 merge, and R27 after P6. On
-implementation machines, P22, P23, P24 and the P6 spike may start independently. Do not run two solver
-screens concurrently on one host: wall-clock limits then change the number of restarts each arm gets.
-R20 needs no expensive run unless a new parse-level arm first beats the current deterministic floor.
-**R9 is closed**, per R25's own gating text: it needed a genuine per-uid flip on the restart axis, and
-R25 measured `0/10`.
+**Parallel execution plan.** **R28 is closed**, so the evaluation machine's next slot is **R29** — it
+needs no implementation work at all since the flag is already on `main`. Then R30/R31 as P22 and P23
+merge, and R27 after P6. On implementation machines, P22, P23, P24 and the P6 spike may start
+independently. Do not run two solver screens concurrently on one host: wall-clock limits then change
+the number of restarts each arm gets. R20 needs no expensive run unless a new parse-level arm first
+beats the current deterministic floor. **R9 is closed**, per R25's own gating text: it needed a
+genuine per-uid flip on the restart axis, and R25 measured `0/10`.
 
-### R28 — a whole-run row on the current `main`
+### R28 — a whole-run row on the current `main` *(closed 2026-08-07)*
 
 **The first slot, and everything else's prerequisite.** Five changes have merged
 since R19 measured `ae0bd319`, and the ledger's own comparability rule forbids gating a candidate
@@ -245,6 +241,20 @@ become the baseline every later candidate is gated against. Record it and update
 free-prose fallbacks are structurally unable to fire on familiar-100 (the template always populates
 both families), and P15's fixes touch families familiar-100 does not carry, so a delta means one of
 those structural claims is wrong and that matters more than any queued arm.
+
+**Result** ([`20260807T152009Z`](../results/phase2_baselines/full_runs/20260807T152009Z.json),
+`git_sha aed4363e`, `1.34 h` of `5 h`): **byte-identical to R19 on all seven official metrics** —
+`overall 64.17251838310492`, `MicEPR 99.6667`, `MacEPR 98.0`, `C-LPR 90.08115419296664`, `FPR 44.0`,
+`DAV 26.0417`, `ATT 34.4752`, `DDR 25.1944`, `constraints_ok 50/100`, `empty_plans 0/100`. **All
+`100/100` plan files are byte-identical to R19's, modulo the timing field** (`elapsed_time(sec)`);
+`sweeps.parent_parse_failed_uids` is `[]`; `solver_flags.window_anchor`/`window_push`/`window_insert`
+are all `true`, per the ledger comparability requirement. This is the expected outcome the section
+above predicted: P15/P16/P18/P19/P20 all touch families or fallback paths that structurally cannot
+fire on familiar-100's rigid numbered-requirements template, so a flat row here confirms those
+structural claims rather than testing them. **The drift is closed.** This row is now the current
+baseline for R29, R30, R31 and any later candidate gate on this host/config; the
+[promoted-default baselines table](#ledger-comparability) and [closed queue](#the-closed-queue-r1r19)
+are updated below.
 
 ### R29 — does deterministic entity resolution convert end-to-end?
 
@@ -777,9 +787,9 @@ configuration (e.g. after a P20/P6 move changes what "failing" means for these q
 - **Any free-prose FPR read against `100`.** The HF splits cap at `38.67–46.0` under `--lang en`
   ([dataset boundaries](#3-hugging-face-chinatravel)). Quote the ceiling with the number or do not
   quote the number.
-- **Any candidate gated against R19.** R19 is `git_sha ae0bd319`, four parser changes behind `main`.
-  Gate against [R28](#r28--a-whole-run-row-on-the-current-main) once it exists; until then a candidate
-  row has no valid baseline.
+- **Any candidate gated against R19.** R19 is `git_sha ae0bd319`, five changes behind `main` now.
+  Gate against [R28](#r28--a-whole-run-row-on-the-current-main) (`git_sha aed4363e`) instead — it is
+  the current baseline.
 - **A repeat of a run you already have.** Post-P0 the solver is bit-for-bit reproducible
   ([R7](#the-closed-queue-r1r19)); the same configuration on the same host returns the same number.
 - **Any whole-run row whose configuration you cannot read off its own telemetry.** Check
@@ -838,7 +848,11 @@ from partial evidence, and do not assume a distribution you have not sampled.
 Run 2026-08-04/05/06/07, primarily on a 4-core box (3 workers), plus R3 on a 10-core Mac (8 workers),
 `evaluator_parity: c89cfca`, rows under `results/phase2_baselines/full_runs/`. **Nothing here needs
 re-running.** Local scores only; see the [held-out fact](#the-one-fact-that-reorganizes-this-document)
-for what they do and do not predict.
+for what they do and do not predict. The table also carries
+[R28](#r28--a-whole-run-row-on-the-current-main), the current-`main` whole-run row that replaced R19
+as the live gate baseline — same numbering range in spirit (a whole-run row measured on this host),
+kept out of the header's own `R1–R19` range only because renumbering it would break every existing
+link into this section.
 
 | Run | Row | Result |
 | --- | --- | --- |
@@ -859,16 +873,17 @@ for what they do and do not predict.
 | **R17 ship candidate** | `20260806T115309Z` | `overall 64.17251838310492`, `FPR 44.0`, C-LPR `90.08`, `constraints_ok 50/100`, `empty_plans 0/100`, `git_sha efbfea96`, `1.38 h` of `5 h`. **The best local row, and the configuration `v1` behaviour is closest to** |
 | R18 released-150 regeneration | `20260806T132917Z` | `tpc_phase2_test` (150): `overall 90.5603`, FPR `90.67`, `constraints_ok 125/150`. P12's residual cross-tab is `4/150`. **Do not read `90.56` as generalization** — same template, a third the constraint density |
 | **R19 phrasing-fix regression check, 5 h** | `20260807T043142Z` | `git_sha ae0bd319` (`main` tip at launch; also carries **P13** `27d31efe`/`de3c8fcb`, which merged *after* R17's measured `efbfea96` and was flagged in `e7faa9f1` as unmeasured on this tree — so this row confirms P13, not only the phrasing fix). All 7 official metrics **byte-identical** to R17: `overall 64.17251838310492`, FPR `44.0`, C-LPR `90.08115419296664`, `constraints_ok 50/100`, `empty_plans 0/100`, `1.36 h` of `5 h`. All 100 plans byte-identical to `results/phase2_e2e_r17_ship/` modulo per-attempt timing fields (`parent_parse_failed_uids: []`, confirming P13's changed branch never fires here either). **GREEN — expected, and read narrowly**: familiar-100 contains the phrasing the fix targets (bare budgets, plain room-type wording) in `0/100` queries, so this shows the fix and P13 are true no-ops on the one register the parser was already perfect on. It is not evidence the phrasing fix helps — that evidence is the free-prose screen's `41.62 → 49.99`, which this run does not touch |
+| **R28 current-`main` baseline, 5 h** | `20260807T152009Z` | `git_sha aed4363e` (`main` tip at launch; carries P15/P16/P18/P19/P20 and R25/R26 on top of R19's `ae0bd319`). All 7 official metrics **byte-identical** to R19 and R17: `overall 64.17251838310492`, FPR `44.0`, C-LPR `90.08115419296664`, `constraints_ok 50/100`, `empty_plans 0/100`, `1.34 h` of `5 h`. All 100 plans byte-identical to R19's modulo the timing field; `parent_parse_failed_uids: []`; `window_anchor`/`window_push`/`window_insert` all `true`. **GREEN — expected, and read narrowly**, same reasoning as R19: every change on this tree since R19 touches families or fallback paths (P20's free-prose fallbacks, P15's phrasing patterns) that familiar-100's rigid template structurally cannot exercise, so flat here is confirmation, not evidence those changes are inert on free prose. **Closes the drift** ([R28's own section](#r28--a-whole-run-row-on-the-current-main)) and becomes the new baseline for R29/R30/R31 |
 
-**Drift note, same shape as `e7faa9f1`, and now five changes deep.** P15 (`a4d028bb`/`8688439c`),
+**Drift note, same shape as `e7faa9f1` — closed by R28.** P15 (`a4d028bb`/`8688439c`),
 P16 (`3c1d3e8e`…`d65785c8`, library-default off), P19 (`f9e8233f`, analysis only), P20 (`e6cc0e65`)
-and P18 (`dfdace2a`, gate and tooling only) all merged after this run's `ae0bd319`, so **no recorded
-row measures the current `main`**. Each
-carries its own screen and floor test; none is remeasured here, and familiar-100 byte-identity is not
-itself evidence about them — P15 and P20 touch families the budget/room-type floor test does not cover,
-and P20's free-prose fallbacks are structurally unable to fire on familiar-100 at all.
-[R28](#r28--a-whole-run-row-on-the-current-main) closes this drift, and until it does, this row is not
-a valid gate baseline for any new candidate.
+and P18 (`dfdace2a`, gate and tooling only) all merged after this run's `ae0bd319`, so R19 stopped
+being a valid gate baseline for any new candidate. [R28](#r28--a-whole-run-row-on-the-current-main)
+(`20260807T152009Z`, `git_sha aed4363e`) remeasured the current `main` directly rather than reasoning
+about it from each change's own screen, and came back byte-identical to R19 on every metric and every
+plan — confirming, rather than assuming, that P15/P20's family/fallback scope and P16/P18/P19's
+non-behavioral scope really do structurally miss familiar-100. **R28 is now the baseline**; R19 is
+retained above as history, not as something to gate against.
 
 **On R10's `git_dirty: true`.** `eval_tpc.py`'s `update_suboptimal_split_file` rewrites
 `chinatravel/evaluation/default_splits/tpc_phase1_suboptimal.txt` on every full-split scoring call, so
@@ -1106,14 +1121,17 @@ and recovery counts, fallback use, stage timings, LLM attempts/failures, and the
 axes. Low-`n` rows are smoke checks, not promotion evidence. Field semantics:
 [baseline ledger guide](phase2_baselines/README.md).
 
-**Two promoted-default baselines exist; pick the one matching your host, not the highest number.
-Both are stale as of `main` `0d6f1837` — see [R28](#r28--a-whole-run-row-on-the-current-main), which
-exists to replace the first row here:**
+**Two promoted-default baselines exist; pick the one matching your host, not the highest number.**
+The 4-core row moved to [R28](#r28--a-whole-run-row-on-the-current-main), the current-`main` row that
+replaced the stale pre-P15/P16/P18/P19/P20 R19 row (byte-identical score, so nothing about the number
+changed — only its `git_sha` currency did). The 10-core row is still R3, unrefreshed since no whole-run
+row has been produced on that host since `main` `0d6f1837` — a fresh row is owed there too, on the same
+gating logic that motivated R28.
 
 | Host | Workers | Baseline row | `overall` / `FPR` / `constraints_ok` |
 | --- | --- | --- | --- |
-| 4-core Linux | 3 (`CPU−1`) | **R19 `20260807T043142Z`** (byte-identical to R17 `20260806T115309Z`, moved to the fresher `git_sha`) | `64.17251838310492` / `44.0` / `50/100` |
-| 10-core Apple Silicon | 8 | R3 `20260805T215107Z` | `64.0773462893086` / `44.0` / `47/100` |
+| 4-core Linux | 3 (`CPU−1`) | **R28 `20260807T152009Z`** (byte-identical to R19 `20260807T043142Z` and R17 `20260806T115309Z` — the fix/feature work since neither of them moves familiar-100, all seven metrics and all 100 plans) | `64.17251838310492` / `44.0` / `50/100` |
+| 10-core Apple Silicon | 8 | R3 `20260805T215107Z` — **stale**, predates P15/P16/P18/P19/P20; refresh before gating anything on this host | `64.0773462893086` / `44.0` / `47/100` |
 
 On a third machine, produce your own flags-off baseline there first; a cross-host delta is not
 evidence. Every row must show `solver_flags.window_anchor`, `window_push` and `window_insert` `true`
