@@ -120,7 +120,7 @@ within-query parallelism *and* a fresh seed salt are all the same intervention: 
 that space.** The space does not contain a fix for these queries.
 
 > **⚠ Scope correction, 2026-08-07.** This section previously read as though the budget question were
-> settled at every scale. It is not. Across **all 24 recorded rows** the per-query cap is `300.0 s` and
+> settled at every scale. It is not. Across **all 25 recorded rows** the per-query cap is `300.0 s` and
 > no pass ever exceeded it, because
 > [P4](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass)
 > makes a higher budget structurally unreachable on this path. What is measured is `25 s → 62 s`,
@@ -402,7 +402,7 @@ a quarter of its envelope, and it silently disabled a mechanism the design inten
   cap_sec=300 | 900)`.
 
 **This means [§3](#3-the-solver-is-bimodal-and-more-search-does-not-help) overclaimed, and the record is
-corrected here.** Across **all 24 recorded rows** `budget_sec` is `300.0` and no pass ever exceeded
+corrected here.** Across **all 25 recorded rows** `budget_sec` is `300.0` and no pass ever exceeded
 `300 s`. So "more search does not help" is established for `25 s → 62 s`, for `120 s → 300 s`, and for
 the whole-envelope `1/3/5 h` ladder — but **no query has ever been solved above `300 s` on the whole-run
 path, because the code cannot do it.** That regime is untested, not tested-and-flat. §3's conclusion may
