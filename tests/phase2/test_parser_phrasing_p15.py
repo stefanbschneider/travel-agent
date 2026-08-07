@@ -192,8 +192,17 @@ def familiar_100_parsed_variants():
     from chinatravel.data.load_datasets import load_query
     from parser_vs_oracle import query_variants
 
+    # oracle_translation=False strips hard_logic/hard_logic_py/hard_logic_nl before this fixture
+    # ever sees the query dicts (CLAUDE.md's no-oracle-leakage invariant): this floor pins the
+    # no-oracle parsed side only, so it should reflect the same oracle-free input the harness
+    # actually feeds the parser, not a dict that happens to still carry oracle-only fields the
+    # parse path must not read. `query_variants` also returns an oracle-side variant for parity
+    # with `parser_vs_oracle`'s other callers; it is discarded below since only the parsed side is
+    # the floor here, and `solver_constraint_variants(..., use_oracle=True)` degrades gracefully
+    # when the oracle fields are absent (the same "absent, never required" contract Phase 2 queries
+    # carry for real).
     ids, data = load_query(
-        argparse.Namespace(splits="tpc_phase2_familiar_100", lang="en", oracle_translation=True)
+        argparse.Namespace(splits="tpc_phase2_familiar_100", lang="en", oracle_translation=False)
     )
     out = {}
     for uid in ids:
