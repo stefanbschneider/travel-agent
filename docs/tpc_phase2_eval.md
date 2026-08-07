@@ -8,28 +8,80 @@ document defines their interpretation. What to *implement* is the
 
 ## The one fact that reorganizes this document
 
-**The organizers returned `v1`'s held-out score on 2026-08-06: `33.2473`.** The same code scores
-`64.17` on the released familiar-100 split ([R17](#the-closed-queue-r1r19)). **Local rows over-predicted
-held-out performance by a factor of about two**, and every ranking decision in this project was made
-on the local number.
+**The organizers returned `v1`'s held-out score on 2026-08-06: `33.2473`, and on 2026-08-07 the
+Phase 2 leaderboard published the seven metrics behind it.** The same code scores `64.17` on the
+released familiar-100 split ([R17](#the-closed-queue-r1r19)). **Local rows over-predicted held-out
+performance by a factor of about two**, and every ranking decision in this project was made on the
+local number.
 
 This doc previously predicted `58–68` at `±2σ` for exactly this measurement. That prediction was
 wrong, and the [post-mortem](#the-falsified-prediction--a-post-mortem) is the most instructive section
-here. The short version: the confidence interval modelled *sampling* noise on a distribution assumed
-to match familiar-100, and the actual error was **distributional**, which no amount of local repeats
-could have surfaced.
+here.
 
-### What the gap is, as far as it is measured
+### The measured breakdown
 
-Two committed screens, both offline on released data, using no held-out fact except the aggregate:
+Recorded as [`heldout/20260807_v1_leaderboard.json`](../results/phase2_baselines/heldout/20260807_v1_leaderboard.json);
+analysis reproducible with `scripts/analyze_heldout_breakdown.py`.
 
-**1. Inverting the official weighted sum.** If the environment terms held at their local values
-(`MicEPR 99.7`, `MacEPR 98.0`, contributing `19.8` of the `33.2`), then `FPR ≤ ~17` **and** `C-LPR`
-fell from `90` to somewhere in `20–54`. Both collapsed. A *total* infrastructure failure is excluded
-arithmetically: empty plans drive every term toward zero, and since `FPR ≤ MacEPR`, a `MacEPR` of `0`
-would require `C-LPR > 100`.
+| metric | weight | held-out `v1` | familiar-100 (R17) | delta |
+| --- | --- | --- | --- | --- |
+| EPR-micro | 0.10 | `99.4815` | `99.6667` | **`−0.19`** |
+| EPR-macro | 0.10 | `95.0000` | `98.0000` | `−3.00` |
+| C-LPR | 0.25 | **`55.1966`** | `90.0812` | **`−34.88`** |
+| **FPR** | **0.40** | **`0.0000`** | `44.0000` | **`−44.00`** |
+| DAV / ATT / DDR | 0.05 ea. | `0` / `0` / `0` | `26.04` / `34.48` / `25.19` | — |
+| **overall** | | **`33.2473`** | `64.1725` | `−30.93` |
 
-**2. [The generalization probe](../results/phase2_baselines/screens/20260806_generalization_probe/README.md)**
+The breakdown reproduces the aggregate exactly (`delta 0.000000`), so there is nothing to suspect
+about the scoring itself. Four readings follow, and they change what is worth building.
+
+**1. Grounding generalized. Constraint satisfaction did not.** EPR-micro is essentially unchanged
+(`−0.19`): every fact we emit still resolves in the environment, on queries we have never seen. The
+entire collapse is in *knowing what to satisfy*. That is the constraint-extraction diagnosis, now
+confirmed on the axis that matters — and it **definitively kills the crashed-run hypothesis**, because
+empty or fallback plans cannot score EPR-micro `99.5`.
+
+**2. `FPR = 0.0000` needs no second bug to explain it.** Do not go looking
+for a second failure. C-LPR is conditional on commonsense, so the per-clause pass rate on a scored
+plan is `55.1966 / 95.0 = 58.1 %`. A query passes only if *every* clause passes, so at familiar-100's
+`11.09` clauses per query the model predicts `FPR ≈ 0.25` on the 0–100 scale — a quarter of one query
+in a hundred. **An expectation that far below one query makes *observing* exactly zero the single most
+likely outcome** (`≈ 78 %` at `n = 100`), and zero becomes more likely than not at any density above
+`~9.2` clauses per query. The same model predicts `39.3` on familiar-100 against a measured `44.0`, so
+it is calibrated and slightly conservative. Held-out density, query count and within-query correlation
+are all unknown and all move this estimate, so read it as an order-of-magnitude consistency check
+rather than a prediction.
+
+**3. `55 %` of the total weight currently yields exactly zero.** FPR is `0.40` on its own and gates all
+three preference terms (`0.15`), since a failing query scores `0` on each. Everything in our `33.2473`
+comes from `0.45` of the weight.
+
+**4. The upside is non-linear, and this is the most decision-relevant fact here.** Because FPR is
+multiplicative in the per-clause rate `p`, it stays flat until `p ≈ 0.75` and then climbs steeply:
+
+| `p` | 0.581 (today) | 0.70 | 0.75 | 0.80 | 0.85 | 0.90 |
+| --- | --- | --- | --- | --- | --- | --- |
+| C-LPR | `55.2` | `66.5` | `71.3` | `76.0` | `80.8` | `85.5` |
+| FPR | `0.0` | `2.1` | `4.6` | `9.4` | `18.5` | `34.8` |
+| overall | `33.2` | `37.1` | `39.6` | `43.1` | `48.8` | `58.2` |
+
+So **a partial coverage fix earns only its C-LPR share at weight `0.25`; a fix that pushes `p` past
+about `0.8` also unlocks the `0.55` of weight that is currently dead.** Aim for the threshold, not for
+an increment. Priced against the phrasing fix's measured effect on free prose (it removed `69 %` of
+failing English-literal clauses), the same reduction transferring to the held-out set would be worth
+roughly `+18`; a third of it, roughly `+5`.
+
+**Treat that projection as a sensitivity tool, not a prediction.** It has one fitted parameter
+calibrated at one point, assumes clause independence beyond that, and assumes held-out clause density
+equals familiar-100's — unknown, though `FPR = 0.0000` itself implies `≥ ~10` clauses per query.
+
+**5. One cheap, phrasing-independent component.** EPR-macro `95.0` means `5 %` of plans fail
+commonsense and therefore also score `0` on C-LPR. Fixing all of them is worth at most `1.23` overall.
+Small, but it is the only piece with no phrasing dependency at all.
+
+### What the gap is made of
+
+**[The generalization probe](../results/phase2_baselines/screens/20260806_generalization_probe/README.md)**
 found the largest identified cause. Our deterministic constraint extraction has **zero** clause-level
 gaps on familiar-100 — the numbered-template split it was built against — and **12–29 %** on every
 differently-phrased released set. familiar-100 is the only set it is clean on.
@@ -44,7 +96,13 @@ differently-phrased released set. familiar-100 is the only set it is clean on.
 
 Reproduced end-to-end at matched budget, workers and `n`: free-prose queries of comparable constraint
 density score `64.57 → 41.62` overall, with `MicEPR`/`MacEPR` staying at `100.0`. The collapse is
-entirely in the logical terms — the same signature the inversion produces.
+entirely in the logical terms — the same signature the leaderboard shows.
+
+**But the held-out set is harder than any register we hold locally.** Its C-LPR (`55.2`) is below even
+our *pre-fix* free-prose measurement (`72.5` raw, `78.4` on English-literal clauses). So phrasing
+brittleness is a real and measured cause, and it is **not the only one** — something beyond it
+separates the held-out set from HF `medium`, most plausibly higher constraint density or families we
+have no local example of.
 
 **Note what this says about `tpc_phase2_test`.** The split scoring `90.56` ([R18](#the-closed-queue-r1r19))
 shares familiar-100's template *and* carries a third of its constraints. It was never evidence of
@@ -57,35 +115,112 @@ classified as satisfied and promoted to polish. Observed on the free-prose run: 
 `FPR 86.67` against a real `6.67` and stopped with `1546 s` of `1800 s` **unspent**. Under parse gaps
 the envelope is not merely insufficient — it is spent on the wrong queries and then partly not spent.
 
-**How much is accounted for.** Phrasing brittleness explains **roughly half to three quarters** of the
-31-point gap. `~8–16` points remain unexplained, most plausibly genuinely denser held-out queries or a
-*partial* infrastructure failure; neither is separable from here. The single biggest uncertainty is
-that the organizers describe the held-out set as same-distribution as familiar-100 — if its phrasing
-really is that numbered template, hypothesis 1 does not apply. We cannot check that.
+**How much is accounted for.** Phrasing brittleness is measured and is the largest identified cause,
+but the leaderboard shows it is **not sufficient**: held-out C-LPR (`55.2`) sits below our *pre-fix*
+free-prose number, so a second factor of comparable size is still unidentified. Most plausible
+candidates, in order: higher constraint density per query (which `FPR = 0.0000` independently implies
+is `≥ ~10`), constraint families we have no local example of, and a *partial* infrastructure failure.
+A total infrastructure failure is now excluded outright by EPR-micro `99.48`. The standing uncertainty
+is that the organizers describe the held-out set as same-distribution as familiar-100; the phrasing
+evidence says the two do not behave alike, whatever the intent.
 
 ### Submission policy (owner's instruction, 2026-08-06)
 
-**Do not upload `v2`, and never upload automatically.** The owner uploads manually. `v2` waits on
-(a) the Phase 2 leaderboard and our relative standing, (b) a *substantial* measured improvement, and
-(c) shortly before the deadline (2026-08-10, 24:00 Beijing Time). One slot remains; the higher score
-wins if both submitted versions succeed, so a worse `v2` costs only the slot — but an unmeasured `v2`
-is not worth uploading at all.
+**Do not upload `v2`, and never upload automatically.** The owner uploads manually, shortly before the
+deadline (2026-08-10, 24:00 Beijing Time), and only with a substantial measured improvement.
+
+The leaderboard published on 2026-08-07 shows **ours as the only submission**, so the rank (`1`)
+carries no information about relative quality and does not change this policy. Two facts do bear on
+the decision when it is made: `v1`'s score stands regardless, since the higher of two successful
+versions wins — so a worse `v2` costs only the slot — and by [reading 4](#the-measured-breakdown) an
+*incremental* coverage fix is worth only its C-LPR share, while one that pushes the per-clause rate
+past `~0.8` is worth several times more. The threshold, not the increment, is what makes a `v2` worth
+spending.
 
 ## Run this next
 
 Priority order. Every item states its own acceptance criterion so it can be executed without
 re-deriving the argument.
 
+**In flight as of 2026-08-07 (owner started both on separate machines):**
+[P15](tpc_phase2_roadmap.md#p15--finish-phrasing-robust-extraction) and **R19**. Do not start a second
+whole-run solve on either host; queue behind them.
+
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **R22** | standing phrasing-robustness tripwire before any parser change promotes | **nothing — the only unblocked item** | ~2 min |
+| **R23** | is the held-out set denser, or does it carry families we never see? — the unidentified half of the gap | nothing; static, cheap | ~1 h |
+| **R24** | does a query above `300 s` ever flip? the regime no row has ever measured | nothing; per-query ladder first | ~1 h |
+| **R22** | standing phrasing-robustness tripwire before any parser change promotes | nothing; cheap, run alongside | ~2 min |
 | R20 | does fill-only LLM extraction plus value grounding convert recall into score? | [P16](tpc_phase2_roadmap.md#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | ~$0 + ~1 h |
 | R21 | does spending the unspent envelope on all queries buy preference points? | [P17](tpc_phase2_roadmap.md#p17--stop-trusting-our-own-satisfied-verdict) | ~1.4 h |
 | R9 | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#work-items) + P2 | ~5 h |
 
-R19 closed GREEN ([closed queue](#the-closed-queue-r1r19)) — familiar-100 confirmed unaffected. R20
-and R21 stay blocked on unlanded Implementation work; R22 is the only item this workstream can run
-without waiting on another lane.
+R19 closed GREEN ([closed queue](#the-closed-queue-r1r19)) — familiar-100 confirmed unaffected by the
+phrasing fix, reproducing R17 on every metric. R20 stays blocked on unlanded Implementation work;
+**R24, R23 and R22 are the items this workstream can run without waiting on another lane.**
+
+### R24 — does a query above 300 s ever flip? (the owner's question) *(open)*
+
+**Registered 2026-08-07 because the owner asked whether more time and fresh seeds could fix failing
+constraints, and the honest answer was that we had never tested it.** Across all 25 recorded rows the
+per-query cap is `300.0 s` and no pass ever exceeded it — not by choice but because
+[P4](tpc_phase2_roadmap.md#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass)
+makes a higher budget structurally unreachable. This row measures the untested regime.
+
+**Cheapest form first — a per-query ladder, not a whole run.** `--budget-sec` is already the per-query
+cap, so no code change is needed to measure it:
+
+```bash
+for B in 300 900 2700; do
+  .venv/bin/python scripts/phase2_quick_eval.py --mode end-to-end \
+    --n 30 --budget-sec $B --parallel 3 --off 0 --on 0 \
+    --out results/phase2_quick_eval/budget_ladder_$B
+done
+```
+
+Run it on the **failing** subset, not a random one: take the uids that fail their constraints in
+[R19](#the-closed-queue-r1r19)'s plan directory, since a query that already passes at `120 s` tells you
+nothing about the ceiling. **Read flips, not the mean**: how many of the failing queries flip to
+fully-passing at `900 s` and at `2700 s` that did not at `300 s`.
+
+| Outcome | Read | Action |
+| --- | --- | --- |
+| flips grow roughly linearly with budget | the search was clock-bound after all, at a scale we never tried | land P4, then re-measure the envelope ladder post-P1, and move P5 up |
+| a few flips at `900 s`, none beyond | there is a modest, bounded gain | land P4 anyway (it is near-zero risk and the envelope is idle), do not pursue P5 |
+| no flips at any budget | §3's conclusion extends to the untested regime | land P4 as a correctness fix only, and close P5 with this row as the evidence |
+
+**Then, only if the ladder is positive**, spend a whole-run slot on the paired form: the same 5 h
+envelope with the cap raised, against [R19](#the-closed-queue-r1r19). Note that P4 also changes the
+*number* of passes, so that row measures the cap and the growth-rule interaction together — which is the
+shipping behaviour, and therefore the right thing to measure.
+
+**One caveat that belongs in the reading, not in the design.** On the held-out distribution a large
+share of clause failures are plausibly clauses we never extracted, and search cannot satisfy a clause
+that is not in the objective. So a positive ladder result on familiar-100 does **not** imply the same
+gain held-out, and a negative one does not close the question for a *correctly extracted* constraint
+set. This row measures the solver, not the extractor.
+
+### R23 — what else separates the held-out set? *(open, static, ~1 h)*
+
+The leaderboard closed the "is it phrasing?" question with a qualified yes, and opened a sharper one:
+**held-out C-LPR is below our worst local free-prose measurement**, so density or unseen families must
+carry a comparable share. This run is cheap because it needs no solve.
+
+Reconstruct, from released data only, what a query set would have to look like to score
+`C-LPR 55.2 / FPR 0.0` under our current extractor, and check which released register that resembles:
+
+1. For each released set, compute the *distribution* of clauses per query (not just the mean) and the
+   per-family clause mix. `scripts/phase2_generalization_probe.py` already emits the per-family diff;
+   add the density histogram.
+2. For each set, compute what our own C-LPR would be **restricted to queries with ≥ 10 clauses**, since
+   `FPR = 0.0000` implies the held-out set is at least that dense. If our C-LPR on the dense tail of
+   HF `medium` approaches `55`, density explains the residual and nothing exotic is needed.
+3. List families present in the *oracle* of any released set that our extractor has **never** produced
+   on any set. A family we cannot express at all is invisible to every screen we run.
+
+**Acceptance:** a ranked, quantified list of candidate residual causes, and for each an estimate of its
+C-LPR cost. **Kill criterion:** if the dense tail of HF `medium` already reproduces `C-LPR ≈ 55`, stop —
+density is the answer, and the action is to re-tune against dense queries rather than to hunt families.
 
 ### R22 — the standing phrasing tripwire *(open, ~2 min, run with every parser change)*
 
@@ -163,8 +298,10 @@ and closes the "we aren't using our time" question for good. Demoted below R20�
   `solver_flags` first, score second.
 - **`audit`-mode LLM parsing, LLM-only planning, or LLM plan refine.** All three measured, all three
   at or below the deterministic floor — see the [closed queue](#the-closed-queue-r1r19).
-- **More envelope-sensitivity runs.** `1/3/5 h` is flat and the
-  [diagnosis](tpc_phase2_roadmap.md#the-diagnosis) explains why.
+- **More whole-envelope sensitivity runs at the current cap.** `1/3/5 h` is flat and the
+  [diagnosis](tpc_phase2_roadmap.md#the-diagnosis) explains why. **This does not extend to a raised
+  per-query cap**, which no row has ever measured — that is
+  [R24](#r24--does-a-query-above-300-s-ever-flip-the-owners-question-open), and it is worth running.
 - **Preference-packing flags (`TPC_PACK_*`).** Every preference term is zeroed on a failing query, so
   each is capped by FPR. Raise FPR first.
 - **The old per-query `900 s` pinned gate as a ship signal.** It measures a contract the competition
@@ -196,6 +333,14 @@ answer was **`33.2473`**. Keeping the reasoning visible is worth more than delet
 
 Record the leaderboard standing next to this when it publishes. It is the only external calibration
 this project gets.
+
+**Update, 2026-08-07 — the leaderboard breakdown scored the post-mortem itself.** The bounded inversion
+this doc performed on the aggregate alone predicted, for the `FPR = 0` case, `C-LPR ≈ 53.9`. The
+published value is `55.20`, and the inversion's structural conclusions all held: environment terms
+roughly intact, both logical terms collapsed, total infrastructure failure excluded. So the *inference*
+method was sound; what failed earlier was the *assumption* that familiar-100 represented the held-out
+distribution. Worth keeping straight, because the two failures have opposite lessons — reason carefully
+from partial evidence, and do not assume a distribution you have not sampled.
 
 ## The closed queue (R1–R19)
 
