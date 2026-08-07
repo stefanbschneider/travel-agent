@@ -130,10 +130,13 @@ slice, fresh configurations, or a validator-guided portfolio. CP-SAT also select
 hotels and transport rather than the exact timed itinerary; greedy reconstruction can reject a
 feasible assignment, so a timeout or `INFEASIBLE` status there is not a proof about the full problem.
 
-The next discriminating measurement is
+The discriminating measurement was
 [R25](tpc_phase2_eval.md#r25--separate-the-cp-restart-and-outer-budget-limits): vary the CP limit and
-restart cap independently on R24's failing subset. Until it runs, the honest statement is "the fixed
-30-second-CP/400-restart configuration saturates; deeper or more diverse search is unmeasured."
+restart cap independently on R24's failing subset. **Closed 2026-08-07**: neither `TPC_CP_TIME_LIMIT_SEC=300`
+nor `TPC_MAX_RESTARTS=4000` (both 10x default) flips a query; the honest statement is now "the fixed
+30-second-CP/400-restart configuration saturates the reachable improvements for the clause families these
+queries fail on, dominated by timed-window placement, and 10x deeper or more diverse search of the same
+move does not reach further."
 
 **So the idle time is usable capacity, not evidence of score headroom by itself.** Part of it is the
 scheduler idling on queries it wrongly believes are done (§1), part is the P4 cap defect, and part is
@@ -184,8 +187,9 @@ the previous ranking:
   demotes P17(b): it buys preference points, and every preference term is `0` while FPR is `0`.
   **This bullet previously demoted P5 and P4 for the same reason, which was wrong** — both target
   failing queries and therefore FPR, not preferences. See [P4](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass)
-  and [P5](#p5--spend-the-idle-envelope-on-fresh-seeds) for the corrected reasoning and the ordering
-  argument that keeps them second rather than closed.
+  for the corrected reasoning; [P5](#p5--spend-the-idle-envelope-on-fresh-seeds) has since been closed
+  by [R25](tpc_phase2_eval.md#r25--separate-the-cp-restart-and-outer-budget-limits), which tested the
+  ordering argument directly rather than by inference.
 
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
@@ -194,7 +198,8 @@ the previous ranking:
 | **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | 1 h | prevents the recurrence of the failure that cost this cycle | **open; independent of P20/P6** |
 | **P6** | [Validator-in-loop Qwen repair](#p6--validator-in-loop-qwen-repair) | 1 day spike | tests the successful Kiro/Claude interaction shape without allowing generated facts or unchecked plans | **open; independent spike, default off** |
 | **P15** | [Finish phrasing-robust extraction](#p15--finish-phrasing-robust-extraction) | half day | the measured residual beyond budget/room-type; compounds through the FPR threshold | **landed (partial) 2026-08-07; residual re-scoped, see below** |
-| **P4/P5** | [Use the idle envelope as a keep-best portfolio](#p5--spend-the-idle-envelope-on-fresh-seeds) | half day | Phase 1's successful pattern; value depends on whether CP time, more restarts or configuration diversity flips R24 failures | **open, blocked on R25** |
+| P4 | [Fix the 300 s per-query cap](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass) | half day | correctness fix (currently disables the intended `900 s` cap); R25 found it will not itself buy flips | open, correctness-only |
+| P5 | [Spend the idle envelope on fresh seeds](#p5--spend-the-idle-envelope-on-fresh-seeds) | half day | R25's own gate ("a positive R25 arm before default-on implementation") was not met — `0/10` flips at 10x restarts; the recurring blocker (timed-window placement) does not respond to search volume | **not implemented; R25 removed the case for default-on** |
 | P17 | [Stop trusting our own "satisfied" verdict](#p17--stop-trusting-our-own-satisfied-verdict) | half day (a), 2 h (b) | (a) re-aims the repair queue, worth more under large parse gaps; (b) idle envelope, worth ~0 until FPR > 0 | open, (a) only |
 | **P19** | [Find the unidentified half of the gap](#p19--find-the-unidentified-half-of-the-gap) | 1 h | produced the density and family ranking that defines P20 | **closed 2026-08-07** |
 | ~~P1~~ | ~~`timed_visit_named_poi` window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **promoted 2026-08-05**: `overall +5.83`, `FPR +11.0` | landed |
@@ -502,7 +507,7 @@ separately, plus `overall`/`FPR` on both registers. If it fires on familiar-100 
 
 ### P4 — the per-query cap is 300 s by accident, and it structurally forbids a second repair pass
 
-**Re-opened 2026-08-07, now blocked on R25.**
+**Re-opened 2026-08-07; R25 closed 2026-08-07 as a correctness-only fix (below).**
 Previously filed as a score-neutral tidy-up. It is not a tidy-up: it is why every run stops at roughly
 a quarter of its envelope, and it silently disabled a mechanism the design intended to have.
 
@@ -543,11 +548,28 @@ spending an eval slot: on the held-out distribution, coverage plausibly binds be
 **R24 measured the outer cap only, 2026-08-07** (Evaluation screen, not a promotion row): `0` flips at
 `900 s`, plans byte-identical to `300 s`. Both arms still used the same deterministic seed, the same
 `TPC_MAX_RESTARTS=400`, and the same default CP-SAT cap of `30 s`; both stopped around `107 s`.
-Therefore P4 alone is a correctness fix that schedules more identical work. Implement it together
-with P5's pass diversity only if [R25](tpc_phase2_eval.md#r25--separate-the-cp-restart-and-outer-budget-limits)
-shows which internal axis can produce a flip.
+Therefore P4 alone is a correctness fix that schedules more identical work.
+
+**R25 then tested both internal limits directly, 2026-08-07**
+([screen](tpc_phase2_eval.md#r25--separate-the-cp-restart-and-outer-budget-limits)): `TPC_CP_TIME_LIMIT_SEC=300`
+(10x default) changed nothing on `10/10` uids; `TPC_MAX_RESTARTS=4000` (10x default) changed plan
+content on `6/10` but flipped `0/10` queries, and the recurring blocker across those 6 is timed-window
+placement, a clause family neither axis touches. **P4 stays a correctness-only fix**: implement it for
+its own sake (it currently silently disables the intended `900 s` cap and burns ~73% of the envelope),
+but do not expect it to pay off in flips paired with P5's seed diversity — R25 closed that pairing.
 
 ### P5 — spend the idle envelope on fresh seeds
+
+**Not implemented, 2026-08-07, per R25.** P5's own gate (below, §2/§3) was "a positive R25 arm before
+default-on implementation." R25 raised `TPC_MAX_RESTARTS` 10x (`400 -> 4000`) directly and measured
+`0/10` query flips (one clause-level move on one uid, not a query flip); the failed-clause inspection its
+own decision table calls for found the recurring blocker to be timed-window placement, a family that
+did not respond to the 10x restart increase. R25 measured restart volume, not distinct-seed diversity —
+that a fresh `TPC_SEED_SALT` would fare differently is P5's own §2 mechanism argument (a fresh salt draws
+different tuples from the same space that more restarts already sample), not something R25 itself tested.
+Given the gate was not met, do not implement `explore_passes`/`TPC_P2_EXPLORE` on this evidence; the
+"Where"/"Tests" sketch below is retained as a record of the design, not a live plan. Re-open only if a
+future move changes what "failing" means for these queries and search headroom becomes plausible again.
 
 **Correction, 2026-08-07: the previous day's demotion was justified with the wrong reason, and that note
 is retracted.** It read "`~0` while FPR is `0` — preference-bounded", which is the argument for
@@ -579,11 +601,9 @@ the objective was *correct*; and the gain came from a monotonic merge across man
 found paid — `+11` FPR from one new *move*, `~0` from more draws of the same one. If the idle envelope is
 to be spent, spend it on configurations before salts.
 
-**Sequencing, which is the actionable part.** R25 may run now in parallel with P20 because it is a
-solver diagnostic on familiar-100, where extraction is clean. Implementation of the shipping
-portfolio waits for both: R25 must identify a productive axis, and coverage work must make the
-held-out objective less incomplete. If neither CP time nor restart breadth flips a query, do not add
-blind seed passes; spend the envelope on configuration-changing repairs or P6 instead.
+**Sequencing — resolved.** R25 ran on familiar-100 (extraction is clean there) and found that neither CP
+time nor restart breadth flips a query: per the plan above, the envelope goes to configuration-changing
+repairs (P20) or targeted repair (P6) instead of blind seed passes.
 
 **Where.** `chinatravel/agent/phase2/sweeps.py`: add `SweepConfig.explore_passes` (env `TPC_P2_EXPLORE`,
 **default off**); have `solve_one(task)` read `task["seed_salt"]` and set `TPC_SEED_SALT` for the solve
@@ -598,7 +618,7 @@ pass sequence exactly.
 
 **Depends on** P0 and P2 (both landed — without the attempt ledger, flips cannot be counted per pass,
 and that is the only signal separating the two readings), plus a positive R25 arm before default-on
-implementation.
+implementation — R25 was not positive, so this item is closed rather than implemented.
 
 **Considered and dropped: warm-starting later passes.** `solve_one` does not receive the incumbent plan,
 so repair and polish re-solve from scratch. Threading plan state through the worker boundary and
@@ -662,15 +682,16 @@ LLM parsing being promoted.
   feedback the measured arms lacked.
 - **Thinking mode on the planning loop.** `75 s` per one-line call, `~$1.1`/query extrapolated,
   timeouts. Measured and rejected.
-- **Within-query parallelism before R25 identifies a productive axis.** Blindly parallelizing the
-  same 400 draws competes with query-level workers. If R25 identifies CP or restart breadth as useful,
-  schedule that diversity across passes first and preserve outer query parallelism.
+- **Within-query parallelism.** Blindly parallelizing the same 400 draws competes with query-level
+  workers, and [R25](tpc_phase2_eval.md#r25--separate-the-cp-restart-and-outer-budget-limits) found
+  neither CP nor restart breadth productive, so there is no diversity axis this would help schedule.
 - **Preference packing (`TPC_PACK_*`).** Bounded by FPR; `~1.5` overall if all three were perfected
   against `~0.85` for one FPR point. `TPC_PACK_HOTEL_BREAKFAST` is permanently off — upstream PR #29
   made a repeated meal type a commonsense failure.
-- **More whole-envelope or outer-timeout sensitivity with unchanged internals.** `1/3/5 h` is flat,
-  and R24 shows a `900 s` outer cap still replays the same 400-restart/30-second-CP search. R25's
-  independently raised CP and restart limits are the remaining compute experiment.
+- **More whole-envelope, outer-timeout, CP-time, or restart-cap sensitivity.** `1/3/5 h` is flat, R24
+  shows a `900 s` outer cap still replays the same 400-restart/30-second-CP search, and R25 shows
+  raising CP time or restart count 10x each independently produces `0/10` flips. All four axes of
+  "more compute, same move" are now measured and closed.
 - **Improving the empty-itinerary fallback for score.** `empty_plans` is `0` on every real run. It is
   insurance against a cut-off run, not points.
 - **`arrive_no_later` emitted from `end_before`.** Tried; its ceiling prunes proper transport, and
