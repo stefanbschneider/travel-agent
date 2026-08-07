@@ -149,6 +149,7 @@ whole-run solve on either host; queue behind them.
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
 | **R23** | is the held-out set denser, or does it carry families we never see? — the unidentified half of the gap | nothing; static, cheap | ~1 h |
+| **R24** | does a query above `300 s` ever flip? the regime no row has ever measured | nothing; per-query ladder first | ~1 h |
 | **R22** | standing phrasing-robustness tripwire before any parser change promotes | nothing; cheap, run alongside | ~2 min |
 | R20 | does fill-only LLM extraction plus value grounding convert recall into score? | [P16](tpc_phase2_roadmap.md#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | ~$0 + ~1 h |
 | R21 | does spending the unspent envelope on all queries buy preference points? | [P17](tpc_phase2_roadmap.md#p17--stop-trusting-our-own-satisfied-verdict) | ~1.4 h |
@@ -156,7 +157,48 @@ whole-run solve on either host; queue behind them.
 
 R19 closed GREEN ([closed queue](#the-closed-queue-r1r19)) — familiar-100 confirmed unaffected by the
 phrasing fix, reproducing R17 on every metric. R20 stays blocked on unlanded Implementation work;
-**R23 and R22 are the two items this workstream can run without waiting on another lane.**
+**R24, R23 and R22 are the items this workstream can run without waiting on another lane.**
+
+### R24 — does a query above 300 s ever flip? (the owner's question) *(open)*
+
+**Registered 2026-08-07 because the owner asked whether more time and fresh seeds could fix failing
+constraints, and the honest answer was that we had never tested it.** Across all 25 recorded rows the
+per-query cap is `300.0 s` and no pass ever exceeded it — not by choice but because
+[P4](tpc_phase2_roadmap.md#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass)
+makes a higher budget structurally unreachable. This row measures the untested regime.
+
+**Cheapest form first — a per-query ladder, not a whole run.** `--budget-sec` is already the per-query
+cap, so no code change is needed to measure it:
+
+```bash
+for B in 300 900 2700; do
+  .venv/bin/python scripts/phase2_quick_eval.py --mode end-to-end \
+    --n 30 --budget-sec $B --parallel 3 --off 0 --on 0 \
+    --out results/phase2_quick_eval/budget_ladder_$B
+done
+```
+
+Run it on the **failing** subset, not a random one: take the uids that fail their constraints in
+[R19](#the-closed-queue-r1r19)'s plan directory, since a query that already passes at `120 s` tells you
+nothing about the ceiling. **Read flips, not the mean**: how many of the failing queries flip to
+fully-passing at `900 s` and at `2700 s` that did not at `300 s`.
+
+| Outcome | Read | Action |
+| --- | --- | --- |
+| flips grow roughly linearly with budget | the search was clock-bound after all, at a scale we never tried | land P4, then re-measure the envelope ladder post-P1, and move P5 up |
+| a few flips at `900 s`, none beyond | there is a modest, bounded gain | land P4 anyway (it is near-zero risk and the envelope is idle), do not pursue P5 |
+| no flips at any budget | §3's conclusion extends to the untested regime | land P4 as a correctness fix only, and close P5 with this row as the evidence |
+
+**Then, only if the ladder is positive**, spend a whole-run slot on the paired form: the same 5 h
+envelope with the cap raised, against [R19](#the-closed-queue-r1r19). Note that P4 also changes the
+*number* of passes, so that row measures the cap and the growth-rule interaction together — which is the
+shipping behaviour, and therefore the right thing to measure.
+
+**One caveat that belongs in the reading, not in the design.** On the held-out distribution a large
+share of clause failures are plausibly clauses we never extracted, and search cannot satisfy a clause
+that is not in the objective. So a positive ladder result on familiar-100 does **not** imply the same
+gain held-out, and a negative one does not close the question for a *correctly extracted* constraint
+set. This row measures the solver, not the extractor.
 
 ### R23 — what else separates the held-out set? *(open, static, ~1 h)*
 
@@ -256,8 +298,10 @@ and closes the "we aren't using our time" question for good. Demoted below R20�
   `solver_flags` first, score second.
 - **`audit`-mode LLM parsing, LLM-only planning, or LLM plan refine.** All three measured, all three
   at or below the deterministic floor — see the [closed queue](#the-closed-queue-r1r19).
-- **More envelope-sensitivity runs.** `1/3/5 h` is flat and the
-  [diagnosis](tpc_phase2_roadmap.md#the-diagnosis) explains why.
+- **More whole-envelope sensitivity runs at the current cap.** `1/3/5 h` is flat and the
+  [diagnosis](tpc_phase2_roadmap.md#the-diagnosis) explains why. **This does not extend to a raised
+  per-query cap**, which no row has ever measured — that is
+  [R24](#r24--does-a-query-above-300-s-ever-flip-the-owners-question-open), and it is worth running.
 - **Preference-packing flags (`TPC_PACK_*`).** Every preference term is zeroed on a failing query, so
   each is capped by FPR. Raise FPR first.
 - **The old per-query `900 s` pinned gate as a ship signal.** It measures a contract the competition

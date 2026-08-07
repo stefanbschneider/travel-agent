@@ -119,8 +119,18 @@ intercity preferences, a meal offset. Extra budget, a raised `TPC_MAX_RESTARTS`,
 within-query parallelism *and* a fresh seed salt are all the same intervention: **draw more tuples from
 that space.** The space does not contain a fix for these queries.
 
-**So the idle time is a symptom, not the problem** — with one correction from §1: part of it is now
-known to be the scheduler idling on queries it wrongly believes are done.
+> **⚠ Scope correction, 2026-08-07.** This section previously read as though the budget question were
+> settled at every scale. It is not. Across **all 24 recorded rows** the per-query cap is `300.0 s` and
+> no pass ever exceeded it, because
+> [P4](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass)
+> makes a higher budget structurally unreachable on this path. What is measured is `25 s → 62 s`,
+> `120 s → 300 s`, and the whole-envelope `1/3/5 h` ladder (the last of these pre-P1). **No query has
+> ever been solved above `300 s` here.** The conclusion above may well survive that test; it has not had
+> it, and the honest statement is "flat over the range we could measure".
+
+**So the idle time is a symptom, not the problem** — with two corrections. Part of it is the scheduler
+idling on queries it wrongly believes are done (§1), and part of it is the P4 cap defect making a second
+repair pass impossible regardless of how much envelope is left.
 
 ### 4. One constraint family accounted for almost all of the in-distribution loss
 
@@ -164,7 +174,7 @@ the previous ranking:
 - **Anything that cannot plausibly move `p` by a lot is worth close to nothing right now.** That
   demotes P17(b): it buys preference points, and every preference term is `0` while FPR is `0`.
   **This bullet previously demoted P5 and P4 for the same reason, which was wrong** — both target
-  failing queries and therefore FPR, not preferences. See [P4](#p4--the-per-query-cap-is-300s-by-accident-and-it-structurally-forbids-a-second-repair-pass)
+  failing queries and therefore FPR, not preferences. See [P4](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass)
   and [P5](#p5--spend-the-idle-envelope-on-fresh-seeds) for the corrected reasoning and the ordering
   argument that keeps them second rather than closed.
 
@@ -173,7 +183,7 @@ the previous ranking:
 | **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | 1 day | a measured `40–65 %` recall gain currently converting to nothing; the largest single lever left | **open, top of the queue** |
 | **P19** | [Find the unidentified half of the gap](#p19--find-the-unidentified-half-of-the-gap) | 1 h | held-out C-LPR is below our worst local register, so phrasing alone does not explain it | **open, cheap, do alongside** |
 | **P15** | [Finish phrasing-robust extraction](#p15--finish-phrasing-robust-extraction) | half day | the measured residual beyond budget/room-type; compounds through the FPR threshold | **landed (partial) 2026-08-07; residual re-scoped, see below** |
-| **P4** | [The per-query cap is 300 s by accident](#p4--the-per-query-cap-is-300s-by-accident-and-it-structurally-forbids-a-second-repair-pass) | 1–2 h | **re-opened 2026-08-07**: no query has ever run above `300 s` on this path because the code cannot. Near-zero risk (keep-best), unlocks an untested regime | **open, promoted** |
+| **P4** | [The per-query cap is 300 s by accident](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass) | 1–2 h | **re-opened 2026-08-07**: no query has ever run above `300 s` on this path because the code cannot. Near-zero risk (keep-best), unlocks an untested regime | **open, promoted** |
 | P17 | [Stop trusting our own "satisfied" verdict](#p17--stop-trusting-our-own-satisfied-verdict) | half day (a), 2 h (b) | (a) re-aims the repair queue, worth more under large parse gaps; (b) idle envelope, worth ~0 until FPR > 0 | open, (a) only |
 | P18 | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | 1 h | prevents the recurrence of the failure that cost this cycle | open |
 | P5 | [Spend the idle envelope on fresh seeds](#p5--spend-the-idle-envelope-on-fresh-seeds) | half day | genuinely open, and **second in line rather than parked**: search cannot satisfy a clause we never extracted, so coverage first | open, after coverage |
@@ -371,6 +381,99 @@ trigger rate to stay at or near zero (as P13's did) before it may ship.
 separately, plus `overall`/`FPR` on both registers. If it fires on familiar-100 at all, show that
 `overall` there does not fall.
 
+### P4 — the per-query cap is 300 s by accident, and it structurally forbids a second repair pass
+
+**Re-opened and promoted 2026-08-07, after the owner challenged the demotion and was right.**
+Previously filed as a score-neutral tidy-up. It is not a tidy-up: it is why every run stops at roughly
+a quarter of its envelope, and it silently disabled a mechanism the design intended to have.
+
+**The mechanism, verified in code and against every recorded row.**
+
+- `run_split` resolves `budget_sec = DEFAULT_BUDGET_SEC` (`300`, `agent_env/scripts/solve_phase2.py`)
+  and passes it as `SweepConfig(max_query_sec=budget_sec)`. So the cap that applies is `300 s`, while
+  `sweeps.DEFAULT_MAX_QUERY_SEC = 900` — the intended cap — is **unreachable dead code on this path**.
+- `_choose_pass` drops a query from a repair pass unless the new budget beats its last by
+  `MIN_BUDGET_GROWTH = 1.25`. After one repair pass at the cap a query's `last_budget` is `300`, so
+  re-entry needs `375 s` — but `pass_budget_sec` is capped at `300`. **`300 < 375`, so no query can ever
+  re-enter a repair pass.** The candidate list empties, `_choose_pass` returns `None`, and the run ends
+  with ~73 % of the envelope unspent.
+- Raise the cap to the intended `900` and the same arithmetic gives a second pass `382 s ≥ 375 s`, so it
+  **is** scheduled. Reproduce both halves with `pass_budget_sec(13000, 50, workers=3, fraction=0.5,
+  cap_sec=300 | 900)`.
+
+**This means [§3](#3-the-solver-is-bimodal-and-more-search-does-not-help) overclaimed, and the record is
+corrected here.** Across **all 24 recorded rows** `budget_sec` is `300.0` and no pass ever exceeded
+`300 s`. So "more search does not help" is established for `25 s → 62 s`, for `120 s → 300 s`, and for
+the whole-envelope `1/3/5 h` ladder — but **no query has ever been solved above `300 s` on the whole-run
+path, because the code cannot do it.** That regime is untested, not tested-and-flat. §3's conclusion may
+survive the test; it has not had it.
+
+**Why it is cheap and low-risk.** `on_result` guarantees keep-best, so an extra pass cannot regress the
+split; `pass_fits` keeps the scheduler deadline-aware; fallbacks are pre-written before the first solve.
+The cost of trying is wall clock that is currently idle.
+
+**The fix.** Derive the cap from the envelope and query count rather than inheriting the per-query
+development default, or at minimum stop passing `budget_sec` as `max_query_sec` so the intended `900`
+applies. Either way delete the constant that is now misleading, and keep `--budget-sec` working as an
+explicit operator override, since the per-query development gate depends on it.
+
+**Bar.** [R24](tpc_phase2_eval.md#r24--does-a-query-above-300-s-ever-flip-the-owners-question-open) is the
+measurement. Read the ordering argument in [P5](#p5--spend-the-idle-envelope-on-fresh-seeds) before
+spending an eval slot: on the held-out distribution, coverage plausibly binds before search does.
+
+### P5 — spend the idle envelope on fresh seeds
+
+**Correction, 2026-08-07: the previous day's demotion was justified with the wrong reason, and that note
+is retracted.** It read "`~0` while FPR is `0` — preference-bounded", which is the argument for
+[P17(b)](#p17--stop-trusting-our-own-satisfied-verdict), not for this item. P5 re-attacks **still-failing**
+queries, so it targets constraint satisfaction and FPR, not preference terms. The two were conflated.
+
+**The conclusion is still "not first", but on different and weaker grounds.** Three arguments, in
+descending strength:
+
+1. **Held-out-specific, and decisive for ordering.** A constraint we never extracted is not in the
+   objective the solver optimizes, so **no amount of search can satisfy it** — and the scheduler will not
+   even queue that query, because our own checker says it passes (the amplifier in
+   [§1](#1-coverage-not-search-what-the-held-out-gap-is-made-of): self-reported `FPR 86.67` against a real
+   `6.67`). Where clause failures are extraction failures, extra search is aimed at the wrong failure.
+2. **Mechanism.** A fresh `TPC_SEED_SALT` draws different tuples from the *same* `_random_params` space —
+   a few thousand combinations sampled independently. That is what continuing the restart loop already
+   does.
+3. **Current measurement.** Post-P1 the repair pass gives ~50 failing queries the full `300 s` and
+   improves `1` (R8 `1/54`, R17 `1/50`); pre-P1 it was `2/66`. Not a pre-P1 artifact — but see P4: `300 s`
+   is the *only* budget this has ever been measured at.
+
+**The owner's Phase 1 experience is real, and it points at the right variant.** Long overnight runs did
+fix hard queries there, under two conditions that do not hold now: oracle constraints were available, so
+the objective was *correct*; and the gain came from a monotonic merge across many **configurations**
+(parameters, flags, repair variants), not from re-seeding one configuration. That is evidence for a
+**portfolio over the search space**, which is also what [§4](#4-one-constraint-family-accounted-for-almost-all-of-the-in-distribution-loss)
+found paid — `+11` FPR from one new *move*, `~0` from more draws of the same one. If the idle envelope is
+to be spent, spend it on configurations before salts.
+
+**Sequencing, which is the actionable part.** Coverage first (P15 partially landed, P16, P19). **Once the
+objective is right and the scheduler queues the right queries, the idle envelope becomes worth spending,
+and P4 and this item move up rather than staying parked.** Second in line, not closed.
+
+**Where.** `chinatravel/agent/phase2/sweeps.py`: add `SweepConfig.explore_passes` (env `TPC_P2_EXPLORE`,
+**default off**); have `solve_one(task)` read `task["seed_salt"]` and set `TPC_SEED_SALT` for the solve
+with the same save/restore discipline as `_fast_accept`; add an `explore` pass kind in
+`_candidate_passes`/`_choose_pass` whose candidates are the still-failing queries, ordered **last**, and
+to which **`MIN_BUDGET_GROWTH` must not apply** (a new seed is new work at any budget); hand out a
+distinct salt per explore pass. `pass_fits` must still bound it against the deadline.
+
+**Tests.** Explore is scheduled when repair and polish are empty but budget remains; not scheduled when
+the envelope is exhausted; each pass hands out a different salt; `TPC_P2_EXPLORE=0` reproduces today's
+pass sequence exactly.
+
+**Depends on** P0 and P2 (both landed — without the attempt ledger, flips cannot be counted per pass,
+and that is the only signal separating the two readings).
+
+**Considered and dropped: warm-starting later passes.** `solve_one` does not receive the incumbent plan,
+so repair and polish re-solve from scratch. Threading plan state through the worker boundary and
+re-grounding it through `ground_and_check` before it may occupy a `best` slot is real complexity for a
+resource we have in surplus.
+
 ### P18 — make phrasing robustness a gate
 
 **The process fix, and the cheapest item here.** Nothing in the previous gate could detect a phrasing
@@ -400,7 +503,9 @@ regression, and right now only a human reading two screens would notice.
 - **Preference packing (`TPC_PACK_*`).** Bounded by FPR; `~1.5` overall if all three were perfected
   against `~0.85` for one FPR point. `TPC_PACK_HOTEL_BREAKFAST` is permanently off — upstream PR #29
   made a repeated meal type a commonsense failure.
-- **More envelope-sensitivity runs.** `1/3/5 h` is flat and §3 explains why.
+- **More whole-envelope sensitivity runs at the current cap.** `1/3/5 h` is flat and §3 explains why —
+  but see the scope correction in §3: a *raised per-query cap* is a different question and is untested
+  ([P4](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass)).
 - **Improving the empty-itinerary fallback for score.** `empty_plans` is `0` on every real run. It is
   insurance against a cut-off run, not points.
 - **`arrive_no_later` emitted from `end_before`.** Tried; its ceiling prunes proper transport, and
