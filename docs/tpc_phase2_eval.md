@@ -192,7 +192,9 @@ the bug — not evidence the fix is inert. P18's tripwire is now an executable g
 3. **Every free-prose FPR this document reports was read against the wrong denominator.** The HF
    splits' oracle literals are Chinese while their query text is English, so under `--lang en`
    `59–61 %` of their queries contain a clause no solver can satisfy. Their FPR ceilings are
-   `38.67–46.0`. This is also why R26's own out-of-scope open question is hard to answer today — see
+   `38.67–46.0`. It is also why the *e2e* half of R26's out-of-scope open question cannot be answered
+   on an HF split today — the static half is answered in
+   [R26's addendum](#r26--gate-p20-on-the-registers-it-targets). See
    [the corrected dataset boundary](#3-hugging-face-chinatravel) and
    [R31](#r31--the-first-real-free-prose-fpr-gate).
 
@@ -519,6 +521,7 @@ value with zero grounded candidates in the target city. Measured directly, with
 | HF `easy` | `7 / 300` (`2 %`) | `required_hotel_all_types` (8) |
 | HF `medium` | `8 / 150` (`5 %`) | `required_hotel_all_types` (7), `required_attraction_types` (2) |
 | HF `human` | `2 / 154` (`1 %`) | `required_hotel_all_types` (4) |
+| HF `preference_base50` | `0 / 50` | — |
 
 **The answer is "yes, but rarely, and mostly not in P20's families."** The risk is real — it is the
 same no-feasible-point class as

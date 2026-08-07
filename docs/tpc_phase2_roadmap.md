@@ -241,8 +241,18 @@ acceptable and its FPR and preference terms unlock. If the oracle *did* have it 
 garbage, we were failing that clause either way, so dropping costs nothing and frees the search to
 satisfy the rest. It cannot lower C-LPR. See [P22](#p22--drop-provably-unsatisfiable-required-name-constraints).
 
+**A smaller sibling, in the category-valued families** (measured 2026-08-07 with the same probe's
+`--types` arm, prompted by [R26](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets)'s open
+question). A `required_attraction_types` / `cuisine_preference` / `required_hotel_*_types` value that
+matches no row of the target city's vocabulary is unsatisfiable for the same reason: `0 %` of
+familiar-100, `3 %` of `local_released_150`, `2 / 5 / 1 / 0 %` of the four HF sets. An order of
+magnitude smaller than the name half, dominated by `required_hotel_all_types` (`"King-size bed"`,
+`"Sea view"` — hotel features outside the closed vocabulary), and notable for one case that is *not* a
+parsing error at all: `required_attraction_types: "Cultural Landscape"` is canonical but absent from
+**Suzhou's and Hangzhou's** catalogs, so the check has to be city-scoped. Folded into P22's scope.
+
 **Related but separate: constraints we invent that *are* satisfiable.** Over-extraction is not
-limited to unresolvable names. From the committed
+limited to unresolvable values. From the committed
 [post-P15 probe](../results/phase2_baselines/screens/20260807_generalization_post_p15/probe.json),
 free-prose `spurious` counts: `required_attractions` `105/25/25/20` across
 `easy/medium/human/preference_base50`, `intercity_mode` `49/52/5/11` against **zero** oracle
@@ -289,7 +299,7 @@ verb — a default can only flip against a like-for-like current-tip baseline.
 | **P22** | [Drop provably unsatisfiable required-name constraints](#p22--drop-provably-unsatisfiable-required-name-constraints) | half day | un-pins the `23–50 %` of free-prose queries that currently cannot pass at any budget; the only item with a dominance argument rather than an estimate | **open — do this first** |
 | **P21** | [Promote deterministic entity resolution](#p21--promote-deterministic-entity-resolution) | screen only, no new code | already-landed flag, never measured alone: familiar-100 parse F1 `0.9552 → 0.9949`, `local_released_150` `0.8222 → 0.8451`, zero LLM calls; also takes familiar-100's unsatisfiable-name count `7 → 0` | **open; needs [R29](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end) only** |
 | **P24** | [Stop inventing satisfiable but unrequested constraints](#p24--stop-inventing-satisfiable-but-unrequested-constraints) | half day | `117` invented `intercity_mode` clauses against **zero** oracle instances on free prose, from one over-broad fallback; plausibly *creates* the timed-window infeasibility R25 found binding | **open** |
-| **P23** | [Make the free-prose register scoreable](#p23--make-the-free-prose-register-scoreable) | half day | lifts a `38.67–46.0` FPR ceiling off every free-prose measurement we make, and makes P20's `required_attraction_types` half locally gateable for the first time | **open; unblocks the gate for P20/P22/P24** |
+| **P23** | [Make the free-prose register scoreable](#p23--make-the-free-prose-register-scoreable) | half day | lifts a `38.67–46.0` FPR ceiling off every free-prose measurement we make, and makes P20's `required_attraction_types` half gateable at volume (R26 found exactly `1` locally-measurable clause; translation unlocks `~380`) | **open; unblocks the gate for P20/P22/P24** |
 | **P25** | [Cross-day timed-window relocation](#p25--cross-day-timed-window-relocation) | 1–2 days | the one solver move R25 identified as the binding blocker on failing queries, and the only unbuilt member of the family that produced our single largest gain (`+11.0` FPR) | **open, newly scoped** |
 | **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | landed | prevents the recurrence of the failure that cost this cycle | **landed 2026-08-07 (`dfdace2a`); gates parse gaps only — two precision conditions still open, see below** |
 | **P6** | [Validator-in-loop Qwen repair](#p6--validator-in-loop-qwen-repair) | 1 day spike | tests the successful Kiro/Claude interaction shape without allowing generated facts or unchecked plans | **open; independent spike, default off** |
@@ -344,6 +354,20 @@ unresolvable `required_attractions` value that contains a type word could become
 name-shaped garbage. Downgrading a whole sentence would re-introduce P15's spurious-constraint trap.
 Prefer dropping; if you downgrade, screen the two separately.
 
+**Cover the category-valued families too, with a city-scoped check** (added 2026-08-07, from
+[R26](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets)'s open question). The same
+no-feasible-point class applies to `required_attraction_types` / `cuisine_preference` /
+`required_hotel_*_types` when the value matches no row of the target city's own vocabulary. Measured
+with `--types`, it is an order of magnitude smaller than the name half — `0 %` familiar-100, `3 %`
+`local_released_150`, `2 / 5 / 1 / 0 %` on the four HF sets — and dominated by
+`required_hotel_all_types` (`"King-size bed"`, `"Large bed"`, `"Sea view"`), a family that predates
+P20. **The interesting case is `required_attraction_types: "Cultural Landscape"`, which is
+ungroundable in Suzhou and Hangzhou specifically**: a perfectly canonical value that is absent from
+*those* cities' catalogs. So the check must be per-city, not against the global vocabulary — which is
+also the hazard `_attraction_type_vocab`'s own casing-disagreement note already warns about. Do this in
+the same commit as the name half only if the screen reports the two counts separately; they have
+different magnitudes and would otherwise be indistinguishable.
+
 **Bar.** `pytest tests` green with no pre-existing test edited; a unit test that
 `Flags.from_env({})` leaves the behaviour byte-identical; a unit test pinning that a resolvable name
 is never dropped. Then the screen:
@@ -351,10 +375,12 @@ is never dropped. Then the screen:
 ```bash
 HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py \
   --out-dir results/phase2_baselines/screens/<date>_p22_unsatisfiable_names
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py --types \
+  --out-dir results/phase2_baselines/screens/<date>_p22_unsatisfiable_names
 ```
 
-Require the per-set count to fall to `0` on every set (it is a definitional check — the probe uses the
-same matchers), familiar-100 parse gaps still `0/1109` via
+Require the per-set count to fall to `0` on every set in **both** arms (it is a definitional check —
+the probe uses the same matchers the acceptance gate does), familiar-100 parse gaps still `0/1109` via
 [R22](tpc_phase2_eval.md#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change),
 and no set's `spurious` rising. Promotion needs
 [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries), a paired e2e A/B on
@@ -503,6 +529,17 @@ token lookup — leave them, and have the pass report them, rather than approxim
 can only be judged by the held-out set" and "it can be judged this afternoon". It gives us the first
 free-prose **FPR** gate the project has ever had — the `0.40`-weight metric — and FPR is what the
 whole ranking above is trying to move.
+
+**One qualification, from [R26](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets).** P20's
+own screen reported *zero* locally-measurable English-literal `required_attraction_types` misses; R26
+found one (`10 → 11 matched` on `tpc_phase2_test`), a **disjunctive-branch** clause that
+`scripts/phase2_family_recall_gap_partition.py` does not enumerate the way
+`scripts/parser_vs_oracle.py --per-variant-family-stats` does. So the local measurable universe for
+that family is `1`, not `0` — which does not change this item's case (`1` against the `~380` clauses
+the translation unlocks) but does mean two of our own instruments disagree about what is measurable.
+**Fix the partition script's disjunction handling while you are here**, or at minimum note in the
+screen which of the two tools a "zero measurable misses" claim came from; an item scoped by a tool with
+a blind spot is how P20 came to ship a fallback it believed it could not measure at all.
 
 ### P25 — cross-day timed-window relocation
 
