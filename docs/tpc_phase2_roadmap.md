@@ -299,7 +299,7 @@ is available again — gate any candidate against R28.
 | --- | --- | --- | --- | --- |
 | **P22** | [Drop provably unsatisfiable required-name constraints](#p22--drop-provably-unsatisfiable-required-name-constraints) | half day | un-pins the `23–50 %` of free-prose queries that currently cannot pass at any budget; the only item with a dominance argument rather than an estimate | **landed 2026-08-07 (code + tests + static screen GREEN); promotion needs [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries) only** |
 | **P21** | [Promote deterministic entity resolution](#p21--promote-deterministic-entity-resolution) | screen only, no new code | already-landed flag, never measured alone: familiar-100 parse F1 `0.9552 → 0.9949`, `local_released_150` `0.8222 → 0.8451`, zero LLM calls; also takes familiar-100's unsatisfiable-name count `7 → 0` | **open; needs [R29](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end) only** |
-| **P24** | [Stop inventing satisfiable but unrequested constraints](#p24--stop-inventing-satisfiable-but-unrequested-constraints) | half day | `117` invented `intercity_mode` clauses against **zero** oracle instances on free prose, from one over-broad fallback; plausibly *creates* the timed-window infeasibility R25 found binding | **open** |
+| **P24** | [Stop inventing satisfiable but unrequested constraints](#p24--stop-inventing-satisfiable-but-unrequested-constraints) | half day | Diagnosis revised 2026-08-07: the `intercity_mode` half was a measurement bug, not invention (fixed, spurious `172→0`); `required_attractions`/`required_hotels` were real (fixed, spurious `310→25` / `55→6`, 92%/89%, matched unchanged) | **landed 2026-08-07 (code + tests + two static screens GREEN, `pytest tests` green); e2e effect needs its own R-numbered arm, not yet run** |
 | **P23** | [Make the free-prose register scoreable](#p23--make-the-free-prose-register-scoreable) | half day | lifts a `38.67–46.0` FPR ceiling off every free-prose measurement we make, and makes P20's `required_attraction_types` half gateable at volume (R26 found exactly `1` locally-measurable clause; translation unlocks `~380`) | **open; unblocks the gate for P20/P22/P24** |
 | **P25** | [Cross-day timed-window relocation](#p25--cross-day-timed-window-relocation) | 1–2 days | the one solver move R25 identified as the binding blocker on failing queries, and the only unbuilt member of the family that produced our single largest gain (`+11.0` FPR) | **open, newly scoped** |
 | **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | landed | prevents the recurrence of the failure that cost this cycle | **landed 2026-08-07 (`dfdace2a`); gates parse gaps only — two precision conditions still open, see below** |
@@ -499,30 +499,52 @@ recall gap — phrasing like "we have chosen to fly" / "traveling by high-speed 
 `parse_intercity_mode` does not catch (`easy +2`, `medium +33`, `human +27` newly-visible parse
 gaps). Needs its own item; not folded into this one.
 
-**`required_attractions` and `required_hotels` are real** — unlike `intercity_mode`, both families
-do exist in the free-prose oracles (see the table's last column), and their `spurious` counts are
-genuine over-extraction on the *wrong queries*, confirmed the same way: `has_marker_clause = 0` on
-every sampled spurious instance (no `attraction_name_set`/`accommodation_name_set` clause at all).
-`required_attractions`, same root cause as [§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves):
-a `(?:want|wish|hope)\s+to\s+visit\s+(.+?)` capture with no delimiter before a trailing
+**`required_attractions` and `required_hotels` are real, and both are landed too.** Unlike
+`intercity_mode`, both families do exist in the free-prose oracles (see the table's last column),
+and their `spurious` counts are genuine over-extraction on the *wrong queries*, confirmed the same
+way: `has_marker_clause = 0` on every sampled spurious instance (no
+`attraction_name_set`/`accommodation_name_set` clause at all). `required_attractions`, same root
+cause as [§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves): a
+`(?:want|wish|hope)\s+to\s+visit\s+(.+?)` capture with no delimiter before a trailing
 budget/day-count clause swallows the whole tail as one "attraction name" (`"I want to visit
-Nanjing for a day by myself with a budget of 1800 RMB"` → captured as an attraction). Confirmed the
-dominant shape by direct sampling. `required_hotels`'s dominant shape is a sibling bug in the
-`stay at/in X` pattern: `"stay in two twin rooms"` / `"stay in a room with a double bed"` is a
-room-type/room-count requirement, not a hotel name — the existing type-word guard only matched
-chunks *starting* with `a single/double/twin`, missing every quantified phrasing.
+Nanjing for a day by myself with a budget of 1800 RMB"` → captured as an attraction), plus a
+smaller shape where the same greedy split lands a restaurant/cuisine clause in
+`required_attractions` instead of `required_restaurants`/`cuisine_preference`.
+`required_hotels`'s dominant shape is a sibling bug in the `stay at/in X` pattern: `"stay in two
+twin rooms"` / `"stay in a room with a double bed"` is a room-type/room-count requirement, not a
+hotel name — the existing type-word guard only matched chunks *starting* with `a single/double/
+twin`, missing every quantified phrasing. **Fixed** with guards applied per `" and "`-split part
+(not the whole captured chunk — an earlier version filtered the whole chunk and was caught in
+review before landing: it also discarded genuine trailing attraction references like `"... and
+would like to go to the Great Hall of the People"`, turning a `wrong_value` into a `missing`).
+Result: `required_attractions` spurious `310 → 25` across the four free-prose sets (92%), `required_
+hotels` spurious `55 → 6` (89%), `matched` unchanged (`0` both sides — neither family ever produced
+a *correct* value on free prose, only invented on queries with no such requirement) and
+familiar-100/local_released_150 control byte-identical. Overall parse precision rose on every
+free-prose set (`easy 0.7433 → 0.8528`, `medium 0.7929 → 0.8924`, `human 0.786 → 0.8363`,
+`preference_base50 0.735 → 0.865`). Full before/after tables:
+[screen README](../results/phase2_baselines/screens/20260807_p24_attractions_hotels_precision/README.md).
+**Residual, not this item:** capture fragments that fuzzy-match a real POI closely enough to pass
+the capitalization guard while still being wrong (the `"Art Museum 2"` case) need catalog
+fuzzy-matching (the entity-resolution layer) to close, not another lexical rule.
 
-**Bar.** One family per commit. Target family's `spurious` falling on at least two free-prose sets
-with `matched` not falling on any set, familiar-100 control byte-identical. **The R22
-"no free-prose set's gaps rising" clause is retracted as stated** — the `intercity_mode` fix proves
-it was unmeetable by construction whenever a fix corrects the *oracle* side: `clause_is_covered()`
+**Bar.** One family per commit — landed as two: intercity oracle-side fix, then the attractions/
+hotels precision guards. Target family's `spurious` falling on at least two free-prose sets with
+`matched` not falling on any set, familiar-100 control byte-identical — met by all three families.
+**The R22 "no free-prose set's gaps rising" clause is retracted as stated** — the `intercity_mode`
+fix proves it was unmeetable by construction whenever a fix corrects the *oracle* side, and the
+attractions/hotels fix shows the same holds for a pure NL-side precision fix: `clause_is_covered()`
 tests family presence, not value correctness, so a query whose garbage capture used to count as
 "covered" correctly loses that credit once the garbage is gone. State the `spurious`/`missing`/
 `wrong_value` deltas per set explicitly instead, and treat any resulting P18 floor rise as
-information to justify in the floor file's `_meta`, not an automatic blocker — see the screen
-README for how that was handled here. Then
+information to justify in the floor file's `_meta`, not an automatic blocker — both screen READMEs
+above show how that was handled (`easy 97→99`, `medium 78→131`, `human 81→109`, unchanged
+elsewhere). Then
 [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries) or its own e2e arm; a
-precision fix whose e2e effect is unmeasured stays default-off.
+precision fix whose e2e effect is unmeasured stays default-off — **both P24 commits are library
+default already** (`parse_constraints.py`/`solver_constraints.py` have no flag gate; they are the
+one deterministic path), so "default-off" here means the roadmap does not yet claim an e2e score
+change from them, not that a flag needs flipping.
 
 ### P23 — make the free-prose register scoreable
 
