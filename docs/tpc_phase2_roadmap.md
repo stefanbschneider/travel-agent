@@ -23,7 +23,7 @@ than compute-bound — was correct and still holds, but it was a diagnosis of on
 | Measurement | Score | What it licenses |
 | --- | --- | --- |
 | **Organizer held-out, `v1`** | **`33.2473`** | the only external calibration; see the [eval doc](tpc_phase2_eval.md#the-one-fact-that-reorganizes-this-document) |
-| familiar-100, [R17](tpc_phase2_eval.md#the-closed-queue-r1r18) `20260806T115309Z` | `64.17251838310492`, FPR `44.0` | best local row; a configuration on one phrasing register |
+| familiar-100, [R17](tpc_phase2_eval.md#the-closed-queue-r1r19) `20260806T115309Z` | `64.17251838310492`, FPR `44.0` | best local row; a configuration on one phrasing register |
 | local released 150, R18 | `90.5603` | **nothing about generalization** — same template, a third the constraint density |
 | free prose (HF `medium`), matched-budget screen | `41.62 → 49.99` after the phrasing fix | the register the held-out set may resemble |
 
@@ -136,7 +136,7 @@ they are ranked by expected effect on the held-out score.
 | ~~P8/P9~~ | ~~Window push / absent-POI insert~~ | — | **promoted 2026-08-06** (R14 GREEN, `+0.5471`); fire rarely | landed |
 | ~~P10~~ | ~~Scheduler self-scoring uses the solver's exact variants~~ | — | **landed 2026-08-06**, default-on; R16 GREEN | landed |
 | ~~P12~~ | ~~Close P10's false-positive half~~ | — | **landed 2026-08-06**; R17 GREEN on the shipped path | landed |
-| ~~P13~~ | ~~Empty parent parse means the same on both sides~~ | — | **landed 2026-08-06**; trigger fires on `0/100` | landed |
+| ~~P13~~ | ~~Empty parent parse means the same on both sides~~ | — | **landed 2026-08-06**; trigger fires on `0/100`, independently confirmed on a full run in [R19](tpc_phase2_eval.md#the-closed-queue-r1r19) | landed |
 | ~~P2~~ | ~~Per-attempt telemetry ledger~~ | — | **landed 2026-08-06**; `attempts.jsonl`, aggregated into the row | landed |
 | ~~P3~~ | ~~Commonsense-valid emission~~ | — | **closed 2026-08-06**, re-screened, no code change needed | closed |
 | ~~P11~~ | ~~Whole-run mode for the pre-gate screen~~ | — | **landed 2026-08-06**, tooling only | landed |

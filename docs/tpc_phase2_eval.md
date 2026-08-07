@@ -9,7 +9,7 @@ document defines their interpretation. What to *implement* is the
 ## The one fact that reorganizes this document
 
 **The organizers returned `v1`'s held-out score on 2026-08-06: `33.2473`.** The same code scores
-`64.17` on the released familiar-100 split ([R17](#the-closed-queue-r1r18)). **Local rows over-predicted
+`64.17` on the released familiar-100 split ([R17](#the-closed-queue-r1r19)). **Local rows over-predicted
 held-out performance by a factor of about two**, and every ranking decision in this project was made
 on the local number.
 
@@ -46,7 +46,7 @@ Reproduced end-to-end at matched budget, workers and `n`: free-prose queries of 
 density score `64.57 → 41.62` overall, with `MicEPR`/`MacEPR` staying at `100.0`. The collapse is
 entirely in the logical terms — the same signature the inversion produces.
 
-**Note what this says about `tpc_phase2_test`.** The split scoring `90.56` ([R18](#the-closed-queue-r1r18))
+**Note what this says about `tpc_phase2_test`.** The split scoring `90.56` ([R18](#the-closed-queue-r1r19))
 shares familiar-100's template *and* carries a third of its constraints. It was never evidence of
 generalization, and it should never again be cited as a second confirmation set.
 
@@ -78,38 +78,28 @@ re-deriving the argument.
 
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
-| **R19** | does the phrasing fix hold at full size, and is familiar-100 really unaffected? | **nothing — run this first** | ~1.4 h |
-| **R20** | does fill-only LLM extraction plus value grounding convert recall into score? | [P16](tpc_phase2_roadmap.md#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | ~$0 + ~1 h |
-| **R21** | does spending the unspent envelope on all queries buy preference points? | [P17](tpc_phase2_roadmap.md#p17--stop-trusting-our-own-satisfied-verdict) | ~1.4 h |
-| R22 | standing phrasing-robustness tripwire before any parser change promotes | nothing; cheap, run alongside | ~2 min |
+| **R22** | standing phrasing-robustness tripwire before any parser change promotes | **nothing — the only unblocked item** | ~2 min |
+| R20 | does fill-only LLM extraction plus value grounding convert recall into score? | [P16](tpc_phase2_roadmap.md#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | ~$0 + ~1 h |
+| R21 | does spending the unspent envelope on all queries buy preference points? | [P17](tpc_phase2_roadmap.md#p17--stop-trusting-our-own-satisfied-verdict) | ~1.4 h |
 | R9 | does re-attacking failures with fresh seeds accumulate flips? | [P5](tpc_phase2_roadmap.md#work-items) + P2 | ~5 h |
 
-### R19 — does the phrasing fix hold at full size? *(open, run first)*
+R19 closed GREEN ([closed queue](#the-closed-queue-r1r19)) — familiar-100 confirmed unaffected. R20
+and R21 stay blocked on unlanded Implementation work; R22 is the only item this workstream can run
+without waiting on another lane.
 
-[The phrasing fix](../results/phase2_baselines/screens/20260806_parser_phrasing_fix/README.md) landed
-on this branch: `parse_budget` now recognises a bare total budget and room-type parsing recognises
-plain wording. Its screen shows familiar-100 parse output **byte-identical** (`0/1109` gaps both
-sides, a floor test keeps verbatim copies of the pre-fix extractors and asserts equality over all 100
-queries) and free-prose e2e `41.62 → 49.99`. What no row yet shows is familiar-100 at `n=100` under
-the real envelope after the change.
+### R22 — the standing phrasing tripwire *(open, ~2 min, run with every parser change)*
+
+The process failure behind the held-out gap was that **no gate could see a phrasing dependency**. This
+closes it, and it costs seconds:
 
 ```bash
-git rev-parse --short HEAD    # record it
-.venv/bin/python scripts/phase2_full_run.py \
-  --method phase2_e2e_r19_phrasing --label "R19 phrasing fix, familiar-100 regression check, 5h"
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_generalization_probe.py \
+  --out-dir results/phase2_baselines/screens/<date>_generalization_<change>
 ```
 
-Export nothing. **Baseline: R17 `20260806T115309Z`** on the same host (4-core Linux / 3 workers),
-`overall 64.17251838310492`, `FPR 44.0`, `constraints_ok 50/100`.
-
-| Outcome vs R17 | Read | Action |
-| --- | --- | --- |
-| `overall` within `±0.5`, `FPR` not down, `empty_plans 0/100` | GREEN — the fix is the intended no-op here | Keep it. It is a pure generalization gain, free on the in-distribution split. |
-| `overall` down by more than `0.5` or `FPR` down | RED | The guard leaked. Diff the plan directory against `results/phase2_e2e_r17_ship/` to find which queries moved, and hand the uids to Implementation. Do not revert blindly — the fix is worth more than the regression on any distribution but this one. |
-| `empty_plans > 0` or a failed job | RED — infrastructure | Suspect the worker pool ([cold-start note](#before-the-first-run)) before the solver. |
-
-Expected: within noise of `64.17`. familiar-100 contains the word "budget" in `0/100` queries, so the
-new alternatives have no text to fire on.
+Require: familiar-100 parse gaps still `0/1109` **and** no free-prose set's gap count rising. A parser
+change that improves familiar-100 while worsening free prose is now a **regression**, whatever its
+familiar-100 number says. Commit the screen next to the change.
 
 ### R20 — does LLM extraction convert recall into score? *(needs P16)*
 
@@ -150,20 +140,6 @@ above). Read this row as **per-pass improvement counts**, not as a total: the qu
 re-polishing queries the scheduler believes are finished converts idle time into preference points.
 Acceptance: `overall` up with `FPR` not down. Expected small — preference terms are capped at `FPR`.
 
-### R22 — the standing phrasing tripwire *(open, ~2 min, run with every parser change)*
-
-The process failure behind the held-out gap was that **no gate could see a phrasing dependency**. This
-closes it, and it costs seconds:
-
-```bash
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_generalization_probe.py \
-  --out-dir results/phase2_baselines/screens/<date>_generalization_<change>
-```
-
-Require: familiar-100 parse gaps still `0/1109` **and** no free-prose set's gap count rising. A parser
-change that improves familiar-100 while worsening free prose is now a **regression**, whatever its
-familiar-100 number says. Commit the screen next to the change.
-
 ### R9 — the falsification run for "spend the idle envelope" *(needs P5)*
 
 ```bash
@@ -174,7 +150,7 @@ TPC_P2_EXPLORE=1 .venv/bin/python scripts/phase2_full_run.py \
 **Read flips per pass, not `overall`.** One extra sampling pass is measured at ~1 flip per 68 queries;
 the question is whether that accumulates over the ~10 passes the idle envelope affords. Independent
 draws give `5–10` flips (`+1.7..+4.2` overall, promoting P5); an exhausted reachable set gives `1–2`
-and closes the "we aren't using our time" question for good. Demoted below R19–R21: it re-attacks the
+and closes the "we aren't using our time" question for good. Demoted below R20–R22: it re-attacks the
 *search*, and the evidence now says the binding limit is *coverage*.
 
 ### What not to spend a slot on
@@ -182,11 +158,11 @@ and closes the "we aren't using our time" question for good. Demoted below R19�
 - **Any local row read as a held-out estimate.** That is the error this cycle paid for. A local row
   measures a *configuration*, never a *distribution*.
 - **A repeat of a run you already have.** Post-P0 the solver is bit-for-bit reproducible
-  ([R7](#the-closed-queue-r1r18)); the same configuration on the same host returns the same number.
+  ([R7](#the-closed-queue-r1r19)); the same configuration on the same host returns the same number.
 - **Any whole-run row whose configuration you cannot read off its own telemetry.** Check
   `solver_flags` first, score second.
 - **`audit`-mode LLM parsing, LLM-only planning, or LLM plan refine.** All three measured, all three
-  at or below the deterministic floor — see the [closed queue](#the-closed-queue-r1r18).
+  at or below the deterministic floor — see the [closed queue](#the-closed-queue-r1r19).
 - **More envelope-sensitivity runs.** `1/3/5 h` is flat and the
   [diagnosis](tpc_phase2_roadmap.md#the-diagnosis) explains why.
 - **Preference-packing flags (`TPC_PACK_*`).** Every preference term is zeroed on a failing query, so
@@ -221,9 +197,9 @@ answer was **`33.2473`**. Keeping the reasoning visible is worth more than delet
 Record the leaderboard standing next to this when it publishes. It is the only external calibration
 this project gets.
 
-## The closed queue (R1–R18)
+## The closed queue (R1–R19)
 
-Run 2026-08-04/05/06, primarily on a 4-core box (3 workers), plus R3 on a 10-core Mac (8 workers),
+Run 2026-08-04/05/06/07, primarily on a 4-core box (3 workers), plus R3 on a 10-core Mac (8 workers),
 `evaluator_parity: c89cfca`, rows under `results/phase2_baselines/full_runs/`. **Nothing here needs
 re-running.** Local scores only; see the [held-out fact](#the-one-fact-that-reorganizes-this-document)
 for what they do and do not predict.
@@ -246,6 +222,14 @@ for what they do and do not predict.
 | R16 `v2` candidate | `20260806T082724Z` | `overall 64.14997555172528`, FPR `44.0`, `constraints_ok 51/100`, `git_sha 241c0524`. P10 does not interact destructively with P8/P9 at `n=100`; `constraints_ok +5` is a **self-score** effect, explicitly not a promotion signal |
 | **R17 ship candidate** | `20260806T115309Z` | `overall 64.17251838310492`, `FPR 44.0`, C-LPR `90.08`, `constraints_ok 50/100`, `empty_plans 0/100`, `git_sha efbfea96`, `1.38 h` of `5 h`. **The best local row, and the configuration `v1` behaviour is closest to** |
 | R18 released-150 regeneration | `20260806T132917Z` | `tpc_phase2_test` (150): `overall 90.5603`, FPR `90.67`, `constraints_ok 125/150`. P12's residual cross-tab is `4/150`. **Do not read `90.56` as generalization** — same template, a third the constraint density |
+| **R19 phrasing-fix regression check, 5 h** | `20260807T043142Z` | `git_sha ae0bd319` (`main` tip at launch; also carries **P13** `27d31efe`/`de3c8fcb`, which merged *after* R17's measured `efbfea96` and was flagged in `e7faa9f1` as unmeasured on this tree — so this row confirms P13, not only the phrasing fix). All 7 official metrics **byte-identical** to R17: `overall 64.17251838310492`, FPR `44.0`, C-LPR `90.08115419296664`, `constraints_ok 50/100`, `empty_plans 0/100`, `1.36 h` of `5 h`. All 100 plans byte-identical to `results/phase2_e2e_r17_ship/` modulo per-attempt timing fields (`parent_parse_failed_uids: []`, confirming P13's changed branch never fires here either). **GREEN — expected, and read narrowly**: familiar-100 contains the phrasing the fix targets (bare budgets, plain room-type wording) in `0/100` queries, so this shows the fix and P13 are true no-ops on the one register the parser was already perfect on. It is not evidence the phrasing fix helps — that evidence is the free-prose screen's `41.62 → 49.99`, which this run does not touch |
+
+**Drift note, same shape as `e7faa9f1`.** P15 (`a4d028bb`/`8688439c`, closes `9/15` `local_released_150`
+phrasing gaps) merged to `main` while this run was in flight, so `main`'s tip is again one parser
+change past what R19 measured. P15 carries its own screen and floor test
+([roadmap](tpc_phase2_roadmap.md#p15--finish-phrasing-robust-extraction)); it is not remeasured here,
+and familiar-100 byte-identity is not itself evidence about it — P15 touches families the budget/
+room-type floor test does not cover.
 
 **On R10's `git_dirty: true`.** `eval_tpc.py`'s `update_suboptimal_split_file` rewrites
 `chinatravel/evaluation/default_splits/tpc_phase1_suboptimal.txt` on every full-split scoring call, so
@@ -273,6 +257,10 @@ pass), not a rerun.
 7. **Removing the oracle costs `13.78` points** on `tpc_phase1` (R10).
 8. **Local rows over-predicted the held-out score by ~2×** — the finding that supersedes how items
    1–7 should be weighted.
+9. **The phrasing fix and P13 are confirmed true no-ops on familiar-100** (R19): byte-identical plans
+   and metrics to R17, closing the unmeasured-drift flag `e7faa9f1` raised. This says nothing about
+   whether either helps elsewhere — the phrasing fix's gain is the free-prose screen's
+   `41.62 → 49.99`, not any number in this queue.
 
 ### Closed LLM and baseline arms (screens, 2026-08-06)
 
@@ -463,7 +451,7 @@ axes. Low-`n` rows are smoke checks, not promotion evidence. Field semantics:
 
 | Host | Workers | Baseline row | `overall` / `FPR` / `constraints_ok` |
 | --- | --- | --- | --- |
-| 4-core Linux | 3 (`CPU−1`) | **R17 `20260806T115309Z`** | `64.17251838310492` / `44.0` / `50/100` |
+| 4-core Linux | 3 (`CPU−1`) | **R19 `20260807T043142Z`** (byte-identical to R17 `20260806T115309Z`, moved to the fresher `git_sha`) | `64.17251838310492` / `44.0` / `50/100` |
 | 10-core Apple Silicon | 8 | R3 `20260805T215107Z` | `64.0773462893086` / `44.0` / `47/100` |
 
 On a third machine, produce your own flags-off baseline there first; a cross-host delta is not
