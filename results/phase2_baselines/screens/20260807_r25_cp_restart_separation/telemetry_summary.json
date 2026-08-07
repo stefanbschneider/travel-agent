@@ -1,0 +1,163 @@
+{
+  "n_queries": 10,
+  "uids": [
+    "phase2_familiar_20250321012512564936_00022",
+    "phase2_familiar_20250321032641509206_00005",
+    "phase2_familiar_20250321040138918100_00001",
+    "phase2_familiar_20250321044802265544_00014",
+    "phase2_familiar_20250321141142046017_00095",
+    "phase2_familiar_20250321171346047220_00011",
+    "phase2_familiar_20250322022134656894_00087",
+    "phase2_familiar_20250322103945146888_00080",
+    "phase2_familiar_20250322111042021223_00006",
+    "phase2_familiar_20250322114324029605_00039"
+  ],
+  "solve_sec_control": {
+    "mean": 85.48,
+    "median": 98.45,
+    "max": 128.64,
+    "min": 13.78
+  },
+  "restarts_used_control": {
+    "mean": 328.4,
+    "max": 400,
+    "min": 23
+  },
+  "stop_reason_counts_control": {
+    "max_restarts": 8,
+    "converged": 2
+  },
+  "n_timed_out_control": 0,
+  "solve_sec_cp300": {
+    "mean": 89.11,
+    "median": 101.11,
+    "max": 135.67,
+    "min": 14.29
+  },
+  "restarts_used_cp300": {
+    "mean": 328.4,
+    "max": 400,
+    "min": 23
+  },
+  "stop_reason_counts_cp300": {
+    "max_restarts": 8,
+    "converged": 2
+  },
+  "n_timed_out_cp300": 0,
+  "solve_sec_r4000": {
+    "mean": 760.37,
+    "median": 929.62,
+    "max": 1201.26,
+    "min": 14.57
+  },
+  "restarts_used_r4000": {
+    "mean": 3208.4,
+    "max": 4000,
+    "min": 23
+  },
+  "stop_reason_counts_r4000": {
+    "max_restarts": 8,
+    "converged": 2
+  },
+  "n_timed_out_r4000": 0,
+  "fpr_true_passing_control": 0,
+  "overall_true_control": {
+    "mean": 40.9543
+  },
+  "fpr_true_passing_cp300": 0,
+  "overall_true_cp300": {
+    "mean": 40.9543
+  },
+  "fpr_true_passing_r4000": 0,
+  "overall_true_r4000": {
+    "mean": 41.2043
+  },
+  "itinerary_content_differs_from_control_cp300": [],
+  "overall_true_moved_from_control_cp300": [],
+  "itinerary_content_differs_from_control_r4000": [
+    "phase2_familiar_20250321040138918100_00001",
+    "phase2_familiar_20250321044802265544_00014",
+    "phase2_familiar_20250321171346047220_00011",
+    "phase2_familiar_20250322022134656894_00087",
+    "phase2_familiar_20250322103945146888_00080",
+    "phase2_familiar_20250322114324029605_00039"
+  ],
+  "overall_true_moved_from_control_r4000": [
+    {
+      "uid": "phase2_familiar_20250322114324029605_00039",
+      "control_overall_true": 40.0,
+      "r4000_overall_true": 42.5
+    }
+  ],
+  "r4000_failed_clause_family_inspection": {
+    "phase2_familiar_20250321040138918100_00001": {
+      "still_failing_clauses": [
+        "logic_py_4",
+        "logic_py_7",
+        "logic_py_9"
+      ],
+      "families": [
+        "timed-window attraction",
+        "timed-window restaurant",
+        "timed-window attraction"
+      ]
+    },
+    "phase2_familiar_20250321044802265544_00014": {
+      "still_failing_clauses": [
+        "logic_py_7",
+        "logic_py_10"
+      ],
+      "families": [
+        "inner-city transport cost budget",
+        "required-attraction inclusion"
+      ]
+    },
+    "phase2_familiar_20250321171346047220_00011": {
+      "still_failing_clauses": [
+        "logic_py_6",
+        "logic_py_7"
+      ],
+      "families": [
+        "timed-window restaurant",
+        "timed-window attraction"
+      ]
+    },
+    "phase2_familiar_20250322022134656894_00087": {
+      "still_failing_clauses": [
+        "logic_py_3",
+        "logic_py_9"
+      ],
+      "families": [
+        "timed-window attraction",
+        "timed-window attraction"
+      ]
+    },
+    "phase2_familiar_20250322103945146888_00080": {
+      "still_failing_clauses": [
+        "logic_py_9"
+      ],
+      "families": [
+        "timed-window attraction"
+      ]
+    },
+    "phase2_familiar_20250322114324029605_00039": {
+      "still_failing_clauses": [
+        "logic_py_7"
+      ],
+      "families": [
+        "timed-window attraction"
+      ],
+      "note": "logic_py_5 (total activity + inner-city transport cost budget) flipped 0->1: r4000 found a cheaper metro+walk-connector route replacing taxi legs, pushing total cost under the 2837 cap. Query's other blocker (timed-window attraction, clause 7) is unaffected by restart count."
+    }
+  },
+  "r4000_failed_clause_family_note": "Across the 6 uids whose plan content changed under r4000, the recurring family in the clauses that stayed unsatisfied in both control and r4000 is timed-window POI placement ('visit/dine at position X between time A and time B'): it appears in 9 of 11 total still-failing clause slots across them, in 5 of the 6 uids (the exception, ...00014, fails on a transport-cost budget and a required-attraction-inclusion clause, neither timed). Search volume (400 vs 4000 restarts) did not close a single timed-window clause; the one clause that did flip (uid ...00039, logic_py_5) was a cost-budget clause, not a timing clause.",
+  "cp_off_discriminator": {
+    "purpose": "distinguish CP-not-starved from CP-branch-silently-no-oped (except Exception: pass wraps the call)",
+    "env": {
+      "TPC_USE_CP_SOLVER": "0"
+    },
+    "method": "phase2_e2e_r25_nocp (not committed, deleted after recording this result)",
+    "result": "byte-identical plans and overall_true to Arm A (control) on all 10/10 uids",
+    "conclusion": "CP-SAT contributes nothing to the accepted plan on these 10 queries at any time budget, including zero; Arm B null is genuine, not a false negative from a silently-skipped call"
+  }
+}
