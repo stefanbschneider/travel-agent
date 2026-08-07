@@ -195,7 +195,7 @@ the previous ranking:
 | --- | --- | --- | --- | --- |
 | **P20** | [Close the two dominant family-recall gaps](#p20--close-the-two-dominant-family-recall-gaps) | half day | P19 attributes `202` released clause misses to `required_attraction_types` and `cuisine_preference`, over 2x the next family | **landed 2026-08-07; R22 GREEN; R26 (e2e) pending, Evaluation workstream** |
 | **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | landed | detects unfamiliar requirements, but current-tree `matched 311 < 320` deterministic and `hf_medium` e2e is flat | **landed, library default off; not promoted** |
-| **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | 1 h | prevents the recurrence of the failure that cost this cycle | **open; independent of P20/P6** |
+| **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | 1 h | prevents the recurrence of the failure that cost this cycle | **landed 2026-08-07; R22 GREEN** |
 | **P6** | [Validator-in-loop Qwen repair](#p6--validator-in-loop-qwen-repair) | 1 day spike | tests the successful Kiro/Claude interaction shape without allowing generated facts or unchecked plans | **open; independent spike, default off** |
 | **P15** | [Finish phrasing-robust extraction](#p15--finish-phrasing-robust-extraction) | half day | the measured residual beyond budget/room-type; compounds through the FPR threshold | **landed (partial) 2026-08-07; residual re-scoped, see below** |
 | P4 | [Fix the 300 s per-query cap](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass) | half day | correctness fix (currently disables the intended `900 s` cap); R25 found it will not itself buy flips | open, correctness-only |
@@ -627,18 +627,41 @@ resource we have in surplus.
 
 ### P18 — make phrasing robustness a gate
 
+**Landed 2026-08-07** (`scripts/phase2_generalization_probe.py`, `tests/phase2/test_phrasing_generalization_gate.py`;
+[screen](../results/phase2_baselines/screens/20260807_generalization_post_p20/README.md)).
+
 **The process fix, and the cheapest item here.** Nothing in the previous gate could detect a phrasing
 dependency: every screen and gate ran on familiar-100 val, and the held-out tripwire was a 20-record
 subset of the same templated artifact.
 
-Add the [phrasing tripwire](tpc_phase2_eval.md#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change)
-as an executable check, not a documented habit: a test (or a `make` target invoked by the screen
-tooling) that runs `scripts/phase2_generalization_probe.py` and **fails** when familiar-100 parse gaps
-rise above `0/1109` or any free-prose set's gap count rises. It needs the local HF cache, so it must
-skip cleanly (not fail) when the cache is absent, and say which condition it skipped on.
+The [phrasing tripwire](tpc_phase2_eval.md#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change)
+is now an executable check, not a documented habit. `results/phase2_baselines/phrasing_generalization_floor.json`
+records, per `DEFAULT_SETS` entry, the last known-good `n_parse_gap` (`tpc_phase2_familiar_100`
+pinned at `0`) alongside `n_oracle_clauses` as a snapshot fingerprint.
+`scripts/phase2_generalization_probe.py --check-floor <path>` re-measures every set and exits `1` if
+any set's parse-gap count rose above its recorded floor; a set whose `n_oracle_clauses` no longer
+matches (the released/HF data moved) is a **skip**, not a failure -- that is not phrasing evidence.
+`tests/phase2/test_phrasing_generalization_gate.py` runs the same check inside the default
+`pytest tests/phase2` suite (measuring all six sets takes ~14 s locally, so it needed no
+`integration` marker) and skips cleanly, stating why, when the local HF cache is unavailable; a
+second, HF-free tier of synthetic tests in the same file pins that `check_floor`/`write_floor`
+actually fire on a regression, hold at the exact floor, and that `--update-floor` can only ratchet a
+set's floor down, never up (so it can tighten the gate after a real fix but can never launder a
+regression). `make phase2-generalization-gate` is the explicit standalone invocation for the R22
+cadence. `phrasing_generalization_floor.json` sits under `results/phase2_baselines/` but outside
+`screens/`: it is an Implementation-owned gate artifact the code depends on to run (checked and
+ratcheted from this same PR), not an Evaluation-workstream measurement row -- unlike everything else
+in that directory, a future change to it should land with the parser change it ratchets, in the same
+PR, not from a separate eval-machine run.
 
-**Why it is worth an hour:** a parser change that improves familiar-100 while worsening free prose is a
-regression, and right now only a human reading two screens would notice.
+**Why it was worth an hour:** a parser change that improves familiar-100 while worsening free prose is
+a regression, and before this only a human reading two screens would notice. The seed run's window
+spans three landed items (P16, P19, P20), but its README checks attribution (`git diff --stat` over
+the range) rather than assuming it: only P20 touches code the probe's default flags-off path
+exercises, so the improvement is P20's alone -- every free-prose set's gap count dropped
+(`hf_easy 127->97`, `hf_medium 126->78`, `hf_human 99->81`, `hf_preference_base50 19->14`,
+`local_released_150 6->5`), `familiar_100` stayed `0/1109` -- see the screen for the full before/after
+table and the attribution check.
 
 ### P6 — validator-in-loop Qwen repair
 

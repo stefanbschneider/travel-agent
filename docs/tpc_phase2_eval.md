@@ -460,13 +460,34 @@ Require: familiar-100 parse gaps still `0/1109` **and** no free-prose set's gap 
 change that improves familiar-100 while worsening free prose is now a **regression**, whatever its
 familiar-100 number says. Commit the screen next to the change.
 
-**Last run 2026-08-07, first post-P15** ([`20260807_generalization_post_p15`](../results/phase2_baselines/screens/20260807_generalization_post_p15/README.md),
-`git_sha dbacc183`): **GREEN**. `familiar_100` stays `0/1109`; `local_released_150` gap count
-`15/522 → 6/522` — independently reproduces P15's own screen's claimed `9/15` closure, from a run
-outside the PR that made the change. `hf_easy` and `hf_preference_base50` each improved by a further
-`1–5` gaps (unfitted — P15 did not read those sets while writing its patterns); `hf_medium`/`hf_human`
-flat. No set regressed. This is a recurring instrument, not a one-time run — re-run it on the next
-parser change, same acceptance criteria.
+**[P18](tpc_phase2_roadmap.md#p18--make-phrasing-robustness-a-gate) turned this from a documented
+habit into an executable gate.** `results/phase2_baselines/phrasing_generalization_floor.json`
+records the floor per set; check it (and fail on any regression, skip cleanly on a dataset-snapshot
+mismatch) with either:
+
+```bash
+make phase2-generalization-gate
+# or directly:
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_generalization_probe.py \
+  --check-floor results/phase2_baselines/phrasing_generalization_floor.json
+```
+
+`tests/phase2/test_phrasing_generalization_gate.py` runs the same check inside the default
+`pytest tests/phase2` suite (skips, stating why, when the local HF cache is unavailable), so this is
+no longer only a human-read table — a violation now fails CI-equivalent tests too. After a change
+that improves a set, ratchet the floor down (never up) with
+`... --check-floor <path> --update-floor`, and commit the refreshed screen next to it.
+
+**Last run 2026-08-07, first post-P20** ([`20260807_generalization_post_p20`](../results/phase2_baselines/screens/20260807_generalization_post_p20/README.md),
+`git_sha f413eb2a`; this run also seeded the floor file above): **GREEN**. `familiar_100` stays
+`0/1109`. Every free-prose set improved over the prior post-P15 run: `local_released_150`
+`6/522 → 5/522`, `hf_easy` `127/1579 → 97/1579`, `hf_medium` `126/1264 → 78/1264`, `hf_human`
+`99/687 → 81/687`, `hf_preference_base50` `19/260 → 14/260`. No set regressed. The prior screen spans
+three landed items (P16, P19, P20), but the screen's README checks attribution rather than assuming
+it: only P20 touches code this probe's default (flags-off) path exercises, so this delta is P20's
+alone — a second, unfitted confirmation that a fix scoped as family-recall (not phrasing) generalizes
+past familiar-100. This is a recurring instrument, not a one-time run — re-run it on the next parser
+change, same acceptance criteria.
 
 ### R21 — spend the unspent envelope *(needs P17)*
 

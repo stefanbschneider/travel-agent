@@ -1,0 +1,33 @@
+{
+  "_meta": {
+    "generated": "2026-08-07",
+    "git_sha": "f413eb2a",
+    "note": "Frozen floor for the P18/R22 phrasing-generalization gate. tpc_phase2_familiar_100 must stay pinned at 0. Other sets: a parser change may lower a count but must never raise it -- see docs/tpc_phase2_roadmap.md#p18--make-phrasing-robustness-a-gate."
+  },
+  "floor": {
+    "tpc_phase2_familiar_100": {
+      "n_parse_gap": 0,
+      "n_oracle_clauses": 1109
+    },
+    "tpc_phase2_test": {
+      "n_parse_gap": 5,
+      "n_oracle_clauses": 522
+    },
+    "easy": {
+      "n_parse_gap": 97,
+      "n_oracle_clauses": 1579
+    },
+    "medium": {
+      "n_parse_gap": 78,
+      "n_oracle_clauses": 1264
+    },
+    "human": {
+      "n_parse_gap": 81,
+      "n_oracle_clauses": 687
+    },
+    "preference_base50": {
+      "n_parse_gap": 14,
+      "n_oracle_clauses": 260
+    }
+  }
+}
