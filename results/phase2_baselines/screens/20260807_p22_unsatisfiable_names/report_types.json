@@ -1,0 +1,87 @@
+{
+  "measurement_kind": "screen",
+  "entity_resolution": false,
+  "drop_unsatisfiable_names": false,
+  "types": true,
+  "fields": [
+    "required_attraction_types",
+    "cuisine_preference",
+    "required_hotel_all_types",
+    "required_hotel_any_types"
+  ],
+  "sets": [
+    {
+      "label": "familiar_100 (control)",
+      "source": "local:tpc_phase2_familiar_100",
+      "entity_resolution": false,
+      "drop_unsatisfiable_names": false,
+      "measured": "category_values",
+      "n": 100,
+      "queries_with_unsatisfiable_constraint": 0,
+      "share_of_queries": 0.0,
+      "unsatisfiable_values_by_field": {},
+      "examples": [],
+      "uids": []
+    },
+    {
+      "label": "local_released_150",
+      "source": "local:tpc_phase2_test",
+      "entity_resolution": false,
+      "drop_unsatisfiable_names": false,
+      "measured": "category_values",
+      "n": 150,
+      "queries_with_unsatisfiable_constraint": 5,
+      "share_of_queries": 0.0333,
+      "unsatisfiable_values_by_field": {
+        "cuisine_preference": 3,
+        "required_hotel_any_types": 2,
+        "required_hotel_all_types": 1
+      },
+      "examples": [
+        {
+          "uid": "20250322130847337844",
+          "field": "required_hotel_any_types",
+          "value": "Of restaurants: Hot pot",
+          "target_city": "Suzhou"
+        },
+        {
+          "uid": "20250322150025121412",
+          "field": "cuisine_preference",
+          "value": "one of these restaurants: Shangzuo cuisine",
+          "target_city": "Chengdu"
+        },
+        {
+          "uid": "20250322165721791741",
+          "field": "cuisine_preference",
+          "value": "and I would like to stay at the following hotel: Qingpu Culture Museum Royal Inn",
+          "target_city": "Suzhou"
+        },
+        {
+          "uid": "20250322221022354837",
+          "field": "required_hotel_all_types",
+          "value": "Or",
+          "target_city": "Chengdu"
+        },
+        {
+          "uid": "20250323094730230054",
+          "field": "cuisine_preference",
+          "value": "one of the following types of",
+          "target_city": "Hangzhou"
+        },
+        {
+          "uid": "20250323094730230054",
+          "field": "required_hotel_any_types",
+          "value": "Of restaurants: Southeast Asian cuisine",
+          "target_city": "Hangzhou"
+        }
+      ],
+      "uids": [
+        "20250322130847337844",
+        "20250322150025121412",
+        "20250322165721791741",
+        "20250322221022354837",
+        "20250323094730230054"
+      ]
+    }
+  ]
+}

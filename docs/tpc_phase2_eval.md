@@ -286,16 +286,24 @@ settle both.
 
 ### R30 — does dropping unsatisfiable names flip queries?
 
-Needs [P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints). The
-static part is definitional and costs two minutes:
+[P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints) **landed
+2026-08-07** (`TPC_P2_DROP_UNSATISFIABLE_NAMES`, library default off). **The static part is done and
+GREEN**:
+[`results/phase2_baselines/screens/20260807_p22_unsatisfiable_names`](../results/phase2_baselines/screens/20260807_p22_unsatisfiable_names/README.md) —
+every set's count is `0` in both the required-name and category-value (`--types`) arms. Reproduce
+(definitional, costs two minutes; the probe uses the same matchers the drop rule and the acceptance
+gate themselves use):
 
 ```bash
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py \
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py --drop-unsatisfiable-names \
+  --out-dir results/phase2_baselines/screens/<date>_p22_unsatisfiable_names
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py --types --drop-unsatisfiable-names \
   --out-dir results/phase2_baselines/screens/<date>_p22_unsatisfiable_names
 ```
 
-Require every set's count at `0`. The scoring question is separate: P22 removes a *blocker*, it does
-not satisfy anything, so a query it un-pins still has to pass all its real clauses.
+**What's left is the e2e half only** (below) — the scoring question is separate: P22 removes a
+*blocker*, it does not satisfy anything, so a query it un-pins still has to pass all its real
+clauses.
 
 **Run it on the queries it targets**, not a random subset: the probe writes the affected `uids` per set,
 so build the target file from the free-prose sets' lists. Baseline and candidate on the same uids, same

@@ -9,6 +9,10 @@ Flag hooks (all OFF by default):
 - ``TPC_P2_DISJUNCTION``: true no-oracle disjunctive branch generation (implemented below).
 - ``TPC_P2_ENTITY_RESOLUTION``: deterministic name-entity canonicalization against the target
   city's POI catalog (implemented below).
+- ``TPC_P2_DROP_UNSATISFIABLE_NAMES``: drop a required-POI-name or category-value constraint that
+  the same catalog lookup proves has no feasible point in the target city, instead of keeping it
+  verbatim as an unsatisfiable hard constraint (P22). Forces the catalog lookup to run even when
+  ``TPC_P2_ENTITY_RESOLUTION`` is off.
 
 When flags are off, neither hook runs and the LLM client is never called.
 """
@@ -727,6 +731,67 @@ def _attraction_type_vocab(slug: str | None) -> dict[str, str]:
     return vocab
 
 
+# --- P22: category-valued families, the type-value half of "no feasible point" ----------------
+#
+# The name-bearing families above (`required_attractions` etc.) are checked against a catalog of
+# proper nouns; these families instead hold a category *label*, so the closed vocabulary is one
+# CSV column, city-scoped for the same reason `_attraction_type_vocab` is (a value can be
+# canonical and still absent from *this* city's catalog, e.g. `required_attraction_types:
+# "Cultural Landscape"` in Suzhou/Hangzhou -- R26). Deliberately a flat set of the raw column
+# literal (not split on '/'), matched with the same substring `_match_text` the acceptance gate
+# itself uses (`chinatravel.agent.tpc_agent.parsed_verifier`) -- a value counted unsatisfiable
+# here really does fail the gate, and one that matches a compound literal via substring is not
+# double-counted as garbage. See `scripts/phase2_unsatisfiable_names_probe.py --types`.
+_TYPE_FIELD_VOCAB_SOURCE = {
+    "required_attraction_types": ("attractions", "type"),
+    "cuisine_preference": ("restaurants", "cuisine"),
+    "required_hotel_all_types": ("accommodations", "featurehoteltype"),
+    "required_hotel_any_types": ("accommodations", "featurehoteltype"),
+}
+_type_field_vocab_cache: dict[tuple[str, str, str], set[str]] = {}
+
+
+def _type_field_vocab(slug: str | None, subdir: str, column: str) -> set[str]:
+    cache_key = (slug or "", subdir, column)
+    if cache_key in _type_field_vocab_cache:
+        return _type_field_vocab_cache[cache_key]
+    root = _extract_project_root()
+    pattern = (
+        f"chinatravel/environment/database_en/{subdir}/{slug}/*.csv"
+        if slug else f"chinatravel/environment/database_en/{subdir}/*/*.csv"
+    )
+    values: set[str] = set()
+    for path in root.glob(pattern):
+        with open(path, encoding="utf-8", newline="") as f:
+            for row in csv.DictReader(f):
+                v = (row.get(column) or "").strip()
+                if v:
+                    values.add(v)
+    _type_field_vocab_cache[cache_key] = values
+    return values
+
+
+def _type_value_satisfiable(value: str, slug: str | None, subdir: str, column: str) -> bool:
+    from chinatravel.agent.tpc_agent.parsed_verifier import _match_text
+
+    vocab = _type_field_vocab(slug, subdir, column)
+    return any(_match_text(known, value) for known in vocab)
+
+
+def _filter_type_field_value(value, slug: str | None, subdir: str, column: str):
+    """Drop entries with no grounded candidate in the target city's own vocabulary for this
+    field. Preserves the caller's scalar-vs-list shape (``cuisine_preference`` may be either --
+    ``solver_constraints._parse_type_sets``, ``parse_constraints.parse_query_no_oracle``) and
+    ordering. Returns ``None`` to signal "pop the field" (nothing satisfiable survived)."""
+    is_scalar = isinstance(value, str)
+    items = [value] if is_scalar else (value if isinstance(value, list) else [])
+    kept = [v for v in items
+            if not isinstance(v, str) or _type_value_satisfiable(v, slug, subdir, column)]
+    if not kept:
+        return None
+    return kept[0] if is_scalar else kept
+
+
 def _norm_entity_key(text: str) -> str:
     s = text.strip().lower()
     s = _ENTITY_PUNCT_RE.sub(" ", s)
@@ -985,23 +1050,39 @@ def _dedupe_preserve_order(items: list[str]) -> list[str]:
     return out
 
 
-def _resolve_generic_location(text: str, catalog: dict[str, list[str]]) -> str:
+def _resolve_generic_location(text: str, catalog: dict[str, list[str]],
+                               drop_unresolved: bool = False) -> str | None:
     """Resolve a single free-standing location reference (position_presence entry,
     hotel_nearby/poi_distance_hotel reference, stay_duration/activity_time_windows location) --
-    no family to reroute to, so just clean the label and canonicalize against any category."""
+    no family to reroute to, so just clean the label and canonicalize against any category.
+
+    ``drop_unresolved`` (P22): returns ``None`` instead of the cleaned-but-unmatched text when
+    nothing in any category catalog matches, i.e. the same "no feasible point anywhere in the
+    catalog" condition ``_resolve_one_required_name``'s terminal branch checks. Only the plain
+    ``position_presence`` list can structurally drop an entry outright; the dict-valued callers
+    (``hotel_nearby``, ``poi_distance_hotel``, ``stay_duration``, ``activity_time_windows``) hold
+    their location inside a larger constraint object, so dropping there would mean removing the
+    whole entry, not just the location string -- out of P22's scope, and they never pass this."""
     cleaned = _strip_entity_label(text)
     if not cleaned:
-        return text
+        return None if drop_unresolved else text
     for category in ("attraction", "restaurant", "hotel"):
         match = _match_catalog_name(cleaned, catalog.get(category, []))
         if match:
             return match
-    return cleaned
+    return None if drop_unresolved else cleaned
 
 
-def _resolve_one_required_name(text: str, field: str, catalog: dict[str, list[str]], slug: str | None) -> dict:
+def _resolve_one_required_name(text: str, field: str, catalog: dict[str, list[str]], slug: str | None,
+                                drop_unresolved: bool = False) -> dict:
     """Steps 1-6 of the resolution pipeline for one entry of a required_/excluded_ name family.
-    Returns a tagged outcome so the caller can route the result into the right constraint family."""
+    Returns a tagged outcome so the caller can route the result into the right constraint family.
+
+    ``drop_unresolved`` (P22, ``TPC_P2_DROP_UNSATISFIABLE_NAMES``): by the terminal branch below,
+    every exact/segmentation/fuzzy match against the *union* of all three catalogs (own pool via
+    ``own_catalog`` above, plus the other two via the step-6 reroute loop) has already failed --
+    exactly the "no feasible point" condition ``scripts/phase2_unsatisfiable_names_probe.py``
+    measures. Default False keeps the raw string (preserves recall; the pre-P22 behavior)."""
     category = _ENTITY_CATEGORY_FOR_FIELD[field]
     cleaned = _strip_entity_label(text)
     if not cleaned:
@@ -1042,13 +1123,24 @@ def _resolve_one_required_name(text: str, field: str, catalog: dict[str, list[st
             # position_presence (any stay_duration the parser separately extracted is untouched).
             return {"kind": "reroute_position", "value": other_match}
 
+    if drop_unresolved:
+        return {"kind": "drop"}
     return {"kind": "keep", "value": cleaned}
 
 
-def resolve_entities(variant: dict, query: dict, catalog: dict[str, list[str]] | None = None) -> dict:
+def resolve_entities(variant: dict, query: dict, catalog: dict[str, list[str]] | None = None,
+                      drop_unresolved: bool = False) -> dict:
     """Canonicalize name-bearing constraint families in one solver-constraint dict against the
     target city's POI catalog. Operate on a single variant so this composes cleanly with OR-branch
     and LLM-alternative expansion; ``ir_to_solver_variants`` applies it to every expanded variant.
+
+    ``drop_unresolved`` (P22): a required-POI-name entry that resolves to nothing anywhere in the
+    catalog, or a category-value entry (``required_attraction_types`` / ``cuisine_preference`` /
+    ``required_hotel_all_types`` / ``required_hotel_any_types``) absent from this city's own
+    vocabulary, is dropped instead of kept verbatim as an unsatisfiable hard constraint -- both are
+    "no feasible point" constraints no search can ever satisfy
+    (docs/tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints).
+    Default False is the pre-P22 behavior (keep, unchanged).
     """
     if not isinstance(variant, dict):
         return variant
@@ -1071,7 +1163,7 @@ def resolve_entities(variant: dict, query: dict, catalog: dict[str, list[str]] |
             if not isinstance(raw, str):
                 new_names.append(raw)
                 continue
-            outcome = _resolve_one_required_name(raw, field, catalog, slug)
+            outcome = _resolve_one_required_name(raw, field, catalog, slug, drop_unresolved)
             kind = outcome["kind"]
             if kind == "name":
                 new_names.append(outcome["value"])
@@ -1081,6 +1173,8 @@ def resolve_entities(variant: dict, query: dict, catalog: dict[str, list[str]] |
                 type_additions.append(outcome["value"])
             elif kind == "reroute_position":
                 position_additions.append(outcome["value"])
+            elif kind == "drop":
+                pass  # P22: no feasible point anywhere in the catalog -- the value, not the query.
             else:
                 new_names.append(outcome["value"])
 
@@ -1101,10 +1195,20 @@ def resolve_entities(variant: dict, query: dict, catalog: dict[str, list[str]] |
 
     pp = out.get("position_presence")
     if isinstance(pp, list) and pp:
-        out["position_presence"] = _dedupe_preserve_order([
-            _resolve_generic_location(v, catalog) if isinstance(v, str) else v
-            for v in pp
-        ])
+        resolved_pp = []
+        for v in pp:
+            if not isinstance(v, str):
+                resolved_pp.append(v)
+                continue
+            r = _resolve_generic_location(v, catalog, drop_unresolved=drop_unresolved)
+            if r is not None:
+                resolved_pp.append(r)
+            # r is None only when drop_unresolved and nothing in any catalog matches -- P22:
+            # no feasible point, drop the entry rather than keep it as an unsatisfiable hard fact.
+        if resolved_pp:
+            out["position_presence"] = _dedupe_preserve_order(resolved_pp)
+        else:
+            out.pop("position_presence", None)
 
     hn = out.get("hotel_nearby")
     if isinstance(hn, dict) and isinstance(hn.get("reference"), str):
@@ -1134,6 +1238,16 @@ def resolve_entities(variant: dict, query: dict, catalog: dict[str, list[str]] |
                     item["location"] = _resolve_generic_location(item["location"], catalog)
                 new_items.append(item)
             out[loc_field] = new_items
+
+    if drop_unresolved:
+        for field, (subdir, column) in _TYPE_FIELD_VOCAB_SOURCE.items():
+            if field not in out:
+                continue
+            filtered = _filter_type_field_value(out[field], slug, subdir, column)
+            if filtered is None:
+                out.pop(field, None)
+            else:
+                out[field] = filtered
 
     return out
 
@@ -1598,11 +1712,14 @@ def ir_to_solver_variants(ir: ParsedIR, query: dict, *, env=None, flags=None) ->
 
     Default: exactly reproduce the current no-oracle single variant. When ``flags.disjunction`` is
     on, route through ``disjunction_stub``, which expands ``ir.or_groups`` into one branch-local
-    variant per OR arm (and is a no-op for non-disjunctive queries). When
-    ``flags.entity_resolution`` is on, every resulting variant (including OR arms and LLM
-    alternatives) is canonicalized against the target city's POI catalog via ``resolve_entities``.
-    ``env`` is unused by entity resolution (it is environment-free by design; see
-    ``load_city_entity_catalog``) and remains a pass-through hook for future WorldEnv checks.
+    variant per OR arm (and is a no-op for non-disjunctive queries). When ``flags.entity_resolution``
+    or ``flags.drop_unsatisfiable_names`` is on, every resulting variant (including OR arms and LLM
+    alternatives) is canonicalized against the target city's POI catalog via ``resolve_entities`` --
+    ``drop_unsatisfiable_names`` (P22) forces this catalog lookup to run even when
+    ``entity_resolution`` itself is off, so the drop rule is reachable standalone and not only when
+    composed with P21's promotion (docs/tpc_phase2_roadmap.md#p22). ``env`` is unused by entity
+    resolution (it is environment-free by design; see ``load_city_entity_catalog``) and remains a
+    pass-through hook for future WorldEnv checks.
     """
     variants = solver_constraint_variants(query, ir.raw, use_oracle=False)
 
@@ -1612,8 +1729,10 @@ def ir_to_solver_variants(ir: ParsedIR, query: dict, *, env=None, flags=None) ->
     if flags is not None and getattr(flags, "llm_parse", False):
         variants = alternatives_stub(variants, ir, query, flags=flags)
 
-    if flags is not None and getattr(flags, "entity_resolution", False):
+    drop_unsatisfiable_names = flags is not None and getattr(flags, "drop_unsatisfiable_names", False)
+    if flags is not None and (getattr(flags, "entity_resolution", False) or drop_unsatisfiable_names):
         catalog = load_city_entity_catalog(query.get("target_city"))
-        variants = [resolve_entities(v, query, catalog) for v in variants]
+        variants = [resolve_entities(v, query, catalog, drop_unresolved=drop_unsatisfiable_names)
+                    for v in variants]
 
     return variants

@@ -87,6 +87,13 @@ class Flags:
     llm_refine: bool = False
     dynamic_budget: bool = False
     entity_resolution: bool = False
+    # P22: drop a required-POI-name/category-value constraint entity resolution's own catalog
+    # lookup proves has no feasible point in the target city's catalog, instead of keeping it
+    # verbatim as an unsatisfiable hard constraint (docs/tpc_phase2_roadmap.md#p22). Forces the
+    # entity-resolution catalog lookup to run even when ``entity_resolution`` itself is off -- see
+    # ``normalize.ir_to_solver_variants`` -- so this is reachable standalone, not only composed
+    # with P21's promotion.
+    drop_unsatisfiable_names: bool = False
     # Master switch stays llm_parse; this selects the strategy only when it is enabled.
     # "audit" (default): today's corrective-audit stub, everything round-trips through the regex.
     # "extract": LLM-first structured extraction + deterministic validation/merge, independent of
@@ -108,6 +115,7 @@ class Flags:
             llm_refine=_truthy(env_map.get("TPC_P2_LLM_REFINE", "0")),
             dynamic_budget=_truthy(env_map.get("TPC_P2_DYNAMIC_BUDGET", "0")),
             entity_resolution=_truthy(env_map.get("TPC_P2_ENTITY_RESOLUTION", "0")),
+            drop_unsatisfiable_names=_truthy(env_map.get("TPC_P2_DROP_UNSATISFIABLE_NAMES", "0")),
         )
 
 
@@ -433,6 +441,7 @@ def solve_phase2(
             "llm_refine": flags.llm_refine,
             "dynamic_budget": flags.dynamic_budget,
             "entity_resolution": flags.entity_resolution,
+            "drop_unsatisfiable_names": flags.drop_unsatisfiable_names,
         },
         # The promoted deterministic solver passes live in the environment, not in ``Flags``, so
         # until now a row could not say which of them actually ran. The ledger requires a row to

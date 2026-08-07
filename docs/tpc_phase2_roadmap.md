@@ -296,7 +296,7 @@ verb — a default can only flip against a like-for-like current-tip baseline.
 
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
-| **P22** | [Drop provably unsatisfiable required-name constraints](#p22--drop-provably-unsatisfiable-required-name-constraints) | half day | un-pins the `23–50 %` of free-prose queries that currently cannot pass at any budget; the only item with a dominance argument rather than an estimate | **open — do this first** |
+| **P22** | [Drop provably unsatisfiable required-name constraints](#p22--drop-provably-unsatisfiable-required-name-constraints) | half day | un-pins the `23–50 %` of free-prose queries that currently cannot pass at any budget; the only item with a dominance argument rather than an estimate | **landed 2026-08-07 (code + tests + static screen GREEN); promotion needs [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries) only** |
 | **P21** | [Promote deterministic entity resolution](#p21--promote-deterministic-entity-resolution) | screen only, no new code | already-landed flag, never measured alone: familiar-100 parse F1 `0.9552 → 0.9949`, `local_released_150` `0.8222 → 0.8451`, zero LLM calls; also takes familiar-100's unsatisfiable-name count `7 → 0` | **open; needs [R29](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end) only** |
 | **P24** | [Stop inventing satisfiable but unrequested constraints](#p24--stop-inventing-satisfiable-but-unrequested-constraints) | half day | `117` invented `intercity_mode` clauses against **zero** oracle instances on free prose, from one over-broad fallback; plausibly *creates* the timed-window infeasibility R25 found binding | **open** |
 | **P23** | [Make the free-prose register scoreable](#p23--make-the-free-prose-register-scoreable) | half day | lifts a `38.67–46.0` FPR ceiling off every free-prose measurement we make, and makes P20's `required_attraction_types` half gateable at volume (R26 found exactly `1` locally-measurable clause; translation unlocks `~380`) | **open; unblocks the gate for P20/P22/P24** |
@@ -323,71 +323,87 @@ verb — a default can only flip against a like-for-like current-tip baseline.
 
 ### P22 — drop provably unsatisfiable required-name constraints
 
-**Do this first.** Diagnosis and measurement:
-[§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves). This is the only open item whose
-value rests on a dominance argument rather than an estimate.
+**Landed 2026-08-07.** Diagnosis and measurement:
+[§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves). This was the only open item
+whose value rested on a dominance argument rather than an estimate.
 
-**What to change.** `chinatravel/agent/phase2/normalize.py`, `_resolve_one_required_name`. Its
-terminal branch is `return {"kind": "keep", "value": cleaned}` — after exact match, list
-segmentation, fuzzy match, type-vocabulary match and cross-category rerouting have all failed, it
-keeps the raw string as a hard required-POI name. Add a terminal `{"kind": "drop"}` outcome, handled
-in `resolve_entities`'s per-field loop (which already pops the field when `new_names` ends up empty,
-so the plumbing exists), behind a new flag `TPC_P2_DROP_UNSATISFIABLE_NAMES`, **library default
-off**, with the usual byte-identical-floor unit test.
+**What landed.** `TPC_P2_DROP_UNSATISFIABLE_NAMES` (`Flags.drop_unsatisfiable_names`, library
+default off) on both halves in one commit, screened separately as the roadmap asked:
+`_resolve_one_required_name`'s terminal branch now returns `{"kind": "drop"}` when the flag is on
+(required-POI names), and `resolve_entities` filters the four category-valued families
+(`required_attraction_types` / `cuisine_preference` / `required_hotel_all_types` /
+`required_hotel_any_types`) against each target city's own vocabulary. The flag forces
+`ir_to_solver_variants` to run the entity-resolution catalog lookup even when
+`TPC_P2_ENTITY_RESOLUTION` is off (composes with [P21](#p21--promote-deterministic-entity-resolution)
+when it promotes, per the design point below, but does not require it). A second code path,
+`_resolve_generic_location` (directly-parsed `position_presence` entries, as opposed to ones
+entity resolution reroutes there from a category misroute), needed its own drop branch too — the
+static screen caught this residual before the fix; see the screen README for the failure and fix.
+Static screen (definitional; the probe uses the same matchers the drop rule and acceptance gate
+themselves use):
+[`results/phase2_baselines/screens/20260807_p22_unsatisfiable_names`](../results/phase2_baselines/screens/20260807_p22_unsatisfiable_names/README.md)
+— **GREEN**: both `familiar_100 (control)` and `local_released_150` reach `0` unsatisfiable-constraint
+queries in both arms (required-name and category-value), `Flags.from_env({})` stays byte-identical,
+and `pytest tests` is green with no pre-existing test edited. **Promotion still needs
+[R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries)** — a paired e2e A/B on
+both registers, Evaluation-workstream work on the eval machine; this static check only proves the
+*drop* removes what the probe measures, not that it flips any query to passing end-to-end.
 
-**Two design points that decide whether this is safe.**
+**Two design points that decided the shape of the fix.**
 
-- **It must run on the deterministic path, not only when `TPC_P2_ENTITY_RESOLUTION` is on.** Today
-  resolution is skipped entirely on the shipped path, which is why nothing filters these values.
-  Either compose the drop rule with [P21](#p21--promote-deterministic-entity-resolution)'s promotion
-  (preferred — one gate, one row) or gate the drop rule to run its own catalog lookup. Do not ship a
-  drop rule that no shipped configuration reaches.
+- **The drop rule had to run on the deterministic path, not only when `TPC_P2_ENTITY_RESOLUTION` is
+  on** — resolution was skipped entirely on the shipped path, which is why nothing filtered these
+  values before. Resolved by composing: `ir_to_solver_variants` now runs the entity-resolution
+  catalog lookup whenever `entity_resolution` **or** `drop_unsatisfiable_names` is true, so the
+  new flag is reachable standalone and, once [P21](#p21--promote-deterministic-entity-resolution)
+  promotes, the two share one code path and can gate as one candidate configuration.
 - **Drop the *value*, not the *query*.** A query whose only requirement was unresolvable becomes an
-  unconstrained query, which is correct: we could not represent what it asked for, and an
-  unconstrained plan still earns EPR and any clause it satisfies incidentally. It must **not** be
-  routed to the empty-plan fallback.
+  unconstrained query — correct, since we could not represent what it asked for, and an
+  unconstrained plan still earns EPR and any clause it satisfies incidentally. Confirmed **not**
+  routed to the empty-plan fallback: the fallback only triggers when the *variants list* is empty,
+  never when one variant dict has an empty/missing field, and dropping only ever removes a field
+  from within a variant, never the variant itself.
 
-**Consider and record, do not silently choose:** whether to downgrade rather than drop — e.g. an
-unresolvable `required_attractions` value that contains a type word could become a
-`required_attraction_types` entry. `_resolve_one_required_name` already does exactly this via
-`_match_type_vocab` for values that *are* type phrases, so the residual here is genuinely
-name-shaped garbage. Downgrading a whole sentence would re-introduce P15's spurious-constraint trap.
-Prefer dropping; if you downgrade, screen the two separately.
+**Downgrade vs. drop, decided:** drop, not downgrade. An unresolvable `required_attractions` value
+that contains a type word already reroutes to `required_attraction_types` via the pre-existing
+`_match_type_vocab` step (a `{"kind": "type"}` outcome, unaffected by this flag); by the time the
+terminal branch is reached the value is genuinely name-shaped garbage (a whole sentence, "book two
+twin rooms", etc.), so downgrading it would re-introduce P15's spurious-constraint trap.
 
-**Cover the category-valued families too, with a city-scoped check** (added 2026-08-07, from
-[R26](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets)'s open question). The same
+**Category-valued families, city-scoped** (from
+[R26](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets)'s open question): the same
 no-feasible-point class applies to `required_attraction_types` / `cuisine_preference` /
-`required_hotel_*_types` when the value matches no row of the target city's own vocabulary. Measured
-with `--types`, it is an order of magnitude smaller than the name half — `0 %` familiar-100, `3 %`
-`local_released_150`, `2 / 5 / 1 / 0 %` on the four HF sets — and dominated by
-`required_hotel_all_types` (`"King-size bed"`, `"Large bed"`, `"Sea view"`), a family that predates
-P20. **The interesting case is `required_attraction_types: "Cultural Landscape"`, which is
-ungroundable in Suzhou and Hangzhou specifically**: a perfectly canonical value that is absent from
-*those* cities' catalogs. So the check must be per-city, not against the global vocabulary — which is
-also the hazard `_attraction_type_vocab`'s own casing-disagreement note already warns about. Do this in
-the same commit as the name half only if the screen reports the two counts separately; they have
-different magnitudes and would otherwise be indistinguishable.
+`required_hotel_all_types` / `required_hotel_any_types` when the value matches no row of the target
+city's own vocabulary — an order of magnitude smaller than the name half (`0 %` familiar-100, `3 %`
+`local_released_150` pre-fix), dominated by `required_hotel_all_types` (`"King-size bed"`, absent
+from every city's `featurehoteltype` column). `required_attraction_types: "Cultural Landscape"` is
+the interesting case: canonical and present in Beijing/Shanghai/five other cities, absent from
+Suzhou's and Hangzhou's own catalogs specifically — confirmed against the committed CSVs, which is
+why the check (`_type_field_vocab` in `normalize.py`) is scoped per city, never pooled globally.
+Screened and reported separately from the name half throughout (`--types` on the probe), landed in
+the same commit as the roadmap allowed.
 
-**Bar.** `pytest tests` green with no pre-existing test edited; a unit test that
-`Flags.from_env({})` leaves the behaviour byte-identical; a unit test pinning that a resolvable name
-is never dropped. Then the screen:
+**A residual the first pass missed.** The static screen's first `--drop-unsatisfiable-names` run
+left `local_released_150` at `1/150`, not `0`: `_resolve_generic_location` — the code path for a
+`position_presence` entry the parser extracted *directly*, as opposed to one entity resolution
+reroutes there from a category misroute — had no drop branch at all. Fixed by giving it its own
+`drop_unresolved` parameter; the four dict-valued callers that share the same function
+(`hotel_nearby`, `poi_distance_hotel`, `stay_duration`, `activity_time_windows`) never pass it,
+since dropping a nested location there would mean removing a whole constraint object, out of this
+item's scope (`NAME_FIELDS` is exactly `required_attractions` / `required_restaurants` /
+`required_hotels` / `position_presence`). See the screen README for the full account.
 
-```bash
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py \
-  --out-dir results/phase2_baselines/screens/<date>_p22_unsatisfiable_names
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py --types \
-  --out-dir results/phase2_baselines/screens/<date>_p22_unsatisfiable_names
-```
-
-Require the per-set count to fall to `0` on every set in **both** arms (it is a definitional check —
-the probe uses the same matchers the acceptance gate does), familiar-100 parse gaps still `0/1109` via
-[R22](tpc_phase2_eval.md#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change),
-and no set's `spurious` rising. Promotion needs
-[R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries), a paired e2e A/B on
-both registers. **Expect the local free-prose e2e gain to be capped**: `59–61 %` of HF queries also
-carry a structurally unpassable CJK oracle clause ([P23](#p23--make-the-free-prose-register-scoreable)),
-so a query this fix un-pins may still be unable to pass for an unrelated reason. Read per-query flips
-and the target subset, not the split mean.
+**Bar, met:** `pytest tests` green with no pre-existing test edited; `Flags.from_env({})` byte-
+identical (unit test); a resolvable name is never dropped (unit test); every set at `0` in both
+arms (required-name and category-value) on the static screen; familiar-100 parse gaps still
+`0/1109` (R22, unaffected — the flag is off on the default path the tripwire measures). Screen:
+[`results/phase2_baselines/screens/20260807_p22_unsatisfiable_names`](../results/phase2_baselines/screens/20260807_p22_unsatisfiable_names/README.md).
+Promotion needs [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries), a
+paired e2e A/B on both registers. **Expect the local free-prose e2e gain to be capped**: `59–61 %`
+of HF queries also carry a structurally unpassable CJK oracle clause
+([P23](#p23--make-the-free-prose-register-scoreable)), so a query this fix un-pins may still be
+unable to pass for an unrelated reason. Read per-query flips and the target subset, not the split
+mean.
 
 ### P21 — promote deterministic entity resolution
 
@@ -1278,7 +1294,7 @@ pins it. The optional autodetect only activates when an operator points an env v
 | **zh→en oracle-literal map + the free-prose FPR ceiling** (P23's instrument) | `scripts/phase2_oracle_literal_translation.py` |
 | Family-recall gap partition by oracle literal language | `scripts/phase2_family_recall_gap_partition.py` |
 | Bilingual concept vocabularies and their English casing aliases | `chinatravel/environment/concept_labels.py`, `chinatravel/environment/database{,_en}/` |
-| Required-name resolution and its `keep` terminal branch (P22's edit site) | `chinatravel/agent/phase2/normalize.py` (`_resolve_one_required_name`, `resolve_entities`) |
+| Required-name/category-value resolution and P22's `keep`-vs-`drop` terminal branch | `chinatravel/agent/phase2/normalize.py` (`_resolve_one_required_name`, `_resolve_generic_location`, `resolve_entities`) |
 | Report ablations (LLM-only, upstream baselines) | `scripts/phase2_report_ablations.py` |
 | Timed-window residual by shape | `scripts/phase2_timed_window_shapes.py` |
 | Failure attribution / commonsense headroom | `scripts/phase2_solver_failure_attribution.py`, `scripts/phase2_commonsense_headroom.py` |

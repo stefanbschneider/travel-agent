@@ -1,0 +1,40 @@
+{
+  "measurement_kind": "screen",
+  "entity_resolution": false,
+  "drop_unsatisfiable_names": true,
+  "types": false,
+  "fields": [
+    "required_attractions",
+    "required_restaurants",
+    "required_hotels",
+    "position_presence"
+  ],
+  "sets": [
+    {
+      "label": "familiar_100 (control)",
+      "source": "local:tpc_phase2_familiar_100",
+      "entity_resolution": false,
+      "drop_unsatisfiable_names": true,
+      "measured": "required_names",
+      "n": 100,
+      "queries_with_unsatisfiable_constraint": 0,
+      "share_of_queries": 0.0,
+      "unsatisfiable_values_by_field": {},
+      "examples": [],
+      "uids": []
+    },
+    {
+      "label": "local_released_150",
+      "source": "local:tpc_phase2_test",
+      "entity_resolution": false,
+      "drop_unsatisfiable_names": true,
+      "measured": "required_names",
+      "n": 150,
+      "queries_with_unsatisfiable_constraint": 0,
+      "share_of_queries": 0.0,
+      "unsatisfiable_values_by_field": {},
+      "examples": [],
+      "uids": []
+    }
+  ]
+}

@@ -314,7 +314,8 @@ def load_hf_queries(config: str = "default", splits: list[str] | None = None):
 
 
 def query_variants(query: dict, *, disjunction: bool = False, llm_parse: bool = False, llm_client=None,
-                   entity_resolution: bool = False, llm_parse_mode: str | None = None):
+                   entity_resolution: bool = False, drop_unsatisfiable_names: bool = False,
+                   llm_parse_mode: str | None = None):
     """Return (parsed_no_oracle_variants, oracle_variants) in the shared solver-dict schema.
 
     When ``disjunction`` is True, the parsed side is produced through the Phase 2 normalize layer
@@ -330,15 +331,19 @@ def query_variants(query: dict, *, disjunction: bool = False, llm_parse: bool = 
 
     When ``entity_resolution`` is True, routes through the deterministic entity-resolution layer
     (``normalize.resolve_entities`` via ``TPC_P2_ENTITY_RESOLUTION``).
+
+    When ``drop_unsatisfiable_names`` is True, routes through the same layer's P22 drop rule
+    (``TPC_P2_DROP_UNSATISFIABLE_NAMES``) -- reachable standalone, without ``entity_resolution``.
     """
     import parse_constraints
     from chinatravel.agent.tpc_agent.solver_constraints import solver_constraint_variants
 
-    if disjunction or llm_parse or entity_resolution:
+    if disjunction or llm_parse or entity_resolution or drop_unsatisfiable_names:
         from chinatravel.agent.phase2 import normalize
         from chinatravel.agent.phase2.orchestrator import Flags
 
-        flags = Flags(disjunction=disjunction, llm_parse=llm_parse, entity_resolution=entity_resolution)
+        flags = Flags(disjunction=disjunction, llm_parse=llm_parse, entity_resolution=entity_resolution,
+                       drop_unsatisfiable_names=drop_unsatisfiable_names)
         if llm_parse_mode:
             # "audit" (patch the regex parse) vs "extract" (LLM-first families). Explicit rather
             # than env-derived so a caller measuring both modes in one process cannot mix them up.
