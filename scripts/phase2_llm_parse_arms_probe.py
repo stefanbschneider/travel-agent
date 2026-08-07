@@ -240,18 +240,25 @@ def load_set(label: str, *, limit: int | None = None, uids: list[str] | None = N
 
 
 def _arm_row(query: dict, *, llm_parse: bool, llm_client, mode: str | None = None,
-             disjunction: bool = True, branch_aware: bool = True) -> tuple[dict, set, list[dict]]:
+             disjunction: bool = True, branch_aware: bool = True,
+             entity_resolution: bool = False) -> tuple[dict, set, list[dict]]:
     """One arm's (diff row, parsed family set, oracle variants) for one query.
 
     Deliberately calls ``query_variants`` **once** and computes the diff from its output rather than
     calling ``compute_query_diff`` as well: the latter re-parses, which on the LLM arm would issue a
     second call per query (or a cache hit that hides a real doubling of cost).
+
+    ``entity_resolution`` routes name-bearing families (required/excluded attractions, restaurants,
+    hotels, ...) through ``normalize.resolve_entities`` -- the deterministic catalog-fuzzy-match
+    layer that already exists for the regex parser's output (``TPC_P2_ENTITY_RESOLUTION``). It is
+    off by default here to keep this arm identical to the 2026-08-06 screen; pass ``True`` to
+    measure the LLM arm with name grounding applied too (see P16).
     """
     from parser_vs_oracle import _f1, _families, diff_variants, query_variants
 
     parsed_variants, oracle_variants = query_variants(
         query, disjunction=disjunction, llm_parse=llm_parse, llm_client=llm_client,
-        llm_parse_mode=mode if llm_parse else None,
+        llm_parse_mode=mode if llm_parse else None, entity_resolution=entity_resolution,
     )
     dv = diff_variants(parsed_variants=parsed_variants, oracle_variants=oracle_variants,
                        branch_aware=branch_aware, people_number=query.get("people_number"))
@@ -274,8 +281,12 @@ def _arm_row(query: dict, *, llm_parse: bool, llm_client, mode: str | None = Non
 
 
 def measure(label: str, uids: list[str], data: dict, *, llm_client, mode: str,
-            counter: CallCounter) -> dict:
-    """Deterministic and LLM arms over the same queries, in one pass, query by query."""
+            counter: CallCounter, entity_resolution: bool = False) -> dict:
+    """Deterministic and LLM arms over the same queries, in one pass, query by query.
+
+    ``entity_resolution``, when True, applies ``normalize.resolve_entities`` to the LLM arm only
+    (the deterministic arm stays exactly the 2026-08-06 baseline, so ``clauses_recovered_by_llm``/
+    ``clauses_broken_by_llm`` keep meaning "vs. the unresolved regex parse")."""
     from parser_vs_oracle import _families, _f1
     from phase2_generalization_probe import clause_gap_kind, clause_is_covered
 
@@ -300,7 +311,8 @@ def measure(label: str, uids: list[str], data: dict, *, llm_client, mode: str,
         det_rows.append(det_row)
 
         before_live, before_fail = counter.live_calls, counter.failures + counter.timeouts
-        llm_row, llm_fams, _ = _arm_row(q, llm_parse=True, llm_client=llm_client, mode=mode)
+        llm_row, llm_fams, _ = _arm_row(q, llm_parse=True, llm_client=llm_client, mode=mode,
+                                        entity_resolution=entity_resolution)
         llm_rows.append(llm_row)
         if counter.failures + counter.timeouts > before_fail:
             llm_error_uids.append(uid)
@@ -469,6 +481,11 @@ def main() -> int:
     ap.add_argument("--max-tokens", type=int, default=None, help="Per-call completion cap.")
     ap.add_argument("--no-cache", action="store_true",
                     help="Bypass the on-disk response cache, so every query is a live call.")
+    ap.add_argument("--entity-resolution", action="store_true",
+                    help="Apply normalize.resolve_entities (TPC_P2_ENTITY_RESOLUTION) to the LLM "
+                         "arm's name-bearing families (required/excluded attractions, "
+                         "restaurants, hotels, ...) before diffing against the oracle. The "
+                         "deterministic arm is unaffected -- see P16.")
     ap.add_argument("--retries", type=int, default=3,
                     help="Retries per call on a transient provider error (429/5xx/timeout), with "
                          "linear backoff. Without these a rate-limited run silently measures the "
@@ -512,7 +529,7 @@ def main() -> int:
         uids, data = load_set(label, limit=args.limit, uids=args.uids)
         print(f"[probe] {label}: {len(uids)} queries ...", flush=True)
         sets_out.append(measure(label, uids, data, llm_client=client, mode=args.mode,
-                                counter=counter))
+                                counter=counter, entity_resolution=args.entity_resolution))
         print(f"[probe] {label} done: live_calls={counter.live_calls} "
               f"cache_hits={counter.cache_hits} fail={counter.failures + counter.timeouts} "
               f"cost=${counter.as_dict(price_in=args.price_in_per_mtok, price_out=args.price_out_per_mtok)['est_cost_usd']}",
@@ -525,6 +542,7 @@ def main() -> int:
         "enable_thinking": bool(args.enable_thinking),
         "timeout_sec": args.timeout_sec,
         "cache_bypassed": bool(args.no_cache),
+        "entity_resolution": bool(args.entity_resolution),
         "limit": args.limit,
         "wall_sec": round(time.perf_counter() - started, 1),
         "measurement_kind": "screen",
