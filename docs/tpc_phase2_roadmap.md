@@ -23,7 +23,7 @@ than compute-bound — was correct and still holds, but it was a diagnosis of on
 | Measurement | Score | What it licenses |
 | --- | --- | --- |
 | **Organizer held-out, `v1`** | **`33.2473`** | the only external calibration; see the [eval doc](tpc_phase2_eval.md#the-one-fact-that-reorganizes-this-document) |
-| familiar-100, [R17](tpc_phase2_eval.md#the-closed-queue-r1r19) `20260806T115309Z` | `64.17251838310492`, FPR `44.0` | best local row; a configuration on one phrasing register |
+| familiar-100, [R19](tpc_phase2_eval.md#the-closed-queue-r1r19) `20260807T043142Z` | `64.17251838310492`, FPR `44.0` | best local row (byte-identical to R17 `20260806T115309Z`); a configuration on one phrasing register |
 | local released 150, R18 | `90.5603` | **nothing about generalization** — same template, a third the constraint density |
 | free prose (HF `medium`), matched-budget screen | `41.62 → 49.99` after the phrasing fix | the register the held-out set may resemble |
 
