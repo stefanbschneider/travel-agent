@@ -25,13 +25,17 @@ value is a perfectly canonical label that exists in *other* cities. This half an
 fallback. Matching uses `parsed_verifier._match_text`, the matcher the acceptance gate itself uses, so
 a value counted here really does fail the gate.
 
-Run both arms; `--entity-resolution` reports the residual that `TPC_P2_ENTITY_RESOLUTION=1` leaves,
-which is the part only a drop rule can reach:
+Run all arms; `--entity-resolution` reports the residual that `TPC_P2_ENTITY_RESOLUTION=1` alone
+leaves (the part only a drop rule can reach), and `--drop-unsatisfiable-names` reports the residual
+after P22's drop rule (`TPC_P2_DROP_UNSATISFIABLE_NAMES=1`) -- a definitional check, since the drop
+rule uses these same matchers: it should always measure `0`.
 
     HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py \
         --out-dir results/phase2_baselines/screens/<date>_unsatisfiable_names
     HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py --entity-resolution
+    HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py --drop-unsatisfiable-names
     HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py --types
+    HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_unsatisfiable_names_probe.py --types --drop-unsatisfiable-names
 """
 
 from __future__ import annotations
@@ -111,6 +115,7 @@ def load_hf(hf_split: str):
 
 
 def measure_set(label: str, kind: str, name: str, *, entity_resolution: bool,
+                drop_unsatisfiable_names: bool = False,
                 types: bool = False, limit: int | None = None, n_examples: int = 10) -> dict:
     from chinatravel.agent.phase2.normalize import (_exact_catalog_match, _match_catalog_name,
                                                     load_city_entity_catalog)
@@ -139,7 +144,8 @@ def measure_set(label: str, kind: str, name: str, *, entity_resolution: bool,
 
         try:
             parsed_variants, _ = query_variants(query, disjunction=True,
-                                                entity_resolution=entity_resolution)
+                                                entity_resolution=entity_resolution,
+                                                drop_unsatisfiable_names=drop_unsatisfiable_names)
         except Exception:
             continue
 
@@ -172,6 +178,7 @@ def measure_set(label: str, kind: str, name: str, *, entity_resolution: bool,
         "label": label,
         "source": f"{kind}:{name}",
         "entity_resolution": entity_resolution,
+        "drop_unsatisfiable_names": drop_unsatisfiable_names,
         "measured": "category_values" if types else "required_names",
         "n": n,
         "queries_with_unsatisfiable_constraint": n_queries_bad,
@@ -188,7 +195,9 @@ def render_markdown(report: dict) -> str:
     lines = [
         f"# {what}",
         "",
-        f"`entity_resolution={report['entity_resolution']}` · static parse-only measurement, no solve.",
+        f"`entity_resolution={report['entity_resolution']}` · "
+        f"`drop_unsatisfiable_names={report['drop_unsatisfiable_names']}` · "
+        "static parse-only measurement, no solve.",
         "",
         "| set | n | queries with >=1 unsatisfiable constraint | share | by field |",
         "| --- | --- | --- | --- | --- |",
@@ -210,6 +219,9 @@ def main() -> None:
     parser.add_argument("--entity-resolution", action="store_true",
                         help="route the parse through TPC_P2_ENTITY_RESOLUTION's deterministic "
                              "name canonicalization first, to report the residual it leaves")
+    parser.add_argument("--drop-unsatisfiable-names", action="store_true",
+                        help="route the parse through P22's TPC_P2_DROP_UNSATISFIABLE_NAMES drop "
+                             "rule; a definitional check -- this should always measure 0")
     parser.add_argument("--types", action="store_true",
                         help="measure category-valued families against each city's closed "
                              "vocabulary instead of required POI names (answers R26's open question)")
@@ -228,6 +240,7 @@ def main() -> None:
             continue
         try:
             rows.append(measure_set(label, kind, name, entity_resolution=args.entity_resolution,
+                                    drop_unsatisfiable_names=args.drop_unsatisfiable_names,
                                     types=args.types, limit=args.limit))
         except Exception as exc:  # a missing HF cache must skip, not fail the whole probe
             rows.append({"label": label, "source": f"{kind}:{name}", "skipped": repr(exc)})
@@ -235,6 +248,7 @@ def main() -> None:
     report = {
         "measurement_kind": "screen",
         "entity_resolution": args.entity_resolution,
+        "drop_unsatisfiable_names": args.drop_unsatisfiable_names,
         "types": args.types,
         "fields": list(TYPE_FIELDS) if args.types else list(NAME_FIELDS),
         "sets": rows,
@@ -245,7 +259,8 @@ def main() -> None:
     if args.out_dir:
         out = Path(args.out_dir)
         out.mkdir(parents=True, exist_ok=True)
-        suffix = ("_types" if args.types else "") + ("_er" if args.entity_resolution else "")
+        suffix = (("_types" if args.types else "") + ("_er" if args.entity_resolution else "")
+                  + ("_drop" if args.drop_unsatisfiable_names else ""))
         (out / f"report{suffix}.json").write_text(
             json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
         (out / f"summary{suffix}.md").write_text(text, encoding="utf-8")

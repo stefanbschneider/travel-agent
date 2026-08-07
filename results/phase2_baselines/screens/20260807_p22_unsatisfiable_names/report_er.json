@@ -1,0 +1,128 @@
+{
+  "measurement_kind": "screen",
+  "entity_resolution": true,
+  "drop_unsatisfiable_names": false,
+  "types": false,
+  "fields": [
+    "required_attractions",
+    "required_restaurants",
+    "required_hotels",
+    "position_presence"
+  ],
+  "sets": [
+    {
+      "label": "familiar_100 (control)",
+      "source": "local:tpc_phase2_familiar_100",
+      "entity_resolution": true,
+      "drop_unsatisfiable_names": false,
+      "measured": "required_names",
+      "n": 100,
+      "queries_with_unsatisfiable_constraint": 0,
+      "share_of_queries": 0.0,
+      "unsatisfiable_values_by_field": {},
+      "examples": [],
+      "uids": []
+    },
+    {
+      "label": "local_released_150",
+      "source": "local:tpc_phase2_test",
+      "entity_resolution": true,
+      "drop_unsatisfiable_names": false,
+      "measured": "required_names",
+      "n": 150,
+      "queries_with_unsatisfiable_constraint": 21,
+      "share_of_queries": 0.14,
+      "unsatisfiable_values_by_field": {
+        "required_restaurants": 10,
+        "required_hotels": 6,
+        "required_attractions": 5,
+        "position_presence": 1
+      },
+      "examples": [
+        {
+          "uid": "20250322102104636925",
+          "field": "required_restaurants",
+          "value": "types: Beijing cuisine, Barbecue, or Japanese cuisine",
+          "target_city": "Shenzhen"
+        },
+        {
+          "uid": "20250322103652290807",
+          "field": "required_attractions",
+          "value": "an Amusement Park or Sports Entertainment venue",
+          "target_city": "Nanjing"
+        },
+        {
+          "uid": "20250322114924953868",
+          "field": "required_attractions",
+          "value": "museums/memorial halls or historical sites",
+          "target_city": "Chongqing"
+        },
+        {
+          "uid": "20250322120628752145",
+          "field": "required_restaurants",
+          "value": "types: Japanese cuisine",
+          "target_city": "Chengdu"
+        },
+        {
+          "uid": "20250322122812261533",
+          "field": "required_restaurants",
+          "value": "types: Hot pot",
+          "target_city": "Chengdu"
+        },
+        {
+          "uid": "20250322131031099056",
+          "field": "position_presence",
+          "value": "a commercial district, and we want to visit Zhejiang West Lake Art Museum",
+          "target_city": "Hangzhou"
+        },
+        {
+          "uid": "20250322155650799736",
+          "field": "required_restaurants",
+          "value": "types – Korean cuisine, Latin American cuisine, or Western cuisine",
+          "target_city": "Shanghai"
+        },
+        {
+          "uid": "20250322162846822521",
+          "field": "required_restaurants",
+          "value": "types: Seafood",
+          "target_city": "Hangzhou"
+        },
+        {
+          "uid": "20250322164802003431",
+          "field": "required_restaurants",
+          "value": "types: Creative Cuisine",
+          "target_city": "Hangzhou"
+        },
+        {
+          "uid": "20250322165721791741",
+          "field": "required_restaurants",
+          "value": "types: Hot pot, and I would like to stay at the following hotel: Qingpu Culture Museum Royal Inn",
+          "target_city": "Suzhou"
+        }
+      ],
+      "uids": [
+        "20250322102104636925",
+        "20250322103652290807",
+        "20250322114924953868",
+        "20250322120628752145",
+        "20250322122812261533",
+        "20250322131031099056",
+        "20250322155650799736",
+        "20250322162846822521",
+        "20250322164802003431",
+        "20250322165721791741",
+        "20250322174416016452",
+        "20250322174632709770",
+        "20250322175216115859",
+        "20250322180344489669",
+        "20250322213901723017",
+        "20250322230928925177",
+        "20250323034202937777",
+        "20250324004250012727",
+        "20250324075652034944",
+        "20250324214731716167",
+        "20250324223909692415"
+      ]
+    }
+  ]
+}

@@ -360,3 +360,199 @@ def test_stay_duration_location_canonicalized():
     catalog = normalize.load_city_entity_catalog("Shanghai")
     out = normalize.resolve_entities(variant, {"target_city": "Shanghai"}, catalog)
     assert out["stay_duration"][0]["location"] == "West Bund Art Center"
+
+
+# --- P22: drop provably unsatisfiable required-name constraints -------------
+#
+# docs/tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints
+
+
+def test_drop_unresolved_default_off_byte_identical_to_keep():
+    # The default (`drop_unresolved=False`) call is exactly the pre-P22 keep-behavior test above --
+    # pin it again here, next to the flag, so the byte-identical floor is visible at the edit site.
+    variant = {"required_hotels": ["one of the following hotels: Totally Made Up Hotel Name"]}
+    catalog = normalize.load_city_entity_catalog("Hangzhou")
+    out = normalize.resolve_entities(variant, {"target_city": "Hangzhou"}, catalog)
+    assert out["required_hotels"] == ["Totally Made Up Hotel Name"]
+
+
+def test_flags_from_env_empty_leaves_drop_unsatisfiable_names_off():
+    assert Flags.from_env({}).drop_unsatisfiable_names is False
+
+
+def test_unresolvable_required_name_dropped_when_flag_on():
+    variant = {"required_hotels": ["one of the following hotels: Totally Made Up Hotel Name"]}
+    catalog = normalize.load_city_entity_catalog("Hangzhou")
+    out = normalize.resolve_entities(variant, {"target_city": "Hangzhou"}, catalog, drop_unresolved=True)
+    assert "required_hotels" not in out
+
+
+def test_unresolvable_name_dropped_leaves_other_satisfiable_names_in_the_same_field():
+    variant = {"required_hotels": [
+        "one of the following hotels: Totally Made Up Hotel Name",
+        "Hangzhou West Lake Zhongwei Xiangyi Hotel",
+    ]}
+    catalog = normalize.load_city_entity_catalog("Hangzhou")
+    out = normalize.resolve_entities(variant, {"target_city": "Hangzhou"}, catalog, drop_unresolved=True)
+    assert out["required_hotels"] == ["Hangzhou West Lake Zhongwei Xiangyi Hotel"]
+
+
+def test_resolvable_name_is_never_dropped_bar_requirement():
+    # The roadmap's bar: "a unit test pinning that a resolvable name is never dropped." An
+    # exact-catalog-match must survive with the flag on, unchanged from the flag-off behavior.
+    variant = {"required_restaurants": ["one of the following restaurants: OMBRA Terrace Garden Western Restaurant"]}
+    catalog = normalize.load_city_entity_catalog("Shanghai")
+    out = normalize.resolve_entities(variant, {"target_city": "Shanghai"}, catalog, drop_unresolved=True)
+    assert out["required_restaurants"] == ["OMBRA Terrace Garden Western Restaurant"]
+
+
+def test_type_vocab_reroute_still_happens_with_drop_flag_on():
+    # A literal type string still reroutes to required_attraction_types (kind="type"), it is not
+    # "unresolved" just because drop_unresolved=True -- only the final keep/drop branch changes.
+    variant = {"required_attractions": ["Cultural Tourism Area", "Art Museum"]}
+    catalog = normalize.load_city_entity_catalog("Shenzhen")
+    out = normalize.resolve_entities(variant, {"target_city": "Shenzhen"}, catalog, drop_unresolved=True)
+    assert "required_attractions" not in out
+    assert set(out["required_attraction_types"]) == {"Cultural Tourism Area", "Art Museum"}
+
+
+def test_category_reroute_to_position_presence_still_happens_with_drop_flag_on():
+    variant = {"required_hotels": ["Chiang Rai Bay (Vientiane Qianhai Branch)"]}
+    catalog = normalize.load_city_entity_catalog("Shenzhen")
+    out = normalize.resolve_entities(variant, {"target_city": "Shenzhen"}, catalog, drop_unresolved=True)
+    assert "required_hotels" not in out
+    assert "Chiang Rai Bay (Vientiane Qianhai Branch)" in out["position_presence"]
+
+
+def test_directly_parsed_position_presence_dropped_when_unresolvable():
+    # Regression: a position_presence entry the *parser itself* extracted (not one entity
+    # resolution rerouted here from required_hotels/attractions/restaurants) goes through
+    # `_resolve_generic_location`, a separate code path from `_resolve_one_required_name` -- the
+    # screen (results/phase2_baselines/screens/20260807_p22_unsatisfiable_names) caught a residual
+    # here before `_resolve_generic_location` grew its own drop_unresolved branch.
+    variant = {"position_presence": ["Totally Made Up Place Name"]}
+    catalog = normalize.load_city_entity_catalog("Hangzhou")
+    out = normalize.resolve_entities(variant, {"target_city": "Hangzhou"}, catalog, drop_unresolved=True)
+    assert "position_presence" not in out
+
+
+def test_directly_parsed_position_presence_kept_when_resolvable():
+    variant = {"position_presence": ["the attraction West Bund Art Center"]}
+    catalog = normalize.load_city_entity_catalog("Shanghai")
+    out = normalize.resolve_entities(variant, {"target_city": "Shanghai"}, catalog, drop_unresolved=True)
+    assert out["position_presence"] == ["West Bund Art Center"]
+
+
+def test_position_presence_partial_drop_keeps_resolvable_entries():
+    variant = {"position_presence": ["Totally Made Up Place Name", "the attraction West Bund Art Center"]}
+    catalog = normalize.load_city_entity_catalog("Shanghai")
+    out = normalize.resolve_entities(variant, {"target_city": "Shanghai"}, catalog, drop_unresolved=True)
+    assert out["position_presence"] == ["West Bund Art Center"]
+
+
+def test_query_with_only_unresolvable_constraint_becomes_unconstrained_not_dropped_entirely():
+    # "Drop the value, not the query" (roadmap design point): the field disappears, the variant
+    # dict itself remains a normal (now-unconstrained) dict, never None/removed.
+    variant = {"required_hotels": ["Nanjing for a day by myself with a budget of 1800 RMB"]}
+    catalog = normalize.load_city_entity_catalog("Nanjing")
+    out = normalize.resolve_entities(variant, {"target_city": "Nanjing"}, catalog, drop_unresolved=True)
+    assert isinstance(out, dict)
+    assert "required_hotels" not in out
+
+
+def test_ir_to_solver_variants_drop_flag_alone_forces_resolution_without_entity_resolution():
+    # Design point: "It must run on the deterministic path, not only when TPC_P2_ENTITY_RESOLUTION
+    # is on." drop_unsatisfiable_names=True with entity_resolution left at its default (False) must
+    # still drop the unresolvable value.
+    from chinatravel.agent.phase2.schema import ParsedIR
+
+    query = {"target_city": "Hangzhou", "uid": "p22_standalone"}
+    raw = {"required_hotels": ["one of the following hotels: Totally Made Up Hotel Name"]}
+    ir = ParsedIR(raw=raw, variants=[raw])
+    flags = Flags(drop_unsatisfiable_names=True)
+    assert flags.entity_resolution is False
+    variants = normalize.ir_to_solver_variants(ir, query, flags=flags)
+    assert len(variants) >= 1
+    assert all("required_hotels" not in v for v in variants)
+
+
+def test_ir_to_solver_variants_both_flags_off_leaves_unresolvable_name_kept():
+    from chinatravel.agent.phase2.schema import ParsedIR
+
+    query = {"target_city": "Hangzhou", "uid": "p22_standalone_off"}
+    raw = {"required_hotels": ["one of the following hotels: Totally Made Up Hotel Name"]}
+    ir = ParsedIR(raw=raw, variants=[raw])
+    variants = normalize.ir_to_solver_variants(ir, query, flags=Flags())
+    # No resolution runs at all with both flags off -- the label prefix `_strip_entity_label`
+    # would otherwise remove is still glued to the name, exactly the pre-P22/pre-P21 behavior.
+    assert variants[0]["required_hotels"] == ["one of the following hotels: Totally Made Up Hotel Name"]
+
+
+# --- P22: the category-valued families (required_attraction_types / cuisine_preference /
+# required_hotel_all_types / required_hotel_any_types), city-scoped ------------------------------
+
+
+def test_required_attraction_type_dropped_when_absent_from_target_citys_catalog():
+    # "Cultural Landscape" is a canonical CSV literal (present in Beijing/Shanghai/... ) but absent
+    # from Suzhou's own attractions catalog specifically (R26's open question).
+    variant = {"required_attraction_types": ["Cultural Landscape"]}
+    catalog = normalize.load_city_entity_catalog("Suzhou")
+    out = normalize.resolve_entities(variant, {"target_city": "Suzhou"}, catalog, drop_unresolved=True)
+    assert "required_attraction_types" not in out
+
+
+def test_required_attraction_type_kept_when_present_in_target_citys_catalog():
+    # Same literal value, but Beijing's own catalog does carry it -- must not be dropped there.
+    variant = {"required_attraction_types": ["Cultural Landscape"]}
+    catalog = normalize.load_city_entity_catalog("Beijing")
+    out = normalize.resolve_entities(variant, {"target_city": "Beijing"}, catalog, drop_unresolved=True)
+    assert out["required_attraction_types"] == ["Cultural Landscape"]
+
+
+def test_cuisine_preference_scalar_dropped_when_unsatisfiable():
+    # cuisine_preference may be a bare string, not a list (solver_constraints._parse_type_sets
+    # collapses a single-value list to scalar) -- the drop path must handle both shapes.
+    variant = {"cuisine_preference": "Zzyzx Nonexistent Cuisine"}
+    catalog = normalize.load_city_entity_catalog("Hangzhou")
+    out = normalize.resolve_entities(variant, {"target_city": "Hangzhou"}, catalog, drop_unresolved=True)
+    assert "cuisine_preference" not in out
+
+
+def test_cuisine_preference_scalar_kept_when_satisfiable():
+    variant = {"cuisine_preference": "Sichuan cuisine"}
+    catalog = normalize.load_city_entity_catalog("Hangzhou")
+    out = normalize.resolve_entities(variant, {"target_city": "Hangzhou"}, catalog, drop_unresolved=True)
+    assert out["cuisine_preference"] == "Sichuan cuisine"
+
+
+def test_cuisine_preference_list_partial_drop_keeps_satisfiable_values():
+    variant = {"cuisine_preference": ["Sichuan cuisine", "Zzyzx Nonexistent Cuisine"]}
+    catalog = normalize.load_city_entity_catalog("Hangzhou")
+    out = normalize.resolve_entities(variant, {"target_city": "Hangzhou"}, catalog, drop_unresolved=True)
+    assert out["cuisine_preference"] == ["Sichuan cuisine"]
+
+
+def test_required_hotel_all_types_dropped_when_unsatisfiable():
+    # "King-size bed" is the roadmap's own cited example: absent from every city's
+    # featurehoteltype vocabulary.
+    variant = {"required_hotel_all_types": ["King-size bed"]}
+    catalog = normalize.load_city_entity_catalog("Hangzhou")
+    out = normalize.resolve_entities(variant, {"target_city": "Hangzhou"}, catalog, drop_unresolved=True)
+    assert "required_hotel_all_types" not in out
+
+
+def test_required_hotel_any_types_kept_when_satisfiable():
+    variant = {"required_hotel_any_types": ["Fitness Room"]}
+    catalog = normalize.load_city_entity_catalog("Hangzhou")
+    out = normalize.resolve_entities(variant, {"target_city": "Hangzhou"}, catalog, drop_unresolved=True)
+    assert out["required_hotel_any_types"] == ["Fitness Room"]
+
+
+def test_type_families_untouched_when_drop_flag_off():
+    # Byte-identical floor for the type-value half too: without the flag, an unsatisfiable
+    # category value is left exactly as parsed.
+    variant = {"required_hotel_all_types": ["King-size bed"], "cuisine_preference": "Zzyzx Nonexistent Cuisine"}
+    catalog = normalize.load_city_entity_catalog("Hangzhou")
+    out = normalize.resolve_entities(variant, {"target_city": "Hangzhou"}, catalog)
+    assert out["required_hotel_all_types"] == ["King-size bed"]
+    assert out["cuisine_preference"] == "Zzyzx Nonexistent Cuisine"
