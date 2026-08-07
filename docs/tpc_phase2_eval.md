@@ -142,31 +142,32 @@ spending.
 Priority order. Every item states its own acceptance criterion so it can be executed without
 re-deriving the argument.
 
-**Current state, 2026-08-07:** P16 and P19 are merged on `main`. P16 lands useful grounding machinery
-but is **not promoted**: its same-tree parse arm has `matched 311 < 320` deterministic and its
-`hf_medium` e2e arm is flat. P19 closes the residual diagnosis and points directly at
+**Current state, 2026-08-07:** P16, P18, P19, P20 and R25 are merged on `main`. P16 lands useful grounding
+machinery but is **not promoted**: its same-tree parse arm has `matched 311 < 320` deterministic and
+its `hf_medium` e2e arm is flat. P19 closes the residual diagnosis and points directly at
 `required_attraction_types` and `cuisine_preference`. R24 changed only the outer timeout; it did not
-raise the fixed 400-restart cap or the default 30-second CP-SAT cap. **R25 is now closed** (below): both
-internal limits were tested directly and neither flips a query; do not schedule the combined
-`CP=300/restarts=4000` 30-uid arm on this evidence. P20 is implemented and R22-GREEN on a branch
-(`implementation/p20-family-recall-cuisine-attraction-type`), pending PR merge; its own screen found the
-local English-literal-measurable universe for these two families is far smaller than P19's miss counts
-suggested — only 3 `cuisine_preference` clauses, zero `required_attraction_types` — so R26 is what
-actually judges the `required_attraction_types` half of this item, not a local number.
+raise the fixed 400-restart cap or the default 30-second CP-SAT cap. **R25 is closed**: both internal
+limits were tested directly and neither flips a query; do not schedule the combined
+`CP=300/restarts=4000` 30-uid arm on this evidence. **R26 is now closed too** (below, GREEN): P20's
+parser fix is confirmed precision-safe on every register measured (static probe + per-family stats),
+and, as a bonus beyond what P20's own screen found, it also moves one `required_attraction_types`
+clause locally (a disjunctive branch P20's partition script didn't enumerate). The e2e arm on P20's
+own 3-uid target set showed no FPR movement, but only because all 3 queries already passed regardless
+of the bug — read that as "no power on this sample," not "the fix is inert." R26 authorizes one
+current-main whole-run row; it does not estimate held-out score.
 
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
-| R26 | do P20's two family-recall fixes convert on free prose without breaking the template floor? | [P20](tpc_phase2_roadmap.md#p20--close-the-two-dominant-family-recall-gaps) | ~1 h after merge |
 | R27 | can bounded Qwen edits plus deterministic rejection feedback flip a failure? | [P6](tpc_phase2_roadmap.md#p6--validator-in-loop-qwen-repair) | `n=10`, at most 60 calls |
 | R20 | should grounded fill-only LLM extraction become a harness default? | no code blocker; current evidence is HOLD | no cold-cache rerun yet |
 | R21 | does spending the unspent envelope on all queries buy preference points? | P17(b), parked until FPR is nonzero | ~1.4 h, low priority |
 
-**Parallel execution plan.** On implementation machines, P20, P18 and the P6 spike may start
-independently. R25 is closed, so the evaluation machine's next slot is R26 (after P20 merges) or R27
-(after P6 merges); do not run two solver screens concurrently on one host because wall-clock limits then
-change the number of restarts. R20 needs no expensive run unless a new parse-level arm first beats the
-current deterministic floor. **R9 is closed**, per R25's own gating text: it needed a genuine per-uid
-flip on the restart axis, and R25 measured `0/10`.
+**Parallel execution plan.** On implementation machines, the P6 spike may start independently.
+R25 and R26 are closed, so the evaluation machine's next slot is R27 (after P6 merges) or the
+current-main whole-run row R26 authorized; do not run two solver screens concurrently on one host
+because wall-clock limits then change the number of restarts. R20 needs no expensive run unless a new
+parse-level arm first beats the current deterministic floor. **R9 is closed**, per R25's own gating
+text: it needed a genuine per-uid flip on the restart axis, and R25 measured `0/10`.
 
 ### R20 — does grounded fill-only LLM extraction convert? *(HOLD; not promoted)*
 
@@ -291,7 +292,7 @@ or a dedicated timed-window repair move — targeted-edit approaches suited to "
 satisfies a tight window," which is what the residual failures on this subset actually are.
 
 <a id="r26--gate-p20-on-the-registers-it-targets"></a>
-### R26 — gate P20 on the registers it targets *(needs P20)*
+### R26 — gate P20 on the registers it targets *(closed 2026-08-07, GREEN)*
 
 P20 must commit an R22 screen and a `target_uids.txt` containing only released English-visible
 `required_attraction_types`/`cuisine_preference` misses used to develop it. Evaluation checks out the
@@ -303,6 +304,43 @@ unchanged familiar-100 first-30 control.
 target-family `matched` rises; target-subset C-LPR rises; FPR and EPR-macro do not fall on either
 register. **RED:** any precision regression, no target e2e movement, or a familiar-only gain. A GREEN
 screen authorizes one current-main whole-run row; it does not estimate held-out score.
+
+**Result** ([`20260807_r26_p20_gate`](../results/phase2_baselines/screens/20260807_r26_p20_gate/README.md),
+baseline `git_sha edb5bb20` / candidate `git_sha 0d6f1837`): **GREEN.** A positive control confirmed
+worktree isolation first — the pre-P20 tree reproduces the exact buggy `cuisine_preference` values
+P20's writeup names, the post-P20 tree emits the clean oracle-matching values.
+
+- **Static probe, all 6 sets:** familiar-100 byte-identical (`0/1109`, structural). Every free-prose
+  set's parse-gap count fell (e.g. `hf_medium` `126/1264 -> 78/1264`) and **no set gained a spurious
+  clause** — the HF sets' precision figure drops only because `missing` clauses convert to
+  `wrong_value` under an unchanged `spurious` count (expected: CJK oracle literals, English fallback
+  values), not a new false-positive family detection. `local_released_150` (the one set with an
+  English oracle) is the one where the fix's real effect shows on both precision and recall at once.
+  Every per-set gap count here is byte-identical to [P18's R22 generalization-tripwire
+  screen](#r22--the-standing-phrasing-tripwire-open-2-min-run-with-every-parser-change)
+  (`20260807_generalization_post_p20`, merged separately in parallel) — two unrelated comparison
+  methods (a pinned pre/post-P20 worktree diff here vs. a floor-file check against an older screen
+  there) landing on the same numbers is a useful cross-check that both are measuring something real.
+- **Per-family (`tpc_phase2_test`):** `cuisine_preference` `matched 6 -> 12` (reproduces P20's own
+  screen). **`required_attraction_types` also moved (`10 -> 11`), contrary to P20's own claim of zero
+  locally-measurable misses** — one disjunctive-branch clause its partition script didn't enumerate
+  the same way. This is the one piece of e2e-adjacent evidence in this row that speaks to the
+  `required_attraction_types` half directly, though it is a single data point, not a volume
+  validation.
+- **E2E, `r26_p20_target3` (3 uids):** `fpr_true` and `conditional_logical_micro` are identical
+  (`100.0`) in both arms on all 3 uids — **no movement, but only because all 3 already passed
+  regardless of the parse bug**, so the sample had no failing query to flip. Read this as "no power on
+  `n=3`," not "the fix is inert" — the static and per-family evidence above is unambiguous that it
+  isn't.
+- **E2E, `r26_familiar_first30` (30 uids) control:** byte-identical — `0/30` differ in parsed
+  constraints or `overall_true`, `13/30` pass in both arms, confirming the fallback structurally never
+  fires on the template register even under an actual solve, not just under static parsing.
+
+No RED condition is met (no precision regression, no familiar-only gain, and the flat e2e result is
+explained by ceiling, not inertness). **This authorizes one current-main whole-run row and nothing
+more** — it does not estimate held-out score, and an HF-set e2e arm (whether the
+`missing -> wrong_value` fallback value can ever locally *hurt* a plan by narrowing the solver to an
+ungrounded English type) is explicitly out of this row's scope and remains open for future work.
 
 ### R27 — validator-in-loop Qwen repair *(needs P6)*
 
