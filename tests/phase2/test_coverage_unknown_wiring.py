@@ -89,9 +89,12 @@ def test_flag_on_flags_a_query_with_an_uncovered_budget_mention(tmp_path, monkey
 
 
 def test_flag_on_but_off_values_stay_off(tmp_path, monkeypatch):
-    for value in ("0", "false", "False", ""):
+    # The method name carries the loop index, not the value: "false" and "False" differ only in
+    # case, and a case-insensitive filesystem (macOS default) then collides on the per-arm method
+    # directory _run creates.
+    for index, value in enumerate(("0", "false", "False", "")):
         uid, captured, summary = _run(
-            tmp_path, monkeypatch, method=f"phase2_p17a_off_{value or 'empty'}",
+            tmp_path, monkeypatch, method=f"phase2_p17a_off_{index}",
             env={"TPC_P2_COVERAGE_UNKNOWN": value})
         assert captured["coverage_unknown"] is None, value
         assert summary["coverage_unknown_flag"] is False, value

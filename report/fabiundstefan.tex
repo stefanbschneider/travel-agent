@@ -62,6 +62,11 @@ and improving that system, and selectively useful for language understanding;
 they did not replace deterministic optimization and verification. The first
 official held-out submission sharpened this division of labor: grounding
 generalized, while constraint extraction tuned to one phrasing style did not.
+Repairing that generalization gap is what the second version contains, and on
+unfamiliar phrasing it raises the clause satisfaction rate from 75.6 to 89.6.
+We also report how the system was built: near-continuous, multi-agent
+``vibe coding'' behind a deterministic evaluation harness, which we treat as a
+result in its own right.
 \end{abstract}
 
 \section{Introduction}
@@ -133,11 +138,22 @@ Precision is equally important. Our audit found that in 23--50\% of free-prose
 queries, depending on the set, the parser invented a required POI name that did
 not exist in the target city.
 % SCREEN: results/phase2_baselines/screens/20260807_p22_unsatisfiable_names/README.md
-A new default-off catalog check removes only provably unsatisfiable required names and
-category values. It reduced this measured failure class to zero on the two local
-sets, but its end-to-end gate was pending at writing time, so we claim no score
-gain for it.
-% SCREEN: results/phase2_baselines/screens/20260807_p22_unsatisfiable_names/README.md
+Such a query has no feasible solution at all, so it can never earn a full-plan
+point no matter how long the solver runs. A catalog check now removes only
+provably unsatisfiable required names and category values, after first trying to
+salvage a real POI name from the captured text. It reduced this measured failure
+class to zero on every set we hold.
+% SCREEN: results/phase2_baselines/screens/20260808_p22_salvage_before_drop/README.md
+
+The most recent recall fix illustrates how narrow these gaps are. Intercity
+transport was the largest remaining unextracted family on free prose: the
+extractor recognized ``take the train to the destination'' but not ``we have
+chosen to fly'' or ``by high-speed train (G)'', missing 33 of 85 such
+requirements on one released set and 27 of 32 on another. Adding verb-form and
+qualified-noun patterns, guarded so that a station name or an undecided
+``fly or take the train'' never produces a requirement, removed most of them
+while leaving precision and the familiar register unchanged.
+% SCREEN: results/phase2_baselines/screens/20260808_v2_candidate_freeprose/README.md
 
 \subsection{Construction, repair, and densification}
 
@@ -170,7 +186,7 @@ five-hour envelope.
 
 The organizers permit two submitted harness versions and retain the better score.
 We submitted v1 early to obtain the only available held-out feedback before
-choosing v2. Table~\ref{tab:official} compares that result with the current-main
+choosing v2. Table~\ref{tab:official} compares that result with the current
 run on 100 familiar released queries. The columns are diagnostic signals, not
 identically distributed test sets.
 
@@ -178,29 +194,78 @@ identically distributed test sets.
 \centering
 \small
 \setlength{\tabcolsep}{3.2pt}
-\begin{tabular}{lrr}
+\begin{tabular}{lrrr}
 \toprule
-Metric & Familiar 100 & Held-out v1\\
+Metric & Familiar 100 & Held-out v1 & Best held-out\\
 \midrule
-Overall & 64.17 & 33.25\\
-EPR micro & 99.67 & 99.48\\
-EPR macro & 98.00 & 95.00\\
-C-LPR & 90.08 & 55.20\\
-FPR & 44.00 & 0.00\\
+Overall & 64.17 & 33.25 & 36.41\\
+EPR micro & 99.67 & 99.48 & 99.64\\
+EPR macro & 98.00 & 95.00 & 95.00\\
+C-LPR & 90.08 & 55.20 & 67.77\\
+FPR & 44.00 & 0.00 & 0.00\\
 \bottomrule
 \end{tabular}
-\caption{Current-main local baseline and official v1 result.}
+\caption{Local familiar-register baseline, our official v1 result, and the
+leading team's v1 result on the same held-out set.}
 \label{tab:official}
 \end{table}
 % ROW: results/phase2_baselines/full_runs/20260807T152009Z.json
 % PORTAL: results/phase2_baselines/heldout/20260807_v1_leaderboard.json
+% PORTAL: results/phase2_baselines/heldout/20260808_leaderboard_5teams.json
 
-Grounding generalized: held-out micro EPR remained 99.48. Constraint
-understanding did not: C-LPR fell to 55.20, no query passed every requirement, and
-all preference terms were therefore zero. If the held-out queries have roughly
-the familiar set's eleven clauses each, the FPR outcome follows naturally from
-the clause-level rate rather than indicating a second grounding failure.
-% PORTAL: results/phase2_baselines/heldout/20260807_v1_leaderboard.json
+Grounding generalized: held-out micro EPR remained 99.48, within 0.16 of the best
+entry. Constraint understanding did not: C-LPR fell to 55.20, no query passed
+every requirement, and all preference terms were therefore zero.
+
+The full field is instructive. Across the five submitted systems, four score a
+full-plan rate of exactly zero and the fifth scores one point, and every
+preference term is zero for every team. The held-out queries are evidently dense
+enough that no entrant reliably satisfies all clauses of a single query, so a
+zero there is a property of the benchmark at this difficulty, not a defect unique
+to one system. It also means 55\% of the metric weight currently pays nobody, and
+the ranking is decided almost entirely by the per-clause rate at weight 0.25:
+the entire 3.16-point gap between our v1 and the leading entry is 12.6 clause
+points. Because the full-plan term is multiplicative in the per-clause rate, it
+stays near zero until roughly 0.8 and then rises steeply; the first system past
+that threshold collects the dormant weight in one step.
+% PORTAL: results/phase2_baselines/heldout/20260808_leaderboard_5teams.json
+
+\subsection{What the second version changes}
+
+Since the v1 build we repaired the phrasing brittleness described below, removed
+the unsatisfiable-name failure class, and closed the largest remaining recall
+gaps. None of that is visible on the familiar register, where the extractor was
+already complete, so we measured it where it applies: 150 differently phrased
+released queries, both builds run as a paired experiment at identical budget on
+one host, scored against an English-literal oracle so the full-plan rate has a
+real denominator.\footnote{Those released sets state their query text in English
+but their verifier literals in Chinese, which caps the achievable full-plan rate;
+we translate the literals with an audited one-to-one map for measurement only,
+and the agent never reads them.} Figure~\ref{fig:v1v2} shows the result: the
+clause rate rises from 75.6 to 89.6 and the full-plan rate from 10.7 to 48.0.
+Checked clause by clause, 205 of 1264 clauses move from failing to passing
+against 27 lost.
+% SCREEN: results/phase2_baselines/screens/20260808_v2_candidate_freeprose/README.md
+% SCREEN: results/phase2_baselines/screens/20260809_r34_intercity_e2e/README.md
+On the familiar register, where none of this can help, a paired run of the full
+five-hour pipeline confirms no regression and a small gain: 64.69 to 65.74
+overall, with the full-plan rate moving from 45 to 47 of 100 queries.
+% ROW: results/phase2_baselines/full_runs/20260808T200402Z_v2gate_base.json
+% ROW: results/phase2_baselines/full_runs/20260808T200402Z_v2gate_cand.json
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/v1_v2_free_prose.pdf}
+\caption{Submitted v1 versus the second version on 150 unfamiliar-phrasing
+queries, paired at equal budget. The dotted line is our v1 clause rate on the
+organizers' held-out set, a different query set, shown for scale.}
+\label{fig:v1v2}
+\end{figure}
+
+We deliberately do not convert this into a predicted held-out score. It is one
+register measured once, and the last prediction we made from a local number was
+wrong by a factor of two. What it does establish is direction and size in the one
+metric that currently decides the ranking.
 
 \subsection{Query phrasing}
 
@@ -208,22 +273,13 @@ The familiar released set was presented as in distribution, so prioritizing it
 was a reasonable development choice. Its queries use a regular numbered
 template, whereas other released sets express similar requirements in varied
 prose. Offline oracle-backed audits found no missed clauses on the familiar
-register but 12--29\% on the differently phrased sets.
+register but 12--29\% on the differently phrased sets --- we had optimized against
+the one register we were already perfect on.
 % SCREEN: results/phase2_baselines/screens/20260807_generalization_post_p15/README.md
-Targeted recall fixes raised a matched free-prose score from 41.62 to 49.99 while
-leaving the familiar control unchanged.
-% SCREEN: results/phase2_baselines/screens/20260806_parser_phrasing_fix/README.md
 The precision audit described in Section~\ref{sec:system} then revealed the
-unsatisfiable-name problem, which can pin an otherwise solvable query at FPR zero
-regardless of search time.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{figures/registers_single.pdf}
-\caption{Score changes with phrasing register. ``Free prose + fix'' is a matched
-30-query A/B; held-out is the organizers' v1 score.}
-\label{fig:registers}
-\end{figure}
+unsatisfiable-name problem, which can pin an otherwise solvable query at a
+full-plan rate of zero regardless of search time. Both classes of fix are what
+Figure~\ref{fig:v1v2} measures.
 
 \subsection{Planning baselines}
 
@@ -231,22 +287,65 @@ We ran two small, matched comparisons to identify failure modes. An autonomous
 tool-using Qwen agent scored 1.88 on eight familiar queries and 2.64 on eight
 free-prose queries, versus 67.71 and 48.49 for our solver; none of its itineraries
 passed all commonsense checks. The upstream RuleNeSy baseline
-\cite{shao2024chinatravel} scored about 9.5 on four queries from each register.
-It grounded most individual facts but still violated at least one commonsense
-rule in every itinerary.
+\cite{shao2024chinatravel} scored about 9.5 on four queries from each register,
+grounding most individual facts but still violating at least one commonsense rule
+in every itinerary.
 % SCREEN: results/phase2_baselines/screens/20260806_llm_arms/README.md
-These samples are too small for general system ranking, but the observed failure
-modes support retaining deterministic acceptance and optimization.
+These samples are too small to rank systems, but the failure modes support
+retaining deterministic acceptance and optimization.
 
 \section{Where AI Helped --- and Where It Did Not}
 \label{sec:ai}
 
-Coding agents were force multipliers once we gave them rigorous feedback. Strong
-agents developed architecture and diagnoses; faster agents implemented focused
-operators, tests, and evaluations. A deterministic evaluator, targeted regression
-tests, pinned A/B contracts, and reproducible result ledgers let us reject
-attractive but invalid changes quickly. AI contributed substantially to the
-engineering loop without becoming the authority inside the execution loop.
+\subsection{The competition as a safe vibe-coding experiment}
+
+We used this challenge deliberately as a low-risk environment in which to push
+agent-driven development much harder than we would on a production system. The
+task has an objective, automatic scorer; nothing is deployed; and a wrong change
+is caught by a test or a measurement rather than by an incident. That let us ask a
+question that is otherwise expensive: how far can coding agents carry a real system
+if you give them fast, honest feedback and remove yourself from the inner loop?
+
+Very far, as it turned out, given a great deal of scaffolding. We ran multiple
+paid agent subscriptions across several machines, with one or more agents working
+almost continuously for eight weeks. The result is 798 commits and 100 merged
+pull requests over 109 opened ones, a suite of 1339 tests, and 47 committed
+measurement screens alongside 63 recorded evaluation rows. Humans still made every
+decision that mattered: what to measure, what a measurement was allowed to prove,
+and what to submit.
+
+Three practices did the actual work.
+
+\textbf{Split the roles by cost and by kind of thinking.} Expensive reasoning
+models were used for analysis, diagnosis, and planning: reading measurements,
+proposing the next experiment, ranking work by expected effect. Faster, cheaper
+agents then implemented a specified change with tests, and ran evaluations. The
+planning agent maintained a ranked work list; implementation and evaluation
+proceeded in parallel branches against it, which also avoided the common failure
+where an implementing agent silently redefines the task it was given.
+
+\textbf{Make feedback fast, automatic, and cheap to trust.} We invested more in
+the evaluation harness than in any single planner feature: a paired A/B screen
+that decides in one or two hours whether a change is worth a long run, a whole-run
+mode reproducing the submission's exact shape, deterministic seeds, and result
+ledgers recording every condition needed to decide whether two numbers may be
+compared. Agents could then evaluate their own work overnight and report a verdict
+against a criterion written before the run.
+
+\textbf{Write the invariants down and let them be enforced by tests.} Grounding,
+no oracle leakage, acceptance-before-emission, and flags-off-is-the-floor are
+recorded as project rules and pinned by tests, so an agent that would violate one
+fails rather than persuades. Cold-start verification is part of that: it caught a
+start-up race that would have shipped empty itineraries for an entire split while
+still exiting successfully, a failure no ordinary local run could expose.
+
+Two limits are worth stating honestly. The volume of agent output is not itself a
+result: much of it was superseded, and the ratio of committed work to accepted
+improvement was low. And agents were reliably over-optimistic about their own
+changes, which is why promotion required an independent measurement rather than an
+argument.
+
+\subsection{Inside the system}
 
 Natural-language interpretation is a more nuanced case. LLM-first extraction cut
 missing free-prose constraint families by 40--65\%, but initially converted many
@@ -254,14 +353,30 @@ misses into values that did not match the environment vocabulary.
 % SCREEN: results/phase2_baselines/screens/20260806_llm_arms/README.md
 We therefore connected model output to the same city-specific entity and category
 catalogs used by the solver. Grounded, fill-only extraction improved one small
-familiar A/B, but was flat on the matched free-prose subset (49.99 to 49.88) and
-still matched fewer clauses than the contemporaneous deterministic parser.
+familiar A/B but was flat on the matched free-prose subset, and still matched fewer
+clauses than the contemporaneous deterministic parser.
 % SCREEN: results/phase2_baselines/screens/20260807_p16_entity_resolution_probe/README.md
 The current default consequently makes zero LLM calls, while retaining the
 grounded extractor as an optional path. This is not a rejection of LLM parsing;
 it separates recognizing a requirement from resolving its values against the
-actual database. An improved agent should query those vocabularies directly,
-whether through the existing tools or an MCP-style interface.
+actual database.
+
+The strongest argument for that path is what our deterministic extractor cannot
+reach. Its largest remaining gap on unfamiliar phrasing is no longer lexical: the
+queries say ``we are more interested in history and culture'' or simply ``going on
+a date, please recommend an itinerary''. Each implies a database category that no
+pattern names, and the benchmark's own labels for such phrasings are inconsistent,
+so hand-written rules would be guessing. Inferring intent is what a language model
+is for, through the existing tools or an MCP-style interface; its answer only has
+to be resolved against the closed vocabulary first.
+% SCREEN: results/phase2_baselines/screens/20260809_r35_preference_verb_trigger/README.md
+
+We also tried the obvious hybrid: letting a model repair itineraries the checker
+rejected, with every proposed edit re-verified before it could be kept. On ten
+deterministic failures the loop iterated, proposed valid-looking edits, and
+flipped none of them to passing. It is off by default and reported here as a
+negative result rather than omitted.
+% SCREEN: results/phase2_baselines/screens/20260808_r27_llm_repair_loop/README.md
 
 End-to-end itinerary generation was the clearer boundary. Even with environment
 tools, autonomous Qwen planning accumulated small inconsistencies, and one
@@ -279,13 +394,18 @@ language missed by deterministic patterns. Environment tools supplied facts;
 deterministic search assembled them; and the acceptance gate ensured that only
 verified itineraries could be emitted. The official v1 result sharpened that
 boundary: grounding transferred to hidden data, while constraint extraction tuned
-to one advertised in-distribution phrasing register did not.
+to one advertised in-distribution phrasing register did not --- and repairing that
+is what the second version measurably contains.
 
-The transferable lesson is methodological. Agentic coding works particularly
-well in a small, isolated project once objective and fast feedback exists. Models
-are valuable at the fuzzy boundary between language and symbols, provided their
-proposals are grounded. Hard itinerary construction remains optimization:
-stochastic fluency does not substitute for satisfying every constraint.
+The transferable lesson is methodological. Agentic coding works particularly well
+in a small, isolated project once objective and fast feedback exists --- and this
+challenge was chosen partly to test that at a scale of continuous multi-agent
+operation we would not risk on a production system. What made it work was not the
+agents but the harness around them: written invariants enforced by tests, a
+measurement contract that says when two numbers may be compared, and a rule that
+only an independent run may promote a change. Models are valuable at the fuzzy
+boundary between language and symbols, provided their proposals are grounded. Hard
+itinerary construction remains optimization.
 
 A production system would replace the sandbox with live map, hotel, rail, flight,
 and booking APIs or MCP servers. It would also infer user-specific objectives
@@ -300,8 +420,9 @@ verification decide what is safe to emit.
 
 We thank the ChinaTravel organizers for the benchmark, sandbox environment, and
 their clarifications on the execution contract.
-
+{\small
 \bibliographystyle{named}
 \bibliography{ijcai26}
+}
 
 \end{document}

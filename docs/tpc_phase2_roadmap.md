@@ -9,22 +9,31 @@ non-negotiable invariants; nothing here overrides them. Phase 1's record is in t
 
 ## The one-paragraph version
 
-**Our held-out score is `33.2473`. Our local score is `64.17`. That gap, not the local score, is the
-work.** Two causes are now measured, and the second is new as of 2026-08-07. **(1) Recall.** Our
-constraint extraction has **zero** clause-level gaps on the familiar-100 split it was built against
-and **12–29 %** on every differently-phrased released set. We optimized, screened and gated against
-the one register we were already perfect on, and our held-out tripwire was a 20-record subset of that
-same templated artifact, so nothing in the process could have caught it. **(2) Precision, and it may
-matter more than the recall story.** On free prose our parser invents a required-POI-name constraint
-that **no POI in the city can satisfy** in `23–50 %` of queries — capturing a whole sentence
-(`"Nanjing for a day by myself with a budget of 1800 RMB"`) as an attraction name. Such a query is
-*provably* unacceptable at any budget, so it is pinned at `FPR = 0` and at zero on all three
-preference terms, and the scheduler keeps paying for it. That is
+**Our held-out score is `33.2473`, first place is `36.4060`, and `99.5 %` of that gap is C-LPR.** The
+2026-08-08 board ([five teams](tpc_phase2_eval.md#the-full-field-and-what-the-race-is-actually-about-2026-08-08))
+also says `FPR = 0` is the whole field, not our bug: four of five teams score exactly `0.0000` and
+every preference term is `0` for everyone. So `55 %` of the weight pays nobody, and the ranking is
+decided inside the per-clause rate at weight `0.25` — `+4.0` C-LPR is `+1.0` overall.
+
+**What we did about it is measured, and it is large.** `v1` was built from `be196d00` and predates the
+entire phrasing-and-precision program; on free prose (the register that behaves like held-out)
+[R32](tpc_phase2_eval.md#r32--what-landed-since-v1-measured-on-free-prose) puts the delta at C-LPR
+`75.55 → 88.37` and FPR `10.67 → 44.00`, with `191` clauses flipping fail→pass against `29` lost.
+
+**The two causes, for the record, because the fixes follow their shape. (1) Recall.** Our constraint
+extraction had **zero** clause-level gaps on the familiar-100 split it was built against and
+**12–29 %** on every differently-phrased released set. We optimized, screened and gated against the
+one register we were already perfect on, and our held-out tripwire was a 20-record subset of that same
+templated artifact, so nothing in the process could have caught it. **(2) Precision.** On free prose
+our parser invented a required-POI-name constraint that **no POI in the city can satisfy** in
+`23–50 %` of queries — capturing a whole sentence (`"Nanjing for a day by myself with a budget of 1800
+RMB"`) as an attraction name. Such a query is *provably* unacceptable at any budget, so it is pinned at
+`FPR = 0` and at zero on all three preference terms, and the scheduler keeps paying for it. That is
 [§6](#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves) and
 [P22](#p22--drop-provably-unsatisfiable-required-name-constraints), and it reproduces the held-out
 signature (`EPR-micro 99.48`, `C-LPR 55.20`, `FPR 0.0000`) without needing the clause-independence
-argument reading 2 relies on. The earlier diagnosis — that the score was *representation*-bound
-rather than compute-bound — was correct and still holds, but it was a diagnosis of one distribution.
+argument reading 2 relies on. The earlier diagnosis — that the score was *representation*-bound rather
+than compute-bound — was correct and still holds, but it was a diagnosis of one distribution.
 
 ## Where we are
 
@@ -297,6 +306,7 @@ is available again — gate any candidate against R28.
 
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
+| **P26** | [Free-prose intercity transport mode](#p26--free-prose-intercity-transport-mode) | 2 h | the largest single remaining ASCII-literal recall gap: `33/85` intercity clauses missed on `hf_medium`, `27/32` on `hf_human`, `0` on familiar-100 | **landed 2026-08-08, unflagged (additive alternatives, floor-gated); static GREEN — `hf_medium` gaps `131 → 111`, `hf_human` `109 → 85`, `hf_easy` `99 → 97`, precision flat or up, familiar-100 and `local_released_150` byte-identical; e2e gate is [R34](tpc_phase2_eval.md#r34--does-the-intercity-recall-fix-convert)** |
 | **P22** | [Drop provably unsatisfiable required-name constraints](#p22--drop-provably-unsatisfiable-required-name-constraints) | half day | un-pins the `23–50 %` of free-prose queries that currently cannot pass at any budget; the only item with a dominance argument rather than an estimate | **landed 2026-08-07, library default off; [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries-closed-2026-08-07-negative-result) closed 2026-08-07 with a negative e2e result (0/103 flip to passing, 2 regress) — stays default-off. Salvage-before-drop follow-up landed 2026-08-08 (`_salvage_catalog_name`, static only): recovers `25–33 %` of what would otherwise be a full drop on every released/HF set (`100 %` on familiar-100), verified against R30's exact loss; e2e re-confirmation is an Evaluation-workstream job, not yet run** |
 | **P21** | [Promote deterministic entity resolution](#p21--promote-deterministic-entity-resolution) | doc/bookkeeping only, no behavioral code change needed | already-landed flag, never measured alone: familiar-100 parse F1 `0.9552 → 0.9949`, `local_released_150` `0.8222 → 0.8451`, zero LLM calls; also takes familiar-100's unsatisfiable-name count `7 → 0` | **[R29 closed GREEN 2026-08-07](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end); found the flag was already harness-default-on since `b53a0747` (predates R28/`v1`) — remaining work is documenting that explicitly, not flipping a switch** |
 | **P24** | [Stop inventing satisfiable but unrequested constraints](#p24--stop-inventing-satisfiable-but-unrequested-constraints) | half day | Diagnosis revised 2026-08-07: the `intercity_mode` half was a measurement bug, not invention (fixed, spurious `172→0`); `required_attractions`/`required_hotels` were real (fixed, spurious `310→25` / `55→6`, 92%/89%, matched unchanged) | **landed 2026-08-07 (code + tests + two static screens GREEN, `pytest tests` green); e2e effect needs its own R-numbered arm, not yet run** |
@@ -321,6 +331,110 @@ is available again — gate any candidate against R28.
 | ~~P11~~ | ~~Whole-run mode for the pre-gate screen~~ | — | **landed 2026-08-06**, tooling only | landed |
 | ~~P14~~ | ~~Promote P8/P9 to harness defaults~~ | — | **landed 2026-08-06** | landed |
 | ~~P0/P7~~ | ~~Reproducible restart seed; worker count from affinity~~ | — | **landed 2026-08-05** | landed |
+
+### P27 — the remaining attraction-type residual is interpretive, not lexical *(investigated and closed 2026-08-09)*
+
+**Read this before adding another attraction-type pattern.** After P26, the largest remaining
+parse-gap family on free prose is `attraction_type` — `37` clauses on `hf_human`, `12` on `hf_medium`.
+It looks like the same shape P20 and P26 fixed. It is not, and the difference is worth recording so the
+next agent does not spend a night on it.
+
+**What the residual actually consists of** (read off the uncovered queries, not guessed): *"experience
+some of the historical areas"*, *"explore the local history and culture"*, *"they are more interested in
+history and culture"*, *"attractions suitable for children"*, *"see the rivers and relax… focusing
+mainly on wellness"*, *"Going on a date, please recommend an itinerary"*, *"experience the atmosphere of
+prestigious universities"*. These are not lexical variants of a category name; they are inferences from
+an interest to a category.
+
+**And the oracle's own labeling of those phrasings is inconsistent**, which caps what any deterministic
+mapping can score. Measured across all five sets by scanning oracle `attraction_type_set` literals for
+each phrase (`/tmp` probe, reproducible from the description here — the phrase list is in this entry):
+
+| phrase in the query text | oracle's required type(s), by frequency |
+| --- | --- |
+| `historical and cultural` / `cultural and historical` | `人文景观` ×5, `{博物馆/纪念馆, 历史古迹}` ×3, `历史古迹` ×2, `{大学校园, 文化旅游区}` ×1 |
+| `history and culture` (any order) | `人文景观` ×5, `历史古迹` ×5, `{博物馆/纪念馆, 历史古迹}` ×3, `{大学校园, 文化旅游区}` ×1 |
+| `I/we like|love|prefer|enjoy …` | **no attraction-type clause at all ×15**, then `人文景观` ×2, `自然风光` ×2, three others ×1 |
+| `universit(y\|ies)` | no clause ×23, `大学校园` ×10 (P20 already measured and rejected the bare form) |
+| `historical area`, `suitable for children`, `going on a date`, `food court` | one instance each |
+
+So the modal answer for the biggest phrase class is a coin flip between two canonical values, and the
+most inviting new trigger (`I like X`) has **no** type clause in two thirds of its occurrences. P20's
+own rule — *drop rather than guess, because a dropped extraction stays `missing` (no regression) while a
+wrong value risks making a satisfiable query infeasible* — decides this: do not add these mappings.
+
+**One addition survived the measurement, and it is the only thing P27 landed.** Adding
+`like|love|prefer|keen on|focus on|experience` to the free-prose *trigger* set — no new value
+mappings, so it can only fire the existing table — moves `hf_human` parse gaps `85 → 81` and costs
+`0.008` of parse precision there. Because the static columns of the other four sets did not move, the
+full parsed **solver dicts** were diffed query by query rather than trusted:
+**`4` of `854` queries change, all on `hf_human`**; familiar-100, `local_released_150`, `hf_medium` and
+`hf_easy` are byte-identical. End-to-end on translated `hf_human`
+([R35](tpc_phase2_eval.md#r35--the-preference-verb-trigger-arm), n=154): FPR `51.9481 → 53.2468`
+(two more queries fully pass), C-LPR `84.8617 → 85.0073`, overall `67.8013 → 68.5027`, `2` clauses
+fail→pass against `1` pass→fail. GREEN, and small — kept, with the caveat recorded in the screen that
+one of the four is a shared-noun OR (`"cultural or natural attractions"`) whose second arm P20's OR
+guard cannot see.
+
+**What this implies for the system, and it is in the report.** This residual is the boundary where a
+deterministic extractor stops being the right tool: recognizing that *"going on a date"* implies
+`约会圣地` is exactly the inference an LLM does well, provided its output is then resolved against the
+closed category vocabulary rather than trusted as text. That is [P16](#p16--ground-llm-extracted-values-into-the-closed-vocabulary)'s
+grounded fill-only path, still library-default-off because it has never beaten the deterministic floor
+on a measured register — and this entry is the sharpest available argument for why that path is worth
+finishing rather than dropping.
+
+### P26 — free-prose intercity transport mode
+
+**Landed 2026-08-08.** The generalization probe's own residual table named this: after the
+2026-08-06 phrasing fix and P20, the largest remaining *ASCII-literal* (i.e. actually fixable under
+`--lang en`) parse gap on free prose was `intercity_transport` — `33` of `85` oracle clauses missed on
+`hf_medium`, `27` of `32` on `hf_human`, `2` on `hf_easy`, **`0` on familiar-100**. The 2026-08-08
+board makes this the highest-value shape available: it is pure C-LPR, which is where `99.5 %` of the
+gap to first place lives.
+
+**Mechanism.** `parse_intercity_mode` recognized the family only through the familiar template's
+literal word `destination`, or through `take|by|use` immediately followed by a *bare* mode noun. Free
+prose states the same requirement as a verb (`"we have chosen to fly"`, `"we will be flying"`,
+`"planning to fly from Guangzhou to Beijing"`) or with a qualifier between the preposition and the
+noun (`"traveling by high-speed train (G)"`, `"round trip by high-speed train"`), and neither reaches
+those patterns.
+
+**What landed.** Two additions, both after every existing pattern so nothing already working can
+change:
+
+1. an **undirected free-prose fallback** that fires only when no directional pattern matched, and sets
+   *both* legs — matching the oracle clause shape for this register, which constrains the whole
+   `intercity_transport_set` rather than a single endpoint;
+2. the missing **affirmative `fly to the destination`** mirror of the long-standing negated pattern,
+   so a genuinely mixed request (`"fly to the destination and take the train back"`) records both legs
+   instead of only the return one.
+
+**Three precision guards, because a spurious intercity mode is not free** — it pins both endpoint legs
+and can invalidate an otherwise-passing plan, which is [P24](#p24--stop-inventing-satisfiable-but-unrequested-constraints)'s
+lesson: station/airport *place* nouns are stripped before matching (`"near the train station"` is not a
+mode statement); every alternative requires an intent context (a planning verb, a preposition of
+travel, or an explicit round-trip phrase); and a loose mention of the *other* mode vetoes the match, so
+`"still deciding whether to fly or take the high-speed train"` yields nothing rather than a guess.
+
+**Static result** (`scripts/phase2_generalization_probe.py`, same command the P18 gate runs):
+
+| set | parse-gap clauses | parse precision | parse recall |
+| --- | --- | --- | --- |
+| familiar_100 (control) | `0 → 0` | `0.9552 → 0.9552` | `0.9552 → 0.9552` |
+| `local_released_150` | `5 → 5` | `0.8222 → 0.8222` | `0.8243 → 0.8243` |
+| `hf_easy` | `99 → 97` | `0.8528 → 0.8528` | `0.7122 → 0.7156` |
+| `hf_medium` | `131 → 111` | `0.8924 → **0.8939**` | `0.7418 → 0.7717` |
+| `hf_human` | `109 → 85` | `0.8363 → 0.8358` | `0.6364 → 0.6868` |
+
+Recall up on all three free-prose sets, precision flat or *up*, and the two template registers
+byte-identical. The [P18 phrasing gate](#p18--make-phrasing-robustness-a-gate) passes and its floor is
+ratcheted down to the new counts. Tests: `tests/phase2/test_parser_phrasing_generalization.py` §5 — 14
+extraction cases, 6 no-spurious cases, the contradiction veto, the directional-wins and
+negation-wins orderings, a solver-dict end-to-end case, and a familiar-100 byte-identity floor against
+a verbatim copy of the pre-fix extractor.
+
+**Not claimed here:** an end-to-end score. That is [R34](tpc_phase2_eval.md#r34--does-the-intercity-recall-fix-convert).
 
 ### P22 — drop provably unsatisfiable required-name constraints
 

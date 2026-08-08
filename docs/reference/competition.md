@@ -183,11 +183,53 @@ What changed as a result: the archive verification now solves `VERIFY_QUERIES` (
 
 **Honest limitation:** the integration test catches *deterministic* cold-start breakage reliably, but fired on only about **one run in four** against the known-broken code, because the race window is narrow and raising the worker count made it *worse* (lazy ramp-up, not simultaneous start). The deterministic unit test is the real regression guard for this instance; the integration test covers the class. Do not treat a green cold-start run as proof that no race exists.
 
+### The `v2` archive as built (2026-08-09)
+
+**Submission status: built, verified, and waiting for the owner. Nothing was uploaded.** `v2` is the
+team's second and last slot under the 2026-08-04 resubmission reset; the higher of the two scores
+counts, so a worse `v2` costs only the slot. Identity of the tested bytes:
+
+| | |
+| --- | --- |
+| File | `submissions/phase2/fabiundstefan_v2.zip` (committed, so the tested bytes are the uploaded bytes) |
+| SHA-256 | `ddfa44b9c5f7a2abac5f90fdbc55456a1fdebcefef88d274f1406c54a4dcdd70` |
+| Built from | `1c8267cdad0a0b4629f65c4e2b9b056ec5f37956` (branch `submission/v2-candidate`, fast-forwarded to `main` in the same PR) |
+| Size | `1724` entries, `4.6 MB` compressed / `17.5 MB` unpacked, `1721` tracked files |
+| Evaluator parity | `c89cfca` |
+| Configuration | `v1`'s promoted set **plus** `TPC_WINDOW_PUSH`/`TPC_WINDOW_INSERT` (R14), `TPC_WINDOW_RELOCATE_DAY` (R33), `TPC_P2_DROP_UNSATISFIABLE_NAMES` (R32/R33), `TPC_P2_ENTITY_RESOLUTION` (R29), and the unflagged parser work: the 2026-08-06 phrasing fix, P15, P20, P24, P26, P27 |
+| Measured against `v1` | free prose (`hf_medium`, n=150, paired, translated oracle): C-LPR `75.5538 → 89.6361`, FPR `10.6667 → 48.0000`, overall `44.4077 → 66.6182`, `205` of `1264` clauses fail→pass against `27` lost ([R32](../tpc_phase2_eval.md#r32--what-landed-since-v1-measured-on-free-prose), [R34](../tpc_phase2_eval.md#r34--does-the-intercity-recall-fix-convert)); human prose (`hf_human`, n=154) `67.8013 → 68.5027` for P27's part alone ([R35](../tpc_phase2_eval.md#r35--the-preference-verb-trigger-arm)); familiar-100 whole-run `64.6878 → 65.7354` ([R33](../tpc_phase2_eval.md#r33--the-v2-whole-run-gate-on-familiar-100)) |
+
+**Verification, beyond the assembler's own unpack-and-run.** A development tree is always warm, so
+every row below was produced from a **pristine unpack** of the committed zip, on a 10-core M1 Pro:
+
+| Check | Result |
+| --- | --- |
+| Unit suite; `tests/phase2` alone; cold-start integration test | all green, `EXIT=0` (`tests/phase2/test_cold_start.py -m integration`) |
+| Assembler's own verification (unpack, restricted `PATH`, `opencode`/`codex` unreachable) | `6` plans, all non-empty, no worker start-up failure, `llm_backend=none`, `valid_output=True` |
+| Cold tree, `env -i` with `PATH=/usr/bin:/bin`, `12` queries, **`3` workers** | `12/12` plans non-empty, `180` activities, **`0`** `Exception in initializer` |
+| Oracle leakage in emitted plans | no `hard_logic*` key in any plan |
+| `solver_flags` read back from the cold run's own telemetry | `pin_timed_windows`, `window_anchor`, `commonsense_first`, `window_push`, `window_insert`, **`window_relocate_day`** all `true`; `solve_converge_patience 15`; `window_push_max_min` unset |
+| `flags` read back from the same telemetry | **`drop_unsatisfiable_names: true`**, `entity_resolution: true`, `disjunction: true`, `dynamic_budget: true`, `llm_parse: false`, `llm_refine: false`, `llm_repair_loop: false` |
+| LLM / network | `llm_backend: "none"`, `llm_backend_source: "none"`, `improve_llm_called: false` on every query; no `.env`, `*.pem`, `.netrc` or key material in the zip; `agent_env/config.toml` synthesized credential-free (`harness = "tpc"`, `lang = "en"`, **no** `split`, **no** `method`) |
+| Archive hygiene | no `results/`, `submissions/` or `report/` tree; no materialized HF split under `chinatravel/data/en/` (only `TPC_IJCAI_2026_phase1_EN` and the familiar-100 data) |
+| Shipped bytes carry the shipped work | `parse_constraints.py` contains P26's free-prose fallback and P27's trigger set; `solve_phase2.py` contains both promotions |
+| **Third** pristine tree, installed from the archive alone (`uv venv --python 3.12` + `requirements-submission.txt`, `34` distributions) and driven by **its own** interpreter under `env -i` | `6/6` plans non-empty, `67` activities, same `solver_flags`, `llm_backend none` — the archive plus its declared dependencies is sufficient |
+| **The bare organizer command**, no other flags, second pristine tree (`--method organizer_shape --split tpc_phase2_familiar_100_test`) | reads its own config, resolves the split, `harness=tpc solver=deterministic TPCAgent (no LLM, no subprocess)`, writes to `results/organizer_shape/<uid>.json` |
+| Interrupt safety: `SIGTERM` at `150 s` of the 5 h envelope | `20/20` plans on disk, `0` schema-broken, **all `20` already non-empty** |
+
+**Envelope headroom.** R33's rows spent `0.63 h` of the `5 h` envelope for 100 queries at 4 workers
+(`~9070` worker-seconds), so even a single-worker host finishes the split in `~2.5 h`. The unused
+envelope is not wasted work (see the [diagnosis](../tpc_phase2_roadmap.md#the-diagnosis)) but it is
+real robustness against a slower evaluation host.
+
+**Remaining manual steps, for the owner only.** Upload `fabiundstefan_v2.zip` and `report/fabiundstefan.pdf`
+to the portal, then `git tag phase2-v2 && git push origin phase2-v2`. **No agent uploads anything.**
+
 ### The `v1` archive as built (2026-08-05)
 
-**Submission status: uploaded 2026-08-05.** `v1` is the team's first official post-reset submission,
-and **one slot (`v2`) remains**. The organizers aim to return a score within 3 days of a valid
-submission, i.e. around **2026-08-08**; both `v2` and the technical report are due
+**Submission status: uploaded 2026-08-05, scored `33.2473` on 2026-08-06.** `v1` was the team's first
+official post-reset submission; `v2` is [built and verified](#the-v2-archive-as-built-2026-08-09) and
+is the last slot. Both `v2` and the technical report are due
 **2026-08-10, 24:00 Beijing Time** (16:00 UTC / 18:00 CEST). Identity of the uploaded bytes:
 
 | | |
@@ -198,22 +240,27 @@ submission, i.e. around **2026-08-08**; both `v2` and the technical report are d
 | Configuration | R8 / R12's promoted defaults — `TPC_WINDOW_ANCHOR` on, P8/P9 (`TPC_WINDOW_PUSH`, `TPC_WINDOW_INSERT`) **off** |
 | Expected score | `overall ≈ 63.58`, `FPR ≈ 43.0`, `±2σ` roughly `58–68` — see [the expectation table](../tpc_phase2_eval.md#what-the-submitted-v1-is-expected-to-score--an-expectation-not-a-measurement) |
 
-**What `v2` requires, in order.** `scripts/assemble_phase2_submission.py` resolves `v2` automatically
-from the `phase2-v1` tag, so packaging is not the work; deciding what goes in it is:
+**What `v2` required, and how each item was met** (kept as the record of the procedure, since it is
+the template for any future submission):
 
-1. a GREEN [R14](../tpc_phase2_eval.md#r14--the-p8p9-gate-the-one-run-that-decides-whether-v2-exists-closed-2026-08-06-green)
-   whole-run row promoting P8+P9 — the only measured candidate that exists today;
-2. the promotion committed on `main` (`apply_deterministic_solver_defaults()` plus the flag moved from
-   `CANDIDATE_SOLVER_FLAGS` to `PROMOTED_SOLVER_FLAGS`), because an archive is built from tracked
-   files at a commit and never from an operator's environment;
+1. a GREEN whole-run gate promoting the candidate configuration — met by
+   [R33](../tpc_phase2_eval.md#r33--the-v2-whole-run-gate-on-familiar-100), with
+   [R32](../tpc_phase2_eval.md#r32--what-landed-since-v1-measured-on-free-prose) and
+   [R34](../tpc_phase2_eval.md#r34--does-the-intercity-recall-fix-convert) covering the register
+   familiar-100 cannot reach;
+2. the promotion committed (`apply_deterministic_solver_defaults()` and
+   `resolve_llm_client_and_flags()`, plus the flag moved from `CANDIDATE_SOLVER_FLAGS` to
+   `PROMOTED_SOLVER_FLAGS`), because an archive is built from tracked files at a commit and never
+   from an operator's environment — done at `441a1d5b`, and re-read back out of the unpacked archive's
+   telemetry rather than assumed;
 3. the full [pre-submission checklist](#pre-submission-checklist--the-cold-start-rule-added-2026-08-05)
-   re-run on a **pristine** tree with more than one worker, and `solver_flags` re-read from the
-   unpacked archive to confirm the new configuration actually ships;
-4. rebuild from `main` (never a feature branch — see the rebuild rule at the end of this section),
-   tag `phase2-v2`, upload as `fabiundstefan_v2.zip`.
+   on a **pristine** tree with more than one worker — done three times over, including once from the
+   archive's own installed interpreter;
+4. build from a commit that is on `main`, tag `phase2-v2`, upload as `fabiundstefan_v2.zip` — the
+   build is done and the tag and upload are **the owner's** manual steps.
 
-If R14 is flat or RED, **do not upload a `v2`**: an identical-configuration resubmission spends the
-last slot for nothing, and the two-version cap means there is no third attempt.
+If a candidate gate is flat or RED, **do not upload a `v2`**: an identical-configuration resubmission
+spends the last slot for nothing, and the two-version cap means there is no third attempt.
 
 `fabiundstefan_v1.zip` — `1683` entries, `4.3 MB` compressed / `16.6 MB` unpacked, `1680` tracked
 files, `evaluator_parity c89cfca`, first `phase2-v<N>` tag namespace entry (Phase 2 numbering restarts

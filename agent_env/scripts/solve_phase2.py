@@ -452,6 +452,19 @@ def resolve_llm_client_and_flags():
     if "TPC_P2_ENTITY_RESOLUTION" not in os.environ:
         flags.entity_resolution = True
 
+    # Roadmap P22, promoted 2026-08-08 on R32 + R33. Drops a required-POI-name or category-value
+    # constraint that no POI in the target city can satisfy -- our own parse artifact, not the
+    # traveler's request, and one that pins the query at FPR 0 at any budget. R30 measured it at
+    # 0/103 flips and could not do better, because it read FPR on registers capped at 38.67 by
+    # untranslated Chinese oracle literals, where a flipped query mostly could not become visible.
+    # Under R31's translated oracle it is +1.33 FPR / +0.32 C-LPR / +4 net clauses on free prose
+    # (R32), and the whole-run familiar-100 pair (R33) is +2.0 FPR / +1.0476 overall with the
+    # relocation pass, with nothing regressing on any of the seven metrics. Deterministic: a catalog
+    # lookup, no LLM, no network, and it only ever *removes* a constraint we invented, after
+    # attempting to salvage a real POI name from the captured text.
+    if "TPC_P2_DROP_UNSATISFIABLE_NAMES" not in os.environ:
+        flags.drop_unsatisfiable_names = True
+
     return llm_client, flags
 
 
@@ -540,6 +553,22 @@ def apply_deterministic_solver_defaults():
         os.environ["TPC_WINDOW_PUSH"] = "1"
     if "TPC_WINDOW_INSERT" not in os.environ:
         os.environ["TPC_WINDOW_INSERT"] = "1"
+    # ``TPC_WINDOW_RELOCATE_DAY=1`` (roadmap P25): the cross-day relocation of a
+    # present-but-window-missing ``timed_visit_named_poi`` -- delete it and re-insert it on another
+    # day, in one atomic trial, when no in-day move can place it. Promoted 2026-08-08 on **R33**, the
+    # whole-run familiar-100 pair (``full_runs/20260808T200402Z_v2gate_base`` vs ``_cand``, same host,
+    # concurrent, 4 workers each, pinned worktrees): ``overall 64.6878 -> 65.7354``, ``FPR 45.0 ->
+    # 47.0``, ``C-LPR 90.1713 -> 90.4418``, all three preference terms up, ``constraints_ok 50 ->
+    # 54``, ``empty_plans 0/100`` both sides, and EPR-micro/macro unchanged -- nothing regresses. It
+    # matches the quick screen that queued it (``+2/40`` at n=40, ``+2/100`` here). R32 separately
+    # showed it is *inert* on free prose -- all 150 plan files byte-identical modulo timing -- so this
+    # is a familiar-register gain with a measured zero cost elsewhere. Gated as a stack with
+    # ``TPC_P2_DROP_UNSATISFIABLE_NAMES`` (see ``resolve_llm_client_and_flags``), which is how R33
+    # measured it, so the pair is what ships. Deterministic and acceptance-gated like the passes
+    # above: the relocation is trialed on a deepcopy and committed only if the full checker still
+    # accepts.
+    if "TPC_WINDOW_RELOCATE_DAY" not in os.environ:
+        os.environ["TPC_WINDOW_RELOCATE_DAY"] = "1"
 
 
 def run_sweeps_split(

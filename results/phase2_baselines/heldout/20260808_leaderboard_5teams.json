@@ -1,0 +1,48 @@
+{
+  "kind": "heldout_observation",
+  "source": "organizer Phase 2 leaderboard, read 2026-08-08T20:40:57+02:00 (screenshot supplied by the owner; the board is public but not machine-readable from here)",
+  "recorded_utc": "2026-08-08T18:41:00Z",
+  "supersedes": "results/phase2_baselines/heldout/20260807_v1_leaderboard.json",
+  "what_changed_since_the_2026_08_07_read": "four more teams appeared; ours is unchanged at 33.2473 and is now rank 3 of 5. No team has submitted a v2 yet (the V2 SCORE column is '-' for every row), so every score on the board is a first submission.",
+  "our_row": {
+    "team_display": "fa***an",
+    "rank": 3,
+    "of": 5,
+    "version": "v1",
+    "archive": "submissions/phase2/fabiundstefan_v1.zip",
+    "archive_built_from_sha": "be196d00",
+    "archive_tag": "phase2-v1",
+    "best_score": 33.2473
+  },
+  "board": [
+    {"rank": 1, "team_display": "fl***ai", "v1": 36.406, "v2": null,
+     "MicEPR": 99.6429, "MacEPR": 95.0, "C-LPR": 67.7669, "FPR": 0.0, "DAV": 0.0, "ATT": 0.0, "DDR": 0.0},
+    {"rank": 2, "team_display": "Ha***li", "v1": 35.4768, "v2": null,
+     "MicEPR": 99.7778, "MacEPR": 94.0, "C-LPR": 64.3961, "FPR": 0.0, "DAV": 0.0, "ATT": 0.0, "DDR": 0.0},
+    {"rank": 3, "team_display": "fa***an", "v1": 33.2473, "v2": null,
+     "MicEPR": 99.4815, "MacEPR": 95.0, "C-LPR": 55.1966, "FPR": 0.0, "DAV": 0.0, "ATT": 0.0, "DDR": 0.0},
+    {"rank": 4, "team_display": "An***ns", "v1": 32.6028, "v2": null,
+     "MicEPR": 99.3571, "MacEPR": 91.0, "C-LPR": 52.6685, "FPR": 1.0, "DAV": 0.0, "ATT": 0.0, "DDR": 0.0},
+    {"rank": 5, "team_display": "LL***PC", "v1": 21.0166, "v2": null,
+     "MicEPR": 91.1852, "MacEPR": 43.0, "C-LPR": 28.7921, "FPR": 0.0, "DAV": 0.0, "ATT": 0.0, "DDR": 0.0}
+  ],
+  "aggregate_check": {
+    "formula": "0.10*MicEPR + 0.10*MacEPR + 0.25*C-LPR + 0.40*FPR + 0.05*(DAV+ATT+DDR)",
+    "per_row_recomputed": {"fl***ai": 36.406, "Ha***li": 35.4768, "fa***an": 33.2473, "An***ns": 32.6028, "LL***PC": 21.0166},
+    "matches_published_for_every_row": true
+  },
+  "readings": [
+    "The whole 3.1586 gap to rank 1 is C-LPR: 67.7669 - 55.1966 = 12.5703 clause points at weight 0.25 = 3.1426, i.e. 99.5 % of the gap. Grounding (EPR-micro 99.48 vs 99.64) and commonsense (EPR-macro 95.0, tied with rank 1) account for the remaining 0.016.",
+    "Four of five teams score FPR 0.0000 and the fifth scores 1.0000, and every preference term is 0.0000 for every team. That is strong external evidence for the clause-density explanation in docs/tpc_phase2_eval.md rather than for a defect unique to us: the held-out set appears dense enough that no system reliably satisfies every clause of a query.",
+    "Consequently 55 % of the metric weight (FPR 0.40 + preferences 0.15) is currently dead for the entire field, and the competition is being decided almost entirely inside C-LPR at weight 0.25. Each +4.0 C-LPR is worth +1.0 overall; +12.6 C-LPR takes us to rank 1 at today's scores.",
+    "The upside is still non-linear: the first team to push its per-clause rate past ~0.8 unlocks the 0.55 of weight nobody is earning, which is worth several points at once. FPR 5.0 alone would be +2.0 overall.",
+    "Every rival will also submit a v2, so the target is not 36.406 but 36.406 plus whatever they gain."
+  ],
+  "what_is_unknown": [
+    "the held-out query count and clauses per query",
+    "the held-out phrasing register",
+    "what the other teams will submit as their v2",
+    "whether any query timed out or any worker died on the organizer host"
+  ],
+  "analysis": "scripts/analyze_heldout_breakdown.py, docs/tpc_phase2_eval.md#the-one-fact-that-reorganizes-this-document"
+}

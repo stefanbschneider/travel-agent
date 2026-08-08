@@ -234,12 +234,219 @@ def test_familiar_100_room_type_parse_is_byte_identical(familiar_100_texts):
     assert changed == [], changed
 
 
+# --- 5. free-prose intercity transport mode (P26) ---------------------------
+#
+# Measured gap before this fix (`scripts/phase2_generalization_probe.py`, `parse_gap_by_kind`):
+# `intercity_transport` was the single largest ASCII-literal residual on free prose -- 33 of 85
+# oracle clauses missed on HF `medium`, 27 of 32 on HF `human`, against 0 on familiar-100. The
+# pre-fix extractor only recognised the family through the literal word "destination" or through
+# "take/by/use" immediately followed by the bare mode noun, so an ordinary verb form ("we have
+# chosen to fly") or a qualified noun ("by high-speed train (G)") produced nothing.
+
+@pytest.mark.parametrize("text,expected", [
+    # verb forms
+    ("We have chosen to fly and have a budget of 8,000 RMB.", "airplane"),
+    ("We will be flying and booking a twin room, with a budget of 7,000 RMB.", "airplane"),
+    ("We plan to fly round-trip and stay in a room with a king-size bed.", "airplane"),
+    ("Our family wants to visit Chongqing and we plan to fly there.", "airplane"),
+    ("Two people are planning to fly from Guangzhou to Beijing for a four-day trip.", "airplane"),
+    ("I would like to fly both ways.", "airplane"),
+    # qualified noun forms
+    ("I plan to visit Suzhou for two days, traveling by high-speed train (G).", "train"),
+    ("We plan to travel by high-speed train both ways and hope to try local food.", "train"),
+    ("Round trip by high-speed train (G), with a budget of 2000.", "train"),
+    ("They plan to take a round-trip train and wish to experience local cuisine.", "train"),
+    ("I plan to take a round-trip high-speed train (G), leaving before 8 AM.", "train"),
+    ("A day trip; make sure to catch the train back before 7 PM.", "train"),
+    ("We would like to travel by air.", "airplane"),
+    ("Booking a direct flight for the two of us.", "airplane"),
+])
+def test_free_prose_intercity_mode_extracts_both_legs(text, expected):
+    """The oracle clause for this family constrains the *set* of intercity legs
+    (``intercity_transport_set == {'train'}``), so an undirected statement means every leg."""
+    assert pc.parse_intercity_mode(text) == {"outbound": expected, "return": expected}
+
+
+@pytest.mark.parametrize("text", [
+    # A station or airport is a place, not a stated mode of travel.
+    "The hotel should be near the train station.",
+    "I would like to stay close to the high-speed rail station.",
+    "Please book a hotel within 2 km of the airport.",
+    # No mode statement at all.
+    "We want two rooms and a budget of 5000 RMB.",
+    "Please include a visit to the aviation museum.",
+    "We would like to see historical sites and avoid a rushed itinerary.",
+])
+def test_no_spurious_intercity_mode(text):
+    """A spurious intercity mode is not free -- it pins both endpoint legs and can invalidate an
+    otherwise-passing plan (the P24 lesson), so the free-prose fallback must stay silent here."""
+    assert pc.parse_intercity_mode(text) is None
+
+
+def test_contradictory_free_prose_modes_say_nothing():
+    """Both modes named with no direction to attach them to: return no mode rather than guess."""
+    assert pc.parse_intercity_mode(
+        "We are still deciding whether to fly or to take the high-speed train.") is None
+
+
+def test_directional_reading_wins_over_the_free_prose_fallback():
+    """A mixed request keeps the per-leg reading the directional patterns produce; the undirected
+    fallback must not overwrite it with one mode for both legs."""
+    got = pc.parse_intercity_mode("We plan to fly to the destination and take the train back.")
+    assert got == {"outbound": "airplane", "return": "train"}, got
+
+
+def test_negation_still_wins_over_the_free_prose_fallback():
+    """``do not want to fly to the destination`` must still resolve to the complement (train), not
+    be swept up as an affirmative flight statement by the new verb pattern."""
+    got = pc.parse_intercity_mode(
+        "We do not want to fly to the destination, and we do not want to fly back.")
+    assert got == {"outbound": "train", "return": "train"}, got
+
+
+def test_familiar_100_intercity_parse_is_byte_identical(familiar_100_texts):
+    """Structural reason the familiar register cannot move: its template always states the mode in
+    the "to the destination" / "back" form the directional patterns already covered, so the new
+    undirected fallback never runs. Asserted, not claimed."""
+    changed = [(uid, _pre_fix_intercity_mode(t), pc.parse_intercity_mode(t))
+               for uid, t in familiar_100_texts
+               if _pre_fix_intercity_mode(t) != pc.parse_intercity_mode(t)]
+    assert changed == [], changed
+
+
+def _pre_fix_intercity_mode(text):
+    """Verbatim copy of ``parse_intercity_mode``'s body as of `1630bbb7` (before the free-prose
+    fallback), kept here rather than imported so the floor cannot drift with the code it guards."""
+    outbound = None
+    ret = None
+    m = re.search(
+        r"(?:do\s+not|don't|not)\s+(?:want\s+to\s+)?take\s+(?:the\s+|an?\s+)?"
+        r"(airplane|plane|flight|train)\s+to\s+(?:the\s+)?destination", text, re.I)
+    if m:
+        excluded = m.group(1).lower()
+        outbound = "train" if excluded in ("airplane", "plane", "flight") else "airplane"
+    if outbound is None:
+        m = re.search(r"(?:do\s+not|don't|not)\s+(?:want\s+to\s+)?fly\s+to\s+(?:the\s+)?destination",
+                      text, re.I)
+        if m:
+            outbound = "train"
+    m = re.search(
+        r"(?:do\s+not|don't|not)\s+(?:want\s+to\s+)?take\s+(?:the\s+|an?\s+)?"
+        r"(airplane|plane|flight|train)\s+(?:for\s+the\s+return|back|for\s+return)", text, re.I)
+    if m:
+        excluded = m.group(1).lower()
+        ret = "train" if excluded in ("airplane", "plane", "flight") else "airplane"
+    if ret is None:
+        m = re.search(r"(?:do\s+not|don't|not)\s+(?:want\s+to\s+)?fly\s+"
+                      r"(?:for\s+the\s+return|back|for\s+return)", text, re.I)
+        if m:
+            ret = "train"
+    if outbound is None:
+        m = re.search(
+            r"(?:take\s+(?:the\s+|a\s+)?|go\s+by\s+|travel\s+(?:to\s+\w+\s+)?by\s+)"
+            r"(train|airplane|plane|flight)\s+to\s+(?:the\s+)?destination", text, re.I)
+        if m:
+            outbound = "train" if "train" in m.group(1).lower() else "airplane"
+    if ret is None:
+        m = re.search(r"(?:return|back)\s+by\s+(train|airplane|plane|flight)", text, re.I)
+        if not m:
+            m = re.search(r"(?:take\s+(?:the\s+|a\s+)?)(train|airplane|plane|flight)\s+"
+                          r"(?:back|for\s+the\s+return)", text, re.I)
+        if m:
+            ret = "train" if "train" in m.group(1).lower() else "airplane"
+    if outbound is None:
+        m = re.search(r"(?:travel|go)\s+to\s+(?:the\s+)?destination\s+by\s+"
+                      r"(train|airplane|plane|flight)", text, re.I)
+        if m:
+            outbound = "train" if "train" in m.group(1).lower() else "airplane"
+    if outbound is None and ret is None:
+        m = re.search(r"(?:take|by|use)\s+(?:a\s+|the\s+)?(train|airplane|plane|flight)",
+                      text, re.I)
+        if m:
+            mode = "train" if "train" in m.group(1).lower() else "airplane"
+            outbound = mode
+            ret = mode
+    result = {}
+    if outbound:
+        result["outbound"] = outbound
+    if ret:
+        result["return"] = ret
+    return result if result else None
+
+
+def test_free_prose_intercity_mode_reaches_the_solver_dict():
+    """End of the chain, not just the extractor: the family must survive into the solver dict the
+    planner consumes."""
+    q = _q("Current location: Chongqing. Four of us are planning to travel to Beijing for two "
+           "days. We have chosen to fly and have a budget of 8,000 RMB.")
+    raw = pc.parse_query_no_oracle(q)
+    assert raw.get("intercity_mode") == {"outbound": "airplane", "return": "airplane"}, raw
+    variants = solver_constraint_variants(q, raw, use_oracle=False)
+    assert variants, variants
+    assert variants[0].get("intercity_mode") == {"outbound": "airplane", "return": "airplane"}
+
+
 def test_familiar_100_contains_no_budget_wording(familiar_100_texts):
-    """The structural reason the guard holds: there is no familiar-100 text for the new
-    alternatives to fire on. If a future dataset refresh introduces the word, the floor tests above
+    """The structural reason the guard holds: there is no familiar-100 text for the new    alternatives to fire on. If a future dataset refresh introduces the word, the floor tests above
     stop being trivially safe -- this test is the tripwire that says so."""
     with_budget = [uid for uid, t in familiar_100_texts if re.search(r"\bbudget", t, re.I)]
     assert with_budget == [], with_budget
     with_currency_within = [uid for uid, t in familiar_100_texts
                             if re.search(r"within\s+\d[\d,.]*\s*(?:RMB|CNY|yuan|元)", t, re.I)]
     assert with_currency_within == [], with_currency_within
+
+
+# --- 6. preference-verb triggers for attraction types (P27) ------------------
+#
+# The one measured survivor of P27's investigation: the free-prose *phrase table* is deliberately
+# not extended (the oracle labels the remaining phrasings inconsistently -- see the roadmap entry),
+# but a bare statement of interest re-uses the existing table and converts end-to-end (R35).
+
+@pytest.mark.parametrize("text,expected", [
+    ("I like natural scenery, please help me plan a travel itinerary in Nanjing.",
+     ["natural scenery"]),
+    ("We love museums and would like a relaxed pace.", ["Museum/Memorial Hall"]),
+    ("I prefer gardens, with a budget of 2000 RMB.", ["Garden"]),
+    ("They are keen on cultural attractions.", ["Cultural Tourism Area"]),
+])
+def test_preference_verbs_fire_the_existing_type_table(text, expected):
+    assert pc.parse_required_attraction_types(text) == expected
+
+
+@pytest.mark.parametrize("text", [
+    # A preference about something that is not an attraction category.
+    "I like spicy food and would rather not walk much.",
+    # A preference naming a specific POI: the proper-noun guard must still hold.
+    "We love the Humble Administrator's Garden and want to see it early.",
+    # Negation must still win.
+    "I do not like museums.",
+])
+def test_preference_verbs_do_not_invent_a_type(text):
+    assert pc.parse_required_attraction_types(text) in (None, [])
+
+
+def test_preference_verbs_leave_the_familiar_template_alone(familiar_100_texts):
+    """Byte-identity on the register the trigger set must never touch. The template always states
+    the family through "Include the following attraction types: X", which an anchored pattern
+    already claims, so the free-prose fallback never runs -- asserted over all 100 queries rather
+    than argued."""
+    changed = [uid for uid, t in familiar_100_texts
+               if pc.parse_required_attraction_types(t) != _pre_p27_required_attraction_types(t)]
+    assert changed == [], changed
+
+
+def _pre_p27_required_attraction_types(text):
+    """``parse_required_attraction_types`` with the pre-P27 trigger set, by patching the module
+    constant for one call -- the trigger regex is the entire change, so restoring it restores the
+    old behaviour exactly, without copying 200 lines of scanning logic."""
+    pre = re.compile(
+        r"\b(?:visit(?:ing)?|see|explor(?:e|ing)|tour(?:ing)?|interested\s+in|enjoy(?:ing)?|"
+        r"go\s+to|go\s+shopping\s+in|take\s+walks?\s+in|spend\s+(?:some\s+)?(?:leisure\s+)?time\s+in)\b",
+        re.I,
+    )
+    current = pc._ATTRACTION_TYPE_FREE_PROSE_TRIGGER
+    pc._ATTRACTION_TYPE_FREE_PROSE_TRIGGER = pre
+    try:
+        return pc.parse_required_attraction_types(text)
+    finally:
+        pc._ATTRACTION_TYPE_FREE_PROSE_TRIGGER = current

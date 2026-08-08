@@ -1,0 +1,12 @@
+diff --git a/parse_constraints.py b/parse_constraints.py
+index e49ccdfb..f50d0f4a 100644
+--- a/parse_constraints.py
++++ b/parse_constraints.py
+@@ -841,6 +841,7 @@ _ATTRACTION_TYPE_FREE_PROSE_VALUES = [
+ # below, not by a narrow trigger.
+ _ATTRACTION_TYPE_FREE_PROSE_TRIGGER = re.compile(
+     r"\b(?:visit(?:ing)?|see|explor(?:e|ing)|tour(?:ing)?|interested\s+in|enjoy(?:ing)?|"
++    r"lik(?:e|es)|love|prefer(?:s)?|keen\s+on|focus(?:ing)?\s+on|experienc(?:e|ing)|"
+     r"go\s+to|go\s+shopping\s+in|take\s+walks?\s+in|spend\s+(?:some\s+)?(?:leisure\s+)?time\s+in)\b",
+     re.I,
+ )

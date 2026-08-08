@@ -146,18 +146,71 @@ ruled out by [R23](#r23--what-else-separates-the-held-out-set-open-static-1-h). 
 is that the organizers describe the held-out set as same-distribution as familiar-100; the phrasing and
 precision evidence says the two do not behave alike, whatever the intent.
 
-### Submission policy (owner's instruction, 2026-08-06)
+### The full field, and what the race is actually about *(2026-08-08)*
+
+**Four more teams appeared on the board on 2026-08-08 and the picture is much more actionable than a
+single score was.** Recorded as
+[`heldout/20260808_leaderboard_5teams.json`](../results/phase2_baselines/heldout/20260808_leaderboard_5teams.json).
+
+| rank | team | `v1` | `v2` | EPR-mic | EPR-mac | C-LPR | FPR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | `fl***ai` | `36.4060` | — | `99.6429` | `95.00` | **`67.7669`** | `0.0000` |
+| 2 | `Ha***li` | `35.4768` | — | `99.7778` | `94.00` | `64.3961` | `0.0000` |
+| **3** | **`fa***an` (us)** | **`33.2473`** | — | `99.4815` | `95.00` | `55.1966` | `0.0000` |
+| 4 | `An***ns` | `32.6028` | — | `99.3571` | `91.00` | `52.6685` | `1.0000` |
+| 5 | `LL***PC` | `21.0166` | — | `91.1852` | `43.00` | `28.7921` | `0.0000` |
+
+Three readings, and they sharpen every priority below.
+
+**1. The entire gap to first place is C-LPR.** `67.7669 − 55.1966 = 12.5703` clause points at weight
+`0.25` is `3.1426` of the `3.1587` total gap — `99.5 %` of it. Our grounding is within `0.16` of rank 1's
+and our commonsense is *tied* with it. There is nothing else to fix at the top of the board:
+**+4.0 C-LPR = +1.0 overall**, and `+12.6` C-LPR is first place at today's scores.
+
+**2. `FPR = 0` is the whole field, not our bug.** Four of five teams score exactly `0.0000` and the
+fifth scores `1.0000`; every preference term is `0.0000` for all five. This is the strongest available
+external confirmation of [reading 2](#the-measured-breakdown) — the held-out set is dense enough that
+no entrant reliably satisfies *every* clause of a query. Stop treating our own `FPR = 0` as evidence of
+a defect unique to us.
+
+**3. `55 %` of the weight is dead for everyone, which makes the non-linearity a *competitive* lever.**
+FPR (`0.40`) plus preferences (`0.15`) currently pay nobody. The first team whose per-clause rate crosses
+`~0.8` collects that weight in one step; `FPR 5.0` alone is `+2.0` overall. So an incremental C-LPR gain
+is worth its `0.25` share (useful — the board is `3.16` wide), and a threshold-crossing gain is worth
+several times more.
+
+And one thing the board does *not* say: every rival still holds an unused `v2` slot, so the bar is not
+`36.4060` but `36.4060` plus whatever they gain.
+
+### What has landed since `v1`, measured *(2026-08-08)*
+
+**`v1` predates the entire phrasing-and-precision program**, and until 2026-08-08 no committed
+measurement said what that was worth, because every row we hold is on familiar-100 — the one register
+where all of it is structurally inert. `v1` was built from `be196d00` (2026-08-05); the phrasing fix
+landed 2026-08-06, and P15, P20, P22, P23, P24, P17(a), P4, P6 and P25 after it.
+
+[R32](#r32--what-landed-since-v1-measured-on-free-prose) closes that gap on the free-prose register,
+now that [R31](#r31--the-first-real-free-prose-fpr-gate) has removed the oracle-literal FPR ceiling
+that made such a measurement unreadable: on `hf_medium` (n=150, paired, same host, translated oracle)
+**C-LPR `75.55 → 88.37` and FPR `10.67 → 44.00`, `overall 44.41 → 64.28`** — `191` clauses flip
+fail→pass against `29` lost, net `+162` of `1264`. Read against the board above, the failing-clause
+mass drops by `52 %` on the register whose failure signature matches the held-out one. That does not
+predict a held-out number, and this document will not pretend otherwise; it does mean **`v2` is
+carrying a large, measured improvement in exactly the metric the competition is being decided on.**
+
+### Submission policy (owner's instruction, 2026-08-06; re-confirmed 2026-08-08)
 
 **Do not upload `v2`, and never upload automatically.** The owner uploads manually, shortly before the
 deadline (2026-08-10, 24:00 Beijing Time), and only with a substantial measured improvement.
 
-The leaderboard published on 2026-08-07 shows **ours as the only submission**, so the rank (`1`)
-carries no information about relative quality and does not change this policy. Two facts do bear on
-the decision when it is made: `v1`'s score stands regardless, since the higher of two successful
-versions wins — so a worse `v2` costs only the slot — and by [reading 4](#the-measured-breakdown) an
-*incremental* coverage fix is worth only its C-LPR share, while one that pushes the per-clause rate
-past `~0.8` is worth several times more. The threshold, not the increment, is what makes a `v2` worth
-spending.
+The 2026-08-07 leaderboard showed **ours as the only submission**; the
+[2026-08-08 read](#the-full-field-and-what-the-race-is-actually-about-2026-08-08) shows five teams and
+puts us third, `3.16` behind first. Neither changes this policy. Three facts bear on the decision when
+it is made: `v1`'s score stands regardless, since the higher of two successful versions wins — so a
+worse `v2` costs only the slot; by [reading 4](#the-measured-breakdown) an *incremental* coverage fix is
+worth only its C-LPR share, while one that pushes the per-clause rate past `~0.8` is worth several
+times more; and on a board `3.16` wide, an increment is no longer negligible — `+4.0` C-LPR is `+1.0`
+overall and the whole gap to first place is `12.6` C-LPR.
 
 ## Run this next
 
@@ -506,6 +559,118 @@ their solver-side conclusions look different once the structural cap is lifted) 
 with an R-number.
 
 <a id="r20--does-grounded-fill-only-llm-extraction-convert"></a>
+### R32 — what landed since `v1`, measured on free prose *(closed 2026-08-08, GREEN)*
+
+**The measurement the `v2` decision needed, and the one nobody had run.** Every committed row is on
+familiar-100, the single register on which the whole 2026-08-06/07 program (phrasing recall, precision,
+family fallbacks) is structurally inert — so no row said what `v2` would be *carrying*, only that it
+would not regress. R31 removed the last obstacle by lifting the CJK-oracle-literal FPR ceiling off free
+prose.
+
+Screen: [`20260808_v2_candidate_freeprose/`](../results/phase2_baselines/screens/20260808_v2_candidate_freeprose/README.md).
+Contract: `hf_medium` n=150, per-query mode, `--budget-sec 90`, `--lang en`, four arms launched
+**simultaneously** with two shards each on one 10-core host so the arms share their contention;
+`v1`'s arm is `be196d00` checked out in a detached `git worktree`, running **its own**
+`apply_deterministic_solver_defaults()` so it reproduces the configuration that actually shipped.
+Scored against both the untranslated control oracle and R31's translated one.
+
+| arm | C-LPR | FPR | overall | (control-oracle overall) |
+| --- | --- | --- | --- | --- |
+| `v1` (`be196d00`) | `75.5538` | `10.6667` | `44.4077` | `41.2850` |
+| **current `main`** | **`88.3703`** | **`44.0000`** | **`64.2767`** | `51.4844` |
+| `main` + `TPC_P2_DROP_UNSATISFIABLE_NAMES` | `88.6867` | `45.3333` | `65.0127` | `51.5239` |
+| `main` + drop + `TPC_WINDOW_RELOCATE_DAY` | `88.6867` | `45.3333` | `65.0127` | `51.5239` |
+
+Clause-level, per uid, through `evaluate_hard_constraints_v2` (not a reimplementation): `v1 → main` is
+`191` fail→pass against `29` pass→fail, **net `+162` of `1264`** — `52 %` of the failing-clause mass
+removed. `main` reproduces R31's independently measured control row (different host, different shard
+layout) to within `0.24` C-LPR, which is the cross-check that these absolute numbers are not a
+host artifact.
+
+**Both candidate flags, decided here.** `TPC_P2_DROP_UNSATISFIABLE_NAMES` is `+0.74` overall,
+`+1.33` FPR (two more queries fully pass), `+4` net clauses (`8` gained, `4` lost) — small, but this is
+the **first register on which it could show anything at all**, since [R30](#r30--does-dropping-unsatisfiable-names-flip-queries-closed-2026-08-07-negative-result)
+read FPR under a `38.67` ceiling where a flipped query mostly could not become visible. That is not a
+reversal of R30's verdict; it is the measurement R30 said it could not make.
+`TPC_WINDOW_RELOCATE_DAY` is **provably inert** here: all `150` plan files are identical between the two
+candidate arms once `elapsed_time(sec)` is removed, checked per file. Free prose does not contain the
+present-but-window-missing `timed_visit_named_poi` shape it targets, so its only positive evidence
+remains the familiar-register screen ([P25](../results/phase2_baselines/screens/20260808_p25_window_relocate_day/README.md),
+`+2/40`) — no risk and no benefit on free prose.
+
+**Limits, stated because they bound what this licenses.** One register, one budget, one host, no
+repeats; the translated oracle is a measurement device, not the organizers'; `90 s`/query is not the
+shipped 5 h envelope shape. This ranks configurations and sizes a code delta. It does not predict a
+held-out score, and the whole-run confirmation on familiar-100 is
+[R33](#r33--the-v2-whole-run-gate-on-familiar-100).
+
+### R33 — the `v2` whole-run gate on familiar-100 *(closed 2026-08-09)*
+
+**The regression half of the `v2` decision.** R32 measures the candidate on the register that resembles
+held-out; this row asks the complementary question in the **shipped shape** (the organizers' entry
+point, 5 h envelope, triage → repair → polish, keep-best): does the candidate flag pair cost anything
+on the register we have always measured? Paired rows on one host, sequential (never concurrent — the
+envelope makes concurrent rows non-comparable by construction), `--workers 8`, `--fresh`.
+
+**Result: GREEN.** Rows [`20260808T200402Z_v2gate_base`](../results/phase2_baselines/full_runs/20260808T200402Z_v2gate_base.json)
+(`0b4c44a4`, harness defaults) and [`20260808T200402Z_v2gate_cand`](../results/phase2_baselines/full_runs/20260808T200402Z_v2gate_cand.json)
+(`104a90d8` + both flags): **overall `64.6878 → 65.7354` (`+1.0476`), FPR `45.0 → 47.0`, C-LPR
+`90.1713 → 90.4418`**, EPR-micro and EPR-macro flat, all three preference terms up, `constraints_ok`
+`50 → 54`, `empty_plans 0/100` in both, `run_wall 0.63 h` of `5 h` in both. Nothing regresses on any of
+the seven metrics. P26 is structurally inert on this register (asserted by a byte-identity test over
+all 100 queries), so the movement belongs to the flag pair — principally `TPC_WINDOW_RELOCATE_DAY`,
+whose own screen predicted this shape (`+2/40` → `+2/100`). Neither row is comparable to R28: this host
+is a 10-core M1 Pro at 4 workers, and the baseline arm scores `64.6878` on code that scored `64.1725`
+on the 4-core Linux box, which is exactly why the baseline was re-run rather than reused. See
+[the screen](../results/phase2_baselines/screens/20260809_v2_whole_run_gate/README.md).
+
+### R34 — does the intercity recall fix convert? *(closed 2026-08-09)*
+
+**The e2e half of [P26](tpc_phase2_roadmap.md#p26--free-prose-intercity-transport-mode).** Static
+recall is not a score: an extracted requirement can still fail to be satisfied, and a *newly
+constrained* query can lose ground elsewhere (both endpoint legs are now pinned). Contract: paired
+free-prose A/B on `hf_medium` (n=150), per-query mode, `--budget-sec 90`, `--lang en`, both arms
+launched simultaneously with two shards each so contention is shared, scored against R31's translated
+oracle. Baseline arm is the same tree with the fix reverted at the flag level — here, the pinned
+pre-P26 revision (`0b4c44a4`) plus the candidate flag pair, so the *only* difference is the parser.
+
+**Bar, written before the run.** GREEN needs C-LPR up **and** no FPR fall, plus the clause-level
+check: `fail→pass` must exceed `pass→fail`. Any C-LPR fall, or a net clause loss, is RED and P26 comes
+back out of `v2` — the change is unflagged, so RED means revert, not "leave it off".
+
+**Result: GREEN.** Translated oracle, n=150: **C-LPR `88.6867 → 89.6361` (`+0.9494`), FPR
+`45.3333 → 48.0000` (`+2.6667`, four more queries pass every clause), overall `65.0127 → 66.6182`
+(`+1.6055`)**; EPR-micro/macro flat at `100.0`; control-oracle arm moves the same way
+(`overall 51.5239 → 53.4361`). Clause level: **`14` fail→pass against `2` pass→fail**, net `+12` of
+`1264` — the bar was `fail→pass > pass→fail`, met `7×`. The two losses are the expected cost of adding
+a constraint (a pinned intercity mode shrinks the feasible set), and the net is what promotes.
+
+**One reproducibility fact from this row is worth carrying forward.** Its baseline arm is the same
+configuration R32 measured, re-solved under a *different* concurrency (4 concurrent solver processes
+against 8), and it reproduced **every metric to the last decimal**. Per-query solves at this budget are
+therefore insensitive to host load here, which is what licenses comparing arms across the two screens.
+See [the screen](../results/phase2_baselines/screens/20260809_r34_intercity_e2e/README.md).
+
+### R35 — the preference-verb trigger arm *(closed 2026-08-09, GREEN, small)*
+
+**The last arm run before the `v2` build, and the only surviving piece of
+[P27](tpc_phase2_roadmap.md#p27--the-remaining-attraction-type-residual-is-interpretive-not-lexical-investigated-and-closed-2026-08-09).**
+Contract: paired A/B on **`hf_human`** (n=154, the human-written register), per-query, `90 s`,
+translated oracle, two shards per arm launched together, arms differing only by the trigger patch.
+
+**Result: GREEN, small.** FPR `51.9481 → 53.2468` (two more queries fully pass), C-LPR
+`84.8617 → 85.0073`, overall `67.8013 → 68.5027`; `2` clauses fail→pass against `1` pass→fail;
+EPR-micro/macro flat.
+
+**The reason it is safe to ship on that evidence alone** is the blast radius, which was *measured*:
+the full parsed solver dicts were diffed query by query across five sets, and **`4` of `854` queries
+change, all on `hf_human`** — familiar-100, `local_released_150`, `hf_medium` and `hf_easy` are
+byte-identical. That also means R33 and R34 still describe the shipped configuration exactly. See
+[the screen](../results/phase2_baselines/screens/20260809_r35_preference_verb_trigger/README.md), which
+also records the one honest caveat (a shared-noun OR whose second arm P20's guard cannot see) and the
+larger negative finding: the rest of the attraction-type residual is interpretive, and the oracle's own
+labels for it are inconsistent, so a deterministic mapping would be guessing.
+
 ### R20 — does grounded fill-only LLM extraction convert? *(HOLD; not promoted)*
 
 P16 fixed two real grounding defects and remains useful infrastructure. It does not yet satisfy the
