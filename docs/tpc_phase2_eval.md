@@ -229,7 +229,7 @@ salvage-before-drop gap, one search perturbation) — see item 4 below.
 | --- | --- | --- | --- |
 | R31 | with the oracle literals translated, what is our real free-prose FPR? | [P23](tpc_phase2_roadmap.md#p23--make-the-free-prose-register-scoreable) | ~1 h after merge |
 | R27 | can bounded Qwen edits plus deterministic rejection feedback flip a failure? | [P6](tpc_phase2_roadmap.md#p6--validator-in-loop-qwen-repair) | `n=10`, at most 60 calls |
-| R20 | should grounded fill-only LLM extraction become a harness default? | no code blocker; current evidence is HOLD | no cold-cache rerun yet |
+| R20 | should grounded fill-only LLM extraction become a harness default? | no code blocker; precondition re-checked 2026-08-08, still not met (HOLD) | no cold-cache rerun yet |
 | R21 | does spending the unspent envelope on all queries buy preference points? | P17(b), parked until FPR is nonzero | ~1.4 h, low priority |
 
 **Parallel execution plan.** **R28, R29 and R30 are all closed**, so the evaluation machine's next slot
@@ -436,6 +436,28 @@ arm before a pinned whole-run row. `extract_fill` is the only allowed merge poli
 Promotion, if R20 reopens, also requires a cold-start harness test with endpoint autodetection and at
 most eight concurrent calls. A local env flag is not enough: the organizer invokes exactly the bare
 harness command.
+
+**Precondition re-checked 2026-08-08**
+([`20260808_r20_precondition_arm`](../results/phase2_baselines/screens/20260808_r20_precondition_arm/README.md),
+`git_sha fecdf7ca`): **still not met, R20 stays HOLD.** P20/P22/P24 all landed since the `311 < 320`
+comparison, so both arms were re-measured live (`extract_fill`, `--entity-resolution`,
+`local_released_150`, `145` live calls + `5` cache hits, `0` failures, `$0.0736`). **The deterministic
+floor moved on its own**: `matched 320 → 325`, independent of any LLM arm. The LLM arm also moved
+(`311 → 318`) but not enough to catch up (`318 < 325`), and its `spurious` improvement (`38 → 32`) is
+offset by `wrong_value` rising sharply (`36 → 59`, `+64 %`). The three counts are a strict partition
+of the same `393` oracle-field slots in both arms, which pins the accounting exactly: **at least `7`
+of the `59` `wrong_value` families were `matched` (correct) before the LLM arm touched them** —
+`extract_fill`'s contract ("only fill families the deterministic parse left empty, never overwrite a
+regex value") says this should not be possible at all. The n=5 price probe shows the same signature
+in isolation with zero missing families to fill (`matched 10 → 8`, `wrong_value 0 → 2`), so at least
+some of this is a genuine overwrite, not an artifact of the larger sample. Whether the cause is
+`extract_fill`'s merge path or `--entity-resolution` rewriting a value post-merge is not resolved
+here (open question for the implementation workstream) — it does not change this row's verdict, since
+`matched 318 < 325` either way. Net: `3` clauses recovered (`attraction_name ×2`, `attraction_type
+×1`), `0` broken, but `19` queries improve recall against `28` that regress it. The precondition's
+first half (beat the floor on `matched`) is not met, so per R20's own bar the expensive half
+(cold-cache harness rerun, free-prose e2e arm) is correctly not spent. Re-open only after a future
+parser change re-measures both arms again.
 
 <a id="r25--separate-the-cp-restart-and-outer-budget-limits"></a>
 ### R25 — separate the CP, restart and outer-budget limits *(closed 2026-08-07)*
