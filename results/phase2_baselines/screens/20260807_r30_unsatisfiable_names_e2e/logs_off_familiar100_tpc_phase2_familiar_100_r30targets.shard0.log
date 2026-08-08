@@ -1,0 +1,55 @@
+config file for testing split: /root/china-travel-agent/chinatravel/evaluation/default_splits/tpc_phase2_familiar_100_r30targets.txt
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 206.42it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 41.08it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 119.15it/s]
+conditional_micro_succ_count:  13
+conditional_macro_succ_count:  1
+[1/3] phase2_familiar_20250322035350348919_00015 valid=True fallback=False budget_sec=90 solve_sec=81.36 overall_true=97.2439 overall_parsed=97.2439
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 197.70it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 38.33it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 237.07it/s]
+conditional_micro_succ_count:  10
+conditional_macro_succ_count:  1
+[2/3] phase2_familiar_20250322165435882231_00085 valid=True fallback=False budget_sec=90 solve_sec=10.67 overall_true=96.1446 overall_parsed=96.1446
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 399.72it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 35.91it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 320.67it/s]
+conditional_micro_succ_count:  9
+conditional_macro_succ_count:  0
+[3/3] phase2_familiar_e20241028160321868761_00024 valid=True fallback=False budget_sec=90 solve_sec=81.27 overall_true=38.7500 overall_parsed=36.6667
+[overall/solved_this_run] true(mean/min/max/std)=77.3795/38.7500/97.2439/27.3189 parsed(mean/min/max/std)=76.6851/36.6667/97.2439/28.3008
+{
+  "split": "tpc_phase2_familiar_100_r30targets",
+  "method": "phase2_e2e_r30_familiar100_off",
+  "budget_sec": 90.0,
+  "total_budget_sec": null,
+  "elapsed_sec": 174.7685016640462,
+  "llm_backend": "deepinfra",
+  "llm_backend_source": "config",
+  "llm_parse_attempts": 0,
+  "llm_fixture_missing": 0,
+  "llm_parse_failed": 0,
+  "selected": 3,
+  "skipped": 0,
+  "uids": [
+    "phase2_familiar_20250322035350348919_00015",
+    "phase2_familiar_20250322165435882231_00085",
+    "phase2_familiar_e20241028160321868761_00024"
+  ],
+  "overall_solved_this_run": {
+    "overall_true": {
+      "count": 3,
+      "mean": 77.37949624294161,
+      "min": 38.75,
+      "max": 97.2439309056956,
+      "std": 27.318865768076197
+    },
+    "overall_parsed": {
+      "count": 3,
+      "mean": 76.68505179849717,
+      "min": 36.66666666666667,
+      "max": 97.2439309056956,
+      "std": 28.300830573363065
+    }
+  }
+}

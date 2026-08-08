@@ -1,0 +1,57 @@
+{
+  "uid": "20250324075652034944",
+  "llm_backend": "deepinfra",
+  "flags": {
+    "disjunction": true,
+    "llm_parse": false,
+    "llm_parse_mode": "audit",
+    "llm_refine": false,
+    "dynamic_budget": true,
+    "entity_resolution": true,
+    "drop_unsatisfiable_names": true
+  },
+  "solver_flags": {
+    "pin_timed_windows": true,
+    "window_anchor": true,
+    "commonsense_first": true,
+    "solve_converge_patience": "15",
+    "window_push": true,
+    "window_insert": true,
+    "window_push_max_min": null
+  },
+  "budget_sec": 90.0,
+  "stage_sec": {
+    "parse": 0.13762514619156718,
+    "solve": 22.397638399153948,
+    "improve": 1.0621733963489532e-06,
+    "finalize": 2.0940788090229034e-06
+  },
+  "timed_out": false,
+  "solve_recovered_from_timeout": false,
+  "solve_recovered_from_error": false,
+  "improve_timed_out": false,
+  "improve_reverted_to_last_valid": false,
+  "improve_llm_called": false,
+  "improve_committed": false,
+  "improve_edit_count": 0,
+  "improve_edit_reasons": [],
+  "improve_skip_reason": null,
+  "improve_attempts": 0,
+  "improve_second_attempt_skip_reason": null,
+  "used_fallback": false,
+  "valid_output": true,
+  "error": null,
+  "llm_parse_error": null,
+  "llm_parse_skipped_deadline": false,
+  "variants_count": 1,
+  "variants_source": "worker",
+  "search_telemetry": {
+    "restarts_used": 33,
+    "stop_reason": "converged",
+    "candidates_evaluated": 50,
+    "best_found_at_restart": 18
+  },
+  "dynamic_solve_sec": 80.86237485380843,
+  "llm_backend_source": "config",
+  "rss_mb": 249.046875
+}
