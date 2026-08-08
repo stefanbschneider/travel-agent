@@ -164,8 +164,8 @@ spending.
 Priority order. Every item states its own acceptance criterion so it can be executed without
 re-deriving the argument.
 
-**Current state, 2026-08-08 (sixth revision).** `main`'s tip carries P16, **P18**, P19, **P20**,
-**P22**, **P23**, **P24**, R25, **R26**, **R28**, **R29**, **R30** and **R31**. P16 lands useful grounding machinery but
+**Current state, 2026-08-08 (seventh revision).** `main`'s tip carries P16, **P18**, P19, **P20**,
+**P22**, **P23**, **P24**, **P6**, R25, **R26**, **R27**, **R28**, **R29**, **R30** and **R31**. P16 lands useful grounding machinery but
 is **not promoted** (same-tree parse arm `matched 311 < 320` deterministic, `hf_medium` e2e flat). P19
 closed the residual diagnosis. R24 changed only the outer timeout; **R25 is closed** — both internal
 limits were tested directly and neither flips a query, so do not schedule the combined
@@ -191,8 +191,13 @@ too**: the genuine loss it found now passes in both arms, the unrelated loss is 
 appears anywhere — still `0/103` fail→pass so the flag stays off, but the regression risk is now
 measured closed, not just claimed closed — see item 4 below.
 
-**R31 is closed, R30's follow-up is reconfirmed, and the evaluation queue is now fully drained: the
-only open items are R27 (blocked on P6), R21 (parked) and R20 (HOLD).**
+**R27 is now closed too** (implementation workstream, same PR that landed P6): the roadmap's own
+cheap falsification screen (`n=10`, live DeepInfra, `temperature=0`) came back **RED** — `0/10`
+accepted flips caused by the repair loop, safety held throughout — see item 7 below.
+`TPC_P2_LLM_REPAIR_LOOP` stays library-default-off.
+
+**R31 is closed, R30's follow-up is reconfirmed, R27 is closed RED, and the evaluation queue is now
+fully drained: the only open items are R21 (parked) and R20 (HOLD), neither actionable right now.**
 
 1. **A whole-run row now exists on the current `main`.** [R28](#r28--a-whole-run-row-on-the-current-main)
    (`20260807T152009Z`, `git_sha aed4363e`) replaces R19 `ae0bd319` as the baseline every later
@@ -260,20 +265,31 @@ only open items are R27 (blocked on P6), R21 (parked) and R20 (HOLD).**
    own RED condition, checked directly, not assumed). Recalibrates the measurement; promotes nothing.
    See [R31](#r31--the-first-real-free-prose-fpr-gate) and
    [the screen](../results/phase2_baselines/screens/20260808_r31_oracle_literal_translation/README.md).
+7. **R27 landed 2026-08-08, closed RED.** P6's own PR
+   (`implementation/p6-validator-in-loop-repair`) ran R27 as its pre-gate screen, per the
+   [workstream protocol](../CLAUDE.md#parallel-workstreams): `n=10` deterministic failures (9
+   timed_window, 1 name_type, 0 transport_budget — the pool's honestly reported residual), live
+   DeepInfra, `temperature=0`, LLM called on 8/10. **`0/10` accepted flips caused by the repair
+   loop.** Safety held (0 ungrounded facts, 0 timeouts, real multi-round iteration, the new
+   `insert_activity` op fired at least once); a measurement pitfall (crediting 2 deterministic-only
+   passes as LLM flips) was caught and fixed before the verdict was drawn. Per the bar this row
+   itself states, RED means stop — not scaled to `n=30`. `TPC_P2_LLM_REPAIR_LOOP` stays
+   library-default-off. See [R27](#r27--validator-in-loop-qwen-repair-closed-2026-08-08-red) and
+   [the screen](../results/phase2_baselines/screens/20260808_r27_llm_repair_loop/README.md).
 
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
-| R27 | can bounded Qwen edits plus deterministic rejection feedback flip a failure? | [P6](tpc_phase2_roadmap.md#p6--validator-in-loop-qwen-repair) | `n=10`, at most 60 calls |
 | R20 | should grounded fill-only LLM extraction become a harness default? | no code blocker; precondition re-checked 2026-08-08, still not met (HOLD) | no cold-cache rerun yet |
 | R21 | does spending the unspent envelope on all queries buy preference points? | P17(b), parked until FPR is nonzero | ~1.4 h, low priority |
 
-**Parallel execution plan.** **R28, R29, R30 and R31 are all closed**, and the salvage-before-drop
-follow-up R30 identified for P22 also landed and was re-confirmed end to end 2026-08-08 (see item 4
-above) — **the evaluation queue is now fully drained.** Every remaining item is blocked or parked: R27
-needs P6 (not yet implemented), R21 is parked until FPR is nonzero on a register that counts (R31
-raised `hf_medium`'s ceiling but P6/preference work is still the blocker, not the denominator), and
-R20 is HOLD per its own precondition re-check. The next open (unnumbered) candidate is a
-`full_runs/`-shaped measurement of whether P22's freed solve time converts into more passes at the
+**Parallel execution plan.** **R27, R28, R29, R30 and R31 are all closed**, and the
+salvage-before-drop follow-up R30 identified for P22 also landed and was re-confirmed end to end
+2026-08-08 (see item 4 above) — **the evaluation queue is now fully drained.** Every remaining item
+is blocked or parked: R21 is parked until FPR is nonzero on a register that counts (R31 raised
+`hf_medium`'s ceiling but P6/preference work is still the blocker, not the denominator — and P6
+itself is now closed RED, so this stays parked), and R20 is HOLD per its own precondition re-check.
+The next open (unnumbered) candidate is a `full_runs/`-shaped measurement of whether P22's freed
+solve time converts into more passes at the
 5 h envelope — plausible from both R30 and its reconfirmation, unmeasured by any per-query screen
 contract. Do not run two solver
 screens concurrently on one host: wall-clock limits then change the number of restarts each arm gets.
@@ -714,7 +730,7 @@ hazard `_attraction_type_vocab` already warns about. Both fold into
 [P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints), whose drop
 rule should cover category-valued families with a **city-scoped** check, not only name-valued ones.
 
-### R27 — validator-in-loop Qwen repair *(needs P6)*
+### R27 — validator-in-loop Qwen repair *(closed 2026-08-08, RED)*
 
 Use ten deterministic failures spanning timed-window, name/type and transport/budget blockers. Baseline
 and candidate share the deterministic plan; candidate gets at most six Qwen calls/query, thinking off,
@@ -724,6 +740,22 @@ and candidate share the deterministic plan; candidate gets at most six Qwen call
 does not fall, every emitted fact grounds, and no timeout/fallback count rises. **RED:** zero accepted
 flips, even if partial score improves. If GREEN, scale to 30 failures before integrating it as the last
 portfolio pass; if RED, close the loop rather than adding prompt turns.
+
+**P6 landed 2026-08-08** (`TPC_P2_LLM_REPAIR_LOOP`, library default off, independent of
+`TPC_P2_LLM_REFINE`) with this exact screen run in the same PR (implementation workstream's own
+pre-gate triage, per the [workstream protocol](../CLAUDE.md#parallel-workstreams)):
+10 deterministic failures (9 timed_window, 1 name_type, 0 transport_budget — the pool's honestly
+reported residual, not a forced even split), live DeepInfra backend, `temperature=0`, LLM called on
+8/10. **Result: `0/10` accepted flips caused by the repair loop — RED**, per the bar stated above.
+Safety held throughout (0 ungrounded facts, 0 timeouts, real multi-round iteration up to all 6
+rounds, the new `insert_activity` op fired at least once). A measurement pitfall was caught and fixed
+while writing it up: 2 of 10 raw "accepted" outcomes were the deterministic solve alone succeeding at
+the repair arm's larger budget, not an LLM-caused flip — the script now reports both the raw and
+LLM-attributed counts and the verdict uses only the latter. `TPC_P2_LLM_REPAIR_LOOP` stays library
+default off; the `insert_activity` op and the generalized `max_attempts` loop remain in the codebase
+(correctness-neutral, tested, off-path). See
+[the screen](../results/phase2_baselines/screens/20260808_r27_llm_repair_loop/README.md). Per its
+own bar, this is a stop, not scaled to `n=30`.
 
 ### Report baselines — no new solver slot
 
