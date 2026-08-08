@@ -66,3 +66,11 @@ chinatravel/evaluation/default_splits/*_suboptimal.txt
 # `git add` cannot commit it either.
 chinatravel/data/en/*_en_oracle/
 chinatravel/evaluation/default_splits/*_en_oracle.txt
+
+# Every other materialize_hf_split.py output, by the `hf_` prefix this project names them with.
+# Same reasoning as the rule above, plus one practical one learned the hard way: a leftover
+# materialized split marks the tree dirty, and `scripts/assemble_phase2_submission.py` then refuses
+# to package -- correctly, since an archive must match a commit. Derived data, reproducible in
+# seconds from the HF cache, and it must never ship inside a submission.
+chinatravel/data/en/hf_*/
+chinatravel/evaluation/default_splits/hf_*.txt
