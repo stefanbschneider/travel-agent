@@ -30,43 +30,47 @@ its default `--harness tpc` dispatches in-process to `solve_phase2.run_split` (z
 subprocesses), and the run is bounded by the 5-hour envelope rather than a fixed per-query budget
 (roadmap item 0a, closed 2026-08-04). Install for that path is `requirements-submission.txt`, and
 `scripts/assemble_phase2_submission.py` packages and verifies the archive.
-**Submission status (2026-08-06): `v1` is uploaded and its held-out score came back at `33.2473`.**
-The archive (`submissions/phase2/fabiundstefan_v1.zip`, built from `be196d00`, tagged `phase2-v1`) was
-the team's first official submission under the 2026-08-04 resubmission reset, so **one slot (`v2`)
-remains**, due with the technical report on 2026-08-10, 24:00 Beijing Time.
+**Submission status (2026-08-08): `v1` is uploaded and scored `33.2473`; `v2` is prepared, measured and
+waiting for the owner.** The `v1` archive (`submissions/phase2/fabiundstefan_v1.zip`, built from
+`be196d00`, tagged `phase2-v1`) was the team's first official submission under the 2026-08-04
+resubmission reset, so **one slot (`v2`) remains**, due with the technical report on 2026-08-10, 24:00
+Beijing Time.
 
-**`33.2473` is roughly half the `64.17` the same code scores locally on familiar-100
-([R17](docs/tpc_phase2_eval.md#the-closed-queue-r1r19), `git_sha efbfea96`), and closing that gap is
-now the work.** The leaderboard published the per-metric breakdown on 2026-08-07
-([artifact](results/phase2_baselines/heldout/20260807_v1_leaderboard.json)) and it is sharper than the
-aggregate: EPR-micro `99.48` (vs `99.67` locally — **grounding generalizes**), EPR-macro `95.00`,
-C-LPR **`55.20`** (vs `90.08`), **FPR `0.0000`** (vs `44.0`), all three preference terms `0`. Three
-things follow, and every agent should read them before choosing work: the failure is *only* in knowing
-what to satisfy, not in grounding it; `FPR = 0` is the expected consequence of a `58 %` per-clause
-rate over ~11 clauses, **not a second bug to hunt**; and `55 %` of the total weight yields exactly zero
-and unlocks at a *threshold* (`p ≈ 0.8`), so rank work by whether it can cross that, not by how many
-clauses it fixes. Two causes are now measured. **Recall:** our constraint extraction has **zero**
-clause-level gaps on familiar-100 — the numbered-template split it was built against — and
-**12–29 %** on every differently-phrased released set, so we optimized against the one register we were
-already perfect on. **Precision, found 2026-08-07 and possibly larger:** in **23–50 %** of free-prose
-queries we emit a required-POI-name constraint that resolves to *nothing* in the target city's catalog
-(a whole sentence captured as an attraction name), giving the query **no feasible point** — it is pinned
-at `FPR = 0` at any budget, while the scheduler keeps paying for it. That reproduces the entire held-out
-signature with no clause-independence assumption. Read
-[the eval doc's opening section](docs/tpc_phase2_eval.md#the-one-fact-that-reorganizes-this-document)
-before trusting any local number; treat a familiar-100 result as evidence about *one phrasing register*
-only; and **never read a free-prose FPR against `100`** — under `--lang en` the HF splits cap at
-`38.67–46.0`, because their oracle literals are Chinese while their query text is English. The ranked
-work is [P22, P21, P24, P23, P25](docs/tpc_phase2_roadmap.md#work-items), and **no default can flip
-until a whole-run row exists on the current `main`** — the best row predates P15/P16/P18/P19/P20, so there
-is currently no valid gate baseline
-([R28](docs/tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main)).
+**The 2026-08-08 leaderboard has five teams and reorganizes the priorities again**
+([artifact](results/phase2_baselines/heldout/20260808_leaderboard_5teams.json)): `36.4060` /
+`35.4768` / **`33.2473` (us)** / `32.6028` / `21.0166`. Three facts follow and every agent should read
+them before choosing work. **(1) `99.5 %` of the `3.16` gap to first place is C-LPR** — `12.57` clause
+points at weight `0.25`. Our EPR-micro is within `0.16` of the leader's and our EPR-macro is tied, so
+there is nothing else at the top of the board to fix; `+4.0` C-LPR is `+1.0` overall. **(2) `FPR = 0`
+is the whole field, not our bug** — four of five teams score exactly `0.0000` and every preference term
+is `0` for everyone, so the held-out set is simply dense enough that nobody satisfies every clause of a
+query. Do not hunt a second defect. **(3) `55 %` of the weight therefore pays nobody**, and it unlocks
+at a *threshold* (`p ≈ 0.8`), so rank work by whether it can cross that, not by how many clauses it
+fixes.
 
-**Do not package or upload `v2`. Never upload automatically.** The owner submits manually, shortly
-before the deadline and only with a substantial measured improvement; agents prepare and measure,
-nothing more. The leaderboard's rank `1` is rank 1 of 1 and carries no information. The packaging path,
-when it is wanted, is in the [competition
-reference](docs/reference/competition.md#the-v1-archive-as-built-2026-08-05). That same 2026-08-04
+**What `v2` carries, measured.** `v1` predates the whole phrasing-and-precision program (the 2026-08-06
+phrasing fix, P15, P20, P22, P23, P24, P17a, P4, P6, P25, P26), and no familiar-100 row could show
+that, because familiar-100 is the one register where all of it is structurally inert.
+[R32](docs/tpc_phase2_eval.md#r32--what-landed-since-v1-measured-on-free-prose) measures it on free
+prose instead — the register whose failure signature matches the held-out one — with R31's translated
+oracle lifting the FPR ceiling that used to make such a measurement unreadable: **C-LPR
+`75.55 → 88.37`, FPR `10.67 → 44.00`, overall `44.41 → 64.28`**, `191` clauses fail→pass against `29`
+lost. Two candidate flags were decided there and in
+[R33](docs/tpc_phase2_eval.md#r33--the-v2-whole-run-gate-on-familiar-100): read those two sections
+before changing a default.
+
+**Read [the eval doc's opening](docs/tpc_phase2_eval.md#the-one-fact-that-reorganizes-this-document)
+before trusting any local number**; treat a familiar-100 result as evidence about *one phrasing
+register* only; and **never read a free-prose FPR against `100`** — under `--lang en` the raw HF splits
+cap at `38.67–46.0`, because their oracle literals are Chinese while their query text is English (use
+`scripts/materialize_hf_split.py --translate-oracle-literals`, P23/R31, when a real denominator is
+needed).
+
+**`v2` is packaged and verified, but never uploaded by an agent.** The owner submits manually, shortly
+before the deadline; agents prepare, measure and test, nothing more. The archive under
+`submissions/phase2/` is the tested bytes, so it can be checked without a rebuild. The packaging and
+verification path is in the [competition
+reference](docs/reference/competition.md#the-v2-archive-as-built-2026-08-09). That 2026-08-04
 email also gave the
 organizers' exact evaluation LLM deployment (SGLang, `Qwen3.6-27B`, `http://127.0.0.1:30000/v1`,
 OpenAI-compatible); see the [competition

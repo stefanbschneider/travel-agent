@@ -1,0 +1,147 @@
+clause_count_mismatch: 0 []
+fail->pass flips (expected, from translation lifting the cap): 14
+pass->fail flips (RED if any -- translation changed a literal's meaning): 2
+
+=== RED: pass->fail flips ===
+uid=e20241028161422443540 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+uid=e20241028161422443540 clause#7
+  A(control):    attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Sun Yat-sen Mausoleum Scenic Area'}<=attraction_name_set)
+  B(translated): attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Sun Yat-sen Mausoleum Scenic Area'}<=attraction_name_set)
+
+=== fail->pass flips (sample of 15) ===
+uid=e20241028160942866027 clause#3
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161153932651 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+uid=e20241028161153932651 clause#5
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161207342223 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161210773442 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161215791938 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161220874335 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161234891857 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161254604670 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161312783307 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161312783307 clause#7
+  A(control):    attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Hongya Cave'}<=attraction_name_set)
+  B(translated): attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Hongya Cave'}<=attraction_name_set)
+uid=e20241028161330699097 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161337180365 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161337180365 clause#7
+  A(control):    attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Leifeng Pagoda'}<=attraction_name_set)
+  B(translated): attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Leifeng Pagoda'}<=attraction_name_set)

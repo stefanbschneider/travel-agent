@@ -98,11 +98,12 @@ LITERALS: dict[str, Literal] = {
     ),
     "r32_v1_fpr": Literal(10.6667, "screens/20260808_v2_candidate_freeprose/README.md"),
     "r32_v1_overall": Literal(44.4077, "screens/20260808_v2_candidate_freeprose/README.md"),
+    # The v2 configuration as shipped: the same free-prose contract, measured after P26 landed.
     "r32_v2_clpr": Literal(
-        88.6867, "screens/20260808_v2_candidate_freeprose/README.md", "v2 candidate configuration"
+        89.6361, "screens/20260809_r34_intercity_e2e/README.md", "v2 as shipped"
     ),
-    "r32_v2_fpr": Literal(45.3333, "screens/20260808_v2_candidate_freeprose/README.md"),
-    "r32_v2_overall": Literal(65.0127, "screens/20260808_v2_candidate_freeprose/README.md"),
+    "r32_v2_fpr": Literal(48.0, "screens/20260809_r34_intercity_e2e/README.md"),
+    "r32_v2_overall": Literal(66.6182, "screens/20260809_r34_intercity_e2e/README.md"),
     # The organizers' board, read 2026-08-08: the leading team's C-LPR and ours.
     "board_rank1_clpr": Literal(
         67.7669, "organizer portal, read 2026-08-08", "leading team's held-out C-LPR"

@@ -63,7 +63,7 @@ they did not replace deterministic optimization and verification. The first
 official held-out submission sharpened this division of labor: grounding
 generalized, while constraint extraction tuned to one phrasing style did not.
 Repairing that generalization gap is what the second version contains, and on
-unfamiliar phrasing it raises the clause satisfaction rate from 75.6 to 88.7.
+unfamiliar phrasing it raises the clause satisfaction rate from 75.6 to 89.6.
 We also report how the system was built: near-continuous, multi-agent
 ``vibe coding'' behind a deterministic evaluation harness, which we treat as a
 result in its own right.
@@ -242,10 +242,16 @@ real denominator.\footnote{Those released sets state their query text in English
 but their verifier literals in Chinese, which caps the achievable full-plan rate;
 we translate the literals with an audited one-to-one map for measurement only,
 and the agent never reads them.} Figure~\ref{fig:v1v2} shows the result: the
-clause rate rises from 75.6 to 88.7 and the full-plan rate from 10.7 to 45.3.
-Checked clause by clause, 191 of 1264 clauses move from failing to passing
-against 29 lost.
+clause rate rises from 75.6 to 89.6 and the full-plan rate from 10.7 to 48.0.
+Checked clause by clause, 205 of 1264 clauses move from failing to passing
+against 27 lost.
 % SCREEN: results/phase2_baselines/screens/20260808_v2_candidate_freeprose/README.md
+% SCREEN: results/phase2_baselines/screens/20260809_r34_intercity_e2e/README.md
+On the familiar register, where none of this can help, a paired run of the full
+five-hour pipeline confirms no regression and a small gain: 64.69 to 65.74
+overall, with the full-plan rate moving from 45 to 47 of 100 queries.
+% ROW: results/phase2_baselines/full_runs/20260808T200402Z_v2gate_base.json
+% ROW: results/phase2_baselines/full_runs/20260808T200402Z_v2gate_cand.json
 
 \begin{figure}[t]
 \centering

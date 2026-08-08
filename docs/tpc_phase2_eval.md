@@ -612,7 +612,16 @@ point, 5 h envelope, triage → repair → polish, keep-best): does the candidat
 on the register we have always measured? Paired rows on one host, sequential (never concurrent — the
 envelope makes concurrent rows non-comparable by construction), `--workers 8`, `--fresh`.
 
-Result: see the two `full_runs/` rows and the summary table in
+**Result: GREEN.** Rows [`20260808T200402Z_v2gate_base`](../results/phase2_baselines/full_runs/20260808T200402Z_v2gate_base.json)
+(`0b4c44a4`, harness defaults) and [`20260808T200402Z_v2gate_cand`](../results/phase2_baselines/full_runs/20260808T200402Z_v2gate_cand.json)
+(`104a90d8` + both flags): **overall `64.6878 → 65.7354` (`+1.0476`), FPR `45.0 → 47.0`, C-LPR
+`90.1713 → 90.4418`**, EPR-micro and EPR-macro flat, all three preference terms up, `constraints_ok`
+`50 → 54`, `empty_plans 0/100` in both, `run_wall 0.63 h` of `5 h` in both. Nothing regresses on any of
+the seven metrics. P26 is structurally inert on this register (asserted by a byte-identity test over
+all 100 queries), so the movement belongs to the flag pair — principally `TPC_WINDOW_RELOCATE_DAY`,
+whose own screen predicted this shape (`+2/40` → `+2/100`). Neither row is comparable to R28: this host
+is a 10-core M1 Pro at 4 workers, and the baseline arm scores `64.6878` on code that scored `64.1725`
+on the 4-core Linux box, which is exactly why the baseline was re-run rather than reused. See
 [the screen](../results/phase2_baselines/screens/20260809_v2_whole_run_gate/README.md).
 
 ### R34 — does the intercity recall fix convert? *(closed 2026-08-09)*
@@ -629,7 +638,18 @@ pre-P26 revision (`0b4c44a4`) plus the candidate flag pair, so the *only* differ
 check: `fail→pass` must exceed `pass→fail`. Any C-LPR fall, or a net clause loss, is RED and P26 comes
 back out of `v2` — the change is unflagged, so RED means revert, not "leave it off".
 
-Result: see [the screen](../results/phase2_baselines/screens/20260809_r34_intercity_e2e/README.md).
+**Result: GREEN.** Translated oracle, n=150: **C-LPR `88.6867 → 89.6361` (`+0.9494`), FPR
+`45.3333 → 48.0000` (`+2.6667`, four more queries pass every clause), overall `65.0127 → 66.6182`
+(`+1.6055`)**; EPR-micro/macro flat at `100.0`; control-oracle arm moves the same way
+(`overall 51.5239 → 53.4361`). Clause level: **`14` fail→pass against `2` pass→fail**, net `+12` of
+`1264` — the bar was `fail→pass > pass→fail`, met `7×`. The two losses are the expected cost of adding
+a constraint (a pinned intercity mode shrinks the feasible set), and the net is what promotes.
+
+**One reproducibility fact from this row is worth carrying forward.** Its baseline arm is the same
+configuration R32 measured, re-solved under a *different* concurrency (4 concurrent solver processes
+against 8), and it reproduced **every metric to the last decimal**. Per-query solves at this budget are
+therefore insensitive to host load here, which is what licenses comparing arms across the two screens.
+See [the screen](../results/phase2_baselines/screens/20260809_r34_intercity_e2e/README.md).
 
 ### R20 — does grounded fill-only LLM extraction convert? *(HOLD; not promoted)*
 
