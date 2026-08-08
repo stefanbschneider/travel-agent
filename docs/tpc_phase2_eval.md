@@ -827,6 +827,37 @@ alone — a second, unfitted confirmation that a fix scoped as family-recall (no
 past familiar-100. This is a recurring instrument, not a one-time run — re-run it on the next parser
 change, same acceptance criteria.
 
+**Refreshed 2026-08-08, first post-P24**
+([`20260808_r22_refresh_post_p24`](../results/phase2_baselines/screens/20260808_r22_refresh_post_p24/README.md),
+`git_sha fecdf7ca`): **PASS**, floor unchanged. `make phase2-generalization-gate` and a fresh probe
+run both reproduce the floor file exactly (`familiar_100 0/1109`, `local_released_150 5/522`,
+`hf_easy 99/1579`, `hf_medium 131/1264`, `hf_human 109/687`, `hf_preference_base50 14/260`) — the
+floor file was already ratcheted to these post-P24 values by P24's own second commit (`0f7bfcbb`), so
+this run confirms `main` is at the floor rather than drifted past it, not that anything moved.
+
+This refresh also ran the second still-missing condition below for the first time
+(`scripts/phase2_unsatisfiable_names_probe.py`, not yet wired into the automated gate), and it
+surfaced a large, previously-unmeasured finding: **the free-prose unsatisfiable-required-name share
+this document and `CLAUDE.md` cite as `23–50 %` ([roadmap §6](tpc_phase2_roadmap.md#6-we-make-a-third-of-free-prose-queries-infeasible-ourselves),
+measured pre-P24) is now `3–12 %` on the current tree** (`hf_easy 42→11 %`, `hf_medium 35→3 %`,
+`hf_human 23→8 %`, `hf_preference_base50 50→12 %`; `local_released_150 16→11 %` with the harness's
+real `entity_resolution=True` default) — identical whether `entity_resolution` is on or off, which
+rules out entity resolution as the cause (matching R29) but does **not** by itself isolate P24 from
+P20/P22, which also landed in this window; one data point argues against a clean "P24 alone" story —
+P24's own screens claim `local_released_150` byte-identical in isolation, yet this run's baseline
+(no-ER) measures that set at `20/150` against the pre-window `24/150`, so something else in the
+window moved it. Read this as attributable to the **post-P20/P22/P24 parse path**, not to entity
+resolution; precise per-item attribution needs a pinned-SHA re-run, not done here. P24 was scoped and
+gated as a satisfiable-but-unrequested-constraint fix and still has no e2e arm of its own
+([roadmap P24](tpc_phase2_roadmap.md#p24--stop-inventing-satisfiable-but-unrequested-constraints)) —
+this is a side effect nobody measured until now, on the *other* half of the precision story
+([P22](tpc_phase2_roadmap.md#p22--drop-provably-unsatisfiable-required-name-constraints)'s
+infeasibility-by-invention). It does not retire P22 or reopen R30 (R30's own `103`-query target set
+was already drawn fresh on this same post-P24 tree, so its negative result already reflects these
+smaller numbers) — it does mean the `23–50 %` figure in `CLAUDE.md`'s "Precision, found 2026-08-07"
+paragraph and in roadmap §6 is stale and should be corrected by the docs workstream to cite `3–12 %`.
+Full tables and per-set breakdown: the screen README linked above.
+
 **Two conditions are still missing, and they are the reason this gate would not have caught the
 largest defect we have found** (2026-08-07). The floor compares `n_parse_gap` per set, which is a
 recall-only criterion: a change that *invents* constraints rather than missing them passes it
