@@ -186,9 +186,13 @@ salvage-before-drop gap, one search perturbation) — see item 4 below.
 GREEN**: with the P23 oracle-literal map applied, `hf_medium`'s FPR moves `20.67 → 44.67` and C-LPR
 moves `82.44 → 88.29`, `74` clauses flip fail→pass and, checked clause-by-clause across all 150 uids,
 **zero flip pass→fail** — see item 6 below. This does not promote a solver default; it recalibrates
-the measurement.
+the measurement. **R30's own salvage-before-drop follow-up landed and was e2e-reconfirmed 2026-08-08
+too**: the genuine loss it found now passes in both arms, the unrelated loss is unchanged, no new loss
+appears anywhere — still `0/103` fail→pass so the flag stays off, but the regression risk is now
+measured closed, not just claimed closed — see item 4 below.
 
-**R31 is closed; the open items are R27 (blocked on P6), R21 (parked) and R20 (HOLD).**
+**R31 is closed, R30's follow-up is reconfirmed, and the evaluation queue is now fully drained: the
+only open items are R27 (blocked on P6), R21 (parked) and R20 (HOLD).**
 
 1. **A whole-run row now exists on the current `main`.** [R28](#r28--a-whole-run-row-on-the-current-main)
    (`20260807T152009Z`, `git_sha aed4363e`) replaces R19 `ae0bd319` as the baseline every later
@@ -229,9 +233,18 @@ the measurement.
    for the full causal analysis and a concrete follow-up (salvage-before-drop) for the implementation
    workstream. **That follow-up landed 2026-08-08** (static half — `_salvage_catalog_name`, verified
    against the exact loss uid, `25–33 %` recovery rate on every released/HF set; see
-   [its screen](../results/phase2_baselines/screens/20260808_p22_salvage_before_drop/README.md)). A
-   re-run of R30's exact e2e A/B to confirm the loss is closed end-to-end (not just statically) is
-   the next step and belongs to the evaluation machine, not yet scheduled with an R-number.
+   [its screen](../results/phase2_baselines/screens/20260808_p22_salvage_before_drop/README.md)). **Its
+   e2e re-confirmation also landed 2026-08-08**: the exact same 103-uid target set and flag pair,
+   re-run end to end — `20250324075652034944` (the salvage-fixable loss) now passes in both arms,
+   `20250322180344489669` (the search-perturbation loss) is unchanged as predicted, every HF set is
+   unchanged from R30, and the solve-time speedup reproduces closely. `local_released_150`'s net
+   regression is halved (`2 lost → 1 lost`). Still `0/103` fail→pass, so
+   `TPC_P2_DROP_UNSATISFIABLE_NAMES` still does not meet R30's own promotion bar and stays
+   library-default-off — but the regression risk R30 identified is now measured closed for the
+   parser-side mechanism. See
+   [the reconfirmation screen](../results/phase2_baselines/screens/20260808_r30_salvage_reconfirmation/README.md).
+   The remaining open question (whether freed solve time converts into more `full_runs/`-level passes)
+   is unchanged and still unscheduled.
 5. **P23 landed 2026-08-08, static half only.** `scripts/materialize_hf_split.py
    --translate-oracle-literals` now exists and reproduces the cap-pricing table above byte-for-byte,
    plus a full-split dry run of the rewrite itself: `331` free-prose queries across the four sets get
@@ -254,13 +267,15 @@ the measurement.
 | R20 | should grounded fill-only LLM extraction become a harness default? | no code blocker; precondition re-checked 2026-08-08, still not met (HOLD) | no cold-cache rerun yet |
 | R21 | does spending the unspent envelope on all queries buy preference points? | P17(b), parked until FPR is nonzero | ~1.4 h, low priority |
 
-**Parallel execution plan.** **R28, R29, R30 and R31 are all closed.** The salvage-before-drop
-follow-up R30 identified for P22 landed 2026-08-08 (static half, implementation machine); its own e2e
-re-confirmation (re-run R30's exact paired A/B, check the target uid now passes and no new loss
-appears) is queued next on the evaluation machine, not yet numbered. After that, every remaining item
-is blocked or parked: R27 needs P6 (not yet implemented), R21 is parked until FPR is nonzero on a
-register that counts (R31 raised `hf_medium`'s ceiling but P6/preference work is still the blocker,
-not the denominator), and R20 is HOLD per its own precondition re-check. Do not run two solver
+**Parallel execution plan.** **R28, R29, R30 and R31 are all closed**, and the salvage-before-drop
+follow-up R30 identified for P22 also landed and was re-confirmed end to end 2026-08-08 (see item 4
+above) — **the evaluation queue is now fully drained.** Every remaining item is blocked or parked: R27
+needs P6 (not yet implemented), R21 is parked until FPR is nonzero on a register that counts (R31
+raised `hf_medium`'s ceiling but P6/preference work is still the blocker, not the denominator), and
+R20 is HOLD per its own precondition re-check. The next open (unnumbered) candidate is a
+`full_runs/`-shaped measurement of whether P22's freed solve time converts into more passes at the
+5 h envelope — plausible from both R30 and its reconfirmation, unmeasured by any per-query screen
+contract. Do not run two solver
 screens concurrently on one host: wall-clock limits then change the number of restarts each arm gets.
 R20 needs no expensive run unless a new parse-level arm first beats the current deterministic floor.
 **R9 is closed**, per R25's own gating text: it needed a genuine per-uid flip on the restart axis, and
@@ -412,6 +427,22 @@ back to a full drop, try to salvage a real catalog POI name that is a prefix/cle
 substring of an otherwise-unmatched capture. That would keep P22's demonstrated solve-time win while
 closing the loss this row found. Not done here (eval-workstream row; does not edit
 `chinatravel/agent/`).
+
+**Follow-up landed 2026-08-08 (static half, implementation machine)** — `_salvage_catalog_name` in
+`chinatravel/agent/phase2/normalize.py`, `25–33 %` recovery rate on every released/HF set (see
+[the screen](../results/phase2_baselines/screens/20260808_p22_salvage_before_drop/README.md)). **Its
+e2e re-confirmation also landed 2026-08-08**, reproducing this row's exact 103-uid target set and flag
+pair: `20250324075652034944` (the clean-causal loss above) now passes in both arms, closing that loss;
+`20250322180344489669` (the search-perturbation loss) is unchanged, as predicted; `local_released_150`'s
+regression is halved (`2 lost → 1 lost`, `0` gained either time); every HF set is unchanged from this
+row (byte-identical clause movement); the solve-time speedup reproduces closely
+(`local_released_150 60.05 → 26.89 s`, `hf_easy 57.74 → 11.74 s`, etc., matching this row's own numbers
+within noise). **Still does not meet this row's own promotion bar** (`0/103` fail→pass) — the flag
+stays library-default-off — but the regression risk this row identified is now measured smaller, not
+just claimed smaller. See
+[the reconfirmation screen](../results/phase2_baselines/screens/20260808_r30_salvage_reconfirmation/README.md).
+The remaining open question (whether the freed solve time converts into more `full_runs/`-level passes)
+is unchanged and still unscheduled.
 
 ### R31 — the first real free-prose FPR gate *(closed 2026-08-08, GREEN)*
 
