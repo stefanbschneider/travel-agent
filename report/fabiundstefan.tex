@@ -287,12 +287,12 @@ We ran two small, matched comparisons to identify failure modes. An autonomous
 tool-using Qwen agent scored 1.88 on eight familiar queries and 2.64 on eight
 free-prose queries, versus 67.71 and 48.49 for our solver; none of its itineraries
 passed all commonsense checks. The upstream RuleNeSy baseline
-\cite{shao2024chinatravel} scored about 9.5 on four queries from each register.
-It grounded most individual facts but still violated at least one commonsense
-rule in every itinerary.
+\cite{shao2024chinatravel} scored about 9.5 on four queries from each register,
+grounding most individual facts but still violating at least one commonsense rule
+in every itinerary.
 % SCREEN: results/phase2_baselines/screens/20260806_llm_arms/README.md
-These samples are too small for general system ranking, but the observed failure
-modes support retaining deterministic acceptance and optimization.
+These samples are too small to rank systems, but the failure modes support
+retaining deterministic acceptance and optimization.
 
 \section{Where AI Helped --- and Where It Did Not}
 \label{sec:ai}
@@ -301,11 +301,10 @@ modes support retaining deterministic acceptance and optimization.
 
 We used this challenge deliberately as a low-risk environment in which to push
 agent-driven development much harder than we would on a production system. The
-task has an objective, automatic scorer; nothing is deployed; no user or revenue
-depends on it; and a wrong change is caught by a test or a measurement rather than
-by an incident. That combination is rare, and it let us answer a question that is
-otherwise expensive to ask: how far can coding agents carry a real system if you
-give them fast, honest feedback and remove yourself from the inner loop?
+task has an objective, automatic scorer; nothing is deployed; and a wrong change
+is caught by a test or a measurement rather than by an incident. That let us ask a
+question that is otherwise expensive: how far can coding agents carry a real system
+if you give them fast, honest feedback and remove yourself from the inner loop?
 
 Very far, as it turned out, given a great deal of scaffolding. We ran multiple
 paid agent subscriptions across several machines, with one or more agents working
@@ -322,17 +321,15 @@ models were used for analysis, diagnosis, and planning: reading measurements,
 proposing the next experiment, ranking work by expected effect. Faster, cheaper
 agents then implemented a specified change with tests, and ran evaluations. The
 planning agent maintained a ranked work list; implementation and evaluation
-proceeded in parallel branches against it. Separating the two roles avoided the
-common failure where an implementing agent silently redefines the task it was
-given.
+proceeded in parallel branches against it, which also avoided the common failure
+where an implementing agent silently redefines the task it was given.
 
 \textbf{Make feedback fast, automatic, and cheap to trust.} We invested more in
 the evaluation harness than in any single planner feature: a paired A/B screen
-that decides in one or two hours whether a change is worth a long run, a
-whole-run mode that reproduces the submission's exact shape, deterministic seeds,
-result ledgers that record every condition needed to decide whether two numbers
-may be compared, and a rule that only a full run on a pinned revision may flip a
-default. Agents could then evaluate their own work overnight and report a verdict
+that decides in one or two hours whether a change is worth a long run, a whole-run
+mode reproducing the submission's exact shape, deterministic seeds, and result
+ledgers recording every condition needed to decide whether two numbers may be
+compared. Agents could then evaluate their own work overnight and report a verdict
 against a criterion written before the run.
 
 \textbf{Write the invariants down and let them be enforced by tests.} Grounding,
@@ -340,13 +337,13 @@ no oracle leakage, acceptance-before-emission, and flags-off-is-the-floor are
 recorded as project rules and pinned by tests, so an agent that would violate one
 fails rather than persuades. Cold-start verification is part of that: it caught a
 start-up race that would have shipped empty itineraries for an entire split while
-still exiting successfully, a failure no local run could have exposed.
+still exiting successfully, a failure no ordinary local run could expose.
 
 Two limits are worth stating honestly. The volume of agent output is not itself a
 result: much of it was superseded, and the ratio of committed work to accepted
 improvement was low. And agents were reliably over-optimistic about their own
-changes, which is precisely why promotion required an independent measurement
-rather than an argument. Uploading was never automated.
+changes, which is why promotion required an independent measurement rather than an
+argument.
 
 \subsection{Inside the system}
 
@@ -356,14 +353,23 @@ misses into values that did not match the environment vocabulary.
 % SCREEN: results/phase2_baselines/screens/20260806_llm_arms/README.md
 We therefore connected model output to the same city-specific entity and category
 catalogs used by the solver. Grounded, fill-only extraction improved one small
-familiar A/B, but was flat on the matched free-prose subset (49.99 to 49.88) and
-still matched fewer clauses than the contemporaneous deterministic parser.
+familiar A/B but was flat on the matched free-prose subset, and still matched fewer
+clauses than the contemporaneous deterministic parser.
 % SCREEN: results/phase2_baselines/screens/20260807_p16_entity_resolution_probe/README.md
 The current default consequently makes zero LLM calls, while retaining the
 grounded extractor as an optional path. This is not a rejection of LLM parsing;
 it separates recognizing a requirement from resolving its values against the
-actual database. An improved agent should query those vocabularies directly,
-whether through the existing tools or an MCP-style interface.
+actual database.
+
+The strongest argument for that path is what our deterministic extractor cannot
+reach. Its largest remaining gap on unfamiliar phrasing is no longer lexical: the
+queries say ``we are more interested in history and culture'' or simply ``going on
+a date, please recommend an itinerary''. Each implies a database category that no
+pattern names, and the benchmark's own labels for such phrasings are inconsistent,
+so hand-written rules would be guessing. Inferring intent is what a language model
+is for, through the existing tools or an MCP-style interface; its answer only has
+to be resolved against the closed vocabulary first.
+% SCREEN: results/phase2_baselines/screens/20260809_r35_preference_verb_trigger/README.md
 
 We also tried the obvious hybrid: letting a model repair itineraries the checker
 rejected, with every proposed edit re-verified before it could be kept. On ten
@@ -391,16 +397,15 @@ boundary: grounding transferred to hidden data, while constraint extraction tune
 to one advertised in-distribution phrasing register did not --- and repairing that
 is what the second version measurably contains.
 
-The transferable lesson is methodological. Agentic coding works particularly
-well in a small, isolated project once objective and fast feedback exists --- and
-this challenge was chosen partly to test exactly that, at a scale of continuous
-multi-agent operation we would not risk on a production system. What made it work
-was not the agents but the harness around them: written invariants enforced by
-tests, a measurement contract that says when two numbers may be compared, and a
-rule that only an independent run may promote a change. Models
-are valuable at the fuzzy boundary between language and symbols, provided their
-proposals are grounded. Hard itinerary construction remains optimization:
-stochastic fluency does not substitute for satisfying every constraint.
+The transferable lesson is methodological. Agentic coding works particularly well
+in a small, isolated project once objective and fast feedback exists --- and this
+challenge was chosen partly to test that at a scale of continuous multi-agent
+operation we would not risk on a production system. What made it work was not the
+agents but the harness around them: written invariants enforced by tests, a
+measurement contract that says when two numbers may be compared, and a rule that
+only an independent run may promote a change. Models are valuable at the fuzzy
+boundary between language and symbols, provided their proposals are grounded. Hard
+itinerary construction remains optimization.
 
 A production system would replace the sandbox with live map, hotel, rail, flight,
 and booking APIs or MCP servers. It would also infer user-specific objectives
@@ -415,8 +420,9 @@ verification decide what is safe to emit.
 
 We thank the ChinaTravel organizers for the benchmark, sandbox environment, and
 their clarifications on the execution contract.
-
+{\small
 \bibliographystyle{named}
 \bibliography{ijcai26}
+}
 
 \end{document}
