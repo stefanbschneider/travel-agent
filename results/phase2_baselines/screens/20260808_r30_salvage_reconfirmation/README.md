@@ -1,8 +1,15 @@
 # R30 salvage-before-drop e2e re-confirmation
 
 **Date** 2026-08-08 · **Branch** `eval/r31-oracle-literal-translation` (same evaluation-workstream
-branch as R31; both land in one PR) · **`git_sha`** `7405e723` (`main` tip plus R31's commit — includes
-[the P22 salvage-before-drop static fix](../20260808_p22_salvage_before_drop/README.md)) · **host**
+branch as R31; both land in one PR) · **measured on `git_sha` `7405e723`** (`main` tip plus R31's
+commit — includes [the P22 salvage-before-drop static fix](../20260808_p22_salvage_before_drop/README.md)).
+**This branch was later rebased onto `cd825340`** (adds P4 and P25), so `7405e723` itself is no longer
+reachable; neither addition can affect this row — P4 changes only `sweeps.py`'s whole-run per-query cap
+default and this row runs `solve_phase2.py`'s plain per-query loop with an explicit `--budget-sec 90`
+throughout (P4's own commit message: "the plain per-query development-gate loop... is unaffected");
+P25 is gated behind `TPC_WINDOW_RELOCATE_DAY`, library-default-off in both `Flags.from_env({})` and
+`resolve_llm_client_and_flags()` (confirmed directly — neither force-defaults it, unlike
+`entity_resolution`/`disjunction`/`dynamic_budget`), and this row never sets it. · **host**
 4-core Linux (3-way sharded per split) · **Contract**: exact re-run of
 [R30](../20260807_r30_unsatisfiable_names_e2e/README.md)'s paired e2e A/B — same 103 target uids
 (`target_uids.json`/`uids/*.txt` copied verbatim from that screen), same six sets, same

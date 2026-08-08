@@ -1,8 +1,16 @@
 # R31 — the first real free-prose FPR gate
 
-**Date** 2026-08-08 · **Branch** `eval/r31-oracle-literal-translation` · **`git_sha`** `d72268a3`
-(current `main` tip at branch cut — includes P22 salvage-before-drop static half, P23 oracle-literal
-translation, P24, R25–R30) · **host** 4-core Linux (3-way sharded) · **Contract**: full `hf_medium`
+**Date** 2026-08-08 · **Branch** `eval/r31-oracle-literal-translation` · **measured on `git_sha`
+`d72268a3`** (`main` tip at branch cut — includes P22 salvage-before-drop static half, P23
+oracle-literal translation, P24, R25–R30). **This branch was later rebased onto `cd825340`** (adds P4
+and P25); neither can affect this row — P4 changes only `sweeps.py`'s whole-run per-query cap default
+and this row runs `solve_phase2.py`'s plain per-query loop with an explicit `--budget-sec 90` (P4's own
+commit message: "the plain per-query development-gate loop... is unaffected... still resolves an
+omitted `--budget-sec` to 300 exactly as before" — irrelevant here either way since this row always
+passes `--budget-sec` explicitly); P25 is gated behind `TPC_WINDOW_RELOCATE_DAY`, library-default-off
+in both `Flags.from_env({})` and `resolve_llm_client_and_flags()` (confirmed directly, not assumed —
+neither force-defaults it, unlike `entity_resolution`/`disjunction`/`dynamic_budget`), and this row
+never sets it. · **host** 4-core Linux (3-way sharded) · **Contract**: full `hf_medium`
 free-prose split (n=150), per-query mode (`agent_env/scripts/solve_phase2.py`, no
 `--total-budget-sec`), `budget-sec=90`, `--lang en`, no `--resume`, single method directory (see
 "single solve" below). Screen, not a `full_runs/`/`runs/` row.
@@ -37,8 +45,14 @@ mappable, 92 queries blocked, **FPR ceiling 38.67**, C-LPR ceiling 90.03. `repor
 in this directory are that reproduction. **Read this number carefully against the result above: the
 control arm's FPR (20.67) is measured under that 38.67 ceiling (53.4 % of the achievable range,
 consistent with prior free-prose measurements), but the translated arm's FPR (44.67) is *not* — once
-the literals are translated, the structural cap is gone and the ceiling is no longer 38.67. There is
-no contradiction in the translated arm exceeding the old ceiling.**
+the literals are translated, the 38.67 ceiling no longer applies. There is no contradiction in the
+translated arm exceeding the old ceiling.** The translated split's own ceiling was not separately
+re-priced with the cap-pricing script's full methodology (that script's unsatisfiability scan is
+defined against raw, untranslated `hard_logic_py`); what is known directly from the translation report
+is that `1/150` queries (`e20241028161036243215`) retains an unmapped residual CJK literal
+(`translation_report_medium.json`), so the translated split's ceiling is bounded above by
+`149/150 ≈ 99.3` at the query level, not `100` — a smaller but nonzero residual cap, not the same
+number as the untranslated ceiling and not formally re-derived here.
 
 ## Single-solve design (not two solves)
 
