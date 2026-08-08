@@ -148,7 +148,7 @@ def test_run_sweeps_split_appends_a_ledger_line_and_keeps_telemetry_as_latest(tm
     uid, query = _one_uid_and_query()
 
     def fake_run_sweeps(*, uids, queries, deadline, config, on_result, best=None,
-                         variants=None, log=print):
+                         variants=None, coverage_unknown=None, log=print):
         plan1 = {"itinerary": [{"day": 1, "activities": []}], "uid": uid, "marker": "attempt-1"}
         plan2 = {"itinerary": [{"day": 1, "activities": []}], "uid": uid, "marker": "attempt-2"}
         telemetry1 = {
@@ -217,7 +217,7 @@ def test_a_non_improving_attempt_still_appends_to_the_ledger_but_writes_no_plan(
     uid, query = _one_uid_and_query()
 
     def fake_run_sweeps(*, uids, queries, deadline, config, on_result, best=None,
-                         variants=None, log=print):
+                         variants=None, coverage_unknown=None, log=print):
         good_plan = {"itinerary": [{"day": 1, "activities": []}], "uid": uid, "marker": "good"}
         worse_plan = {"itinerary": [{"day": 1, "activities": []}], "uid": uid, "marker": "worse"}
         on_result(uid, good_plan, _score(ok=True, overall=90.0),

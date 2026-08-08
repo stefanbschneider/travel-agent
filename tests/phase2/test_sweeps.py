@@ -120,6 +120,47 @@ class TestWorkOrdering:
         assert kind == "polish"
         assert todo == ["b"]
 
+    def test_coverage_unknown_keeps_a_passing_query_in_repair_not_polish(self):
+        """Roadmap P17(a): a query the checker reports constraints_ok, but whose text mentions
+        something the parse could not represent, must not be silently promoted to polish."""
+        scores = {
+            "flagged": _score(ok=True, overall=80.0),
+            "clean": _score(ok=True, overall=80.0),
+        }
+        coverage_unknown = {"flagged": True}
+        assert sweeps.repair_order(scores, coverage_unknown) == ["flagged"]
+        assert sweeps.polish_order(scores, coverage_unknown) == ["clean"]
+
+    def test_coverage_unknown_omitted_or_false_changes_nothing(self):
+        """Library-default no-op: an unset/empty coverage_unknown must reproduce today's ordering
+        exactly, and a uid explicitly marked False must behave the same as unset."""
+        scores = {
+            "a": _score(ok=False, overall=10.0, satisfied=1, total=10),
+            "b": _score(ok=True, overall=80.0),
+        }
+        assert sweeps.repair_order(scores) == sweeps.repair_order(scores, None) == \
+            sweeps.repair_order(scores, {})
+        assert sweeps.polish_order(scores) == sweeps.polish_order(scores, None) == \
+            sweeps.polish_order(scores, {})
+        assert sweeps.repair_order(scores, {"b": False}) == sweeps.repair_order(scores)
+        assert sweeps.polish_order(scores, {"b": False}) == sweeps.polish_order(scores)
+
+    def test_coverage_unknown_does_not_touch_a_genuinely_failing_query(self):
+        """A query already in repair_order because it fails outright is unaffected either way --
+        coverage_unknown only changes eligibility for queries the checker calls passing."""
+        scores = {"a": _score(ok=False, overall=10.0)}
+        assert sweeps.repair_order(scores, {"a": True}) == sweeps.repair_order(scores, {"a": False})
+        assert sweeps.repair_order(scores, {"a": True}) == ["a"]
+
+    def test_choose_pass_threads_coverage_unknown_through_to_repair_order(self):
+        uids = ["a", "b"]
+        scores = {"a": _score(ok=True, overall=80.0), "b": _score(ok=True, overall=80.0)}
+        kind, todo = sweeps._next_pass(
+            index=2, uids=uids, best_scores=scores, stalled_repairs=0,
+            coverage_unknown={"a": True},
+        )
+        assert (kind, todo) == ("repair", ["a"])
+
 
 class TestKeepBest:
     def test_constraint_satisfaction_outranks_any_preference_gain(self):

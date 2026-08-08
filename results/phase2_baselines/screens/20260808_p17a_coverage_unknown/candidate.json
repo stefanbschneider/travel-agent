@@ -1,0 +1,90 @@
+{
+  "label": "TPC_P2_COVERAGE_UNKNOWN=1",
+  "env_overrides": {
+    "TPC_P2_COVERAGE_UNKNOWN": "1"
+  },
+  "wall_sec": 888.1,
+  "fpr": 35.71,
+  "continuous_score": 59.716,
+  "parse_failures": 0,
+  "timeouts": 2,
+  "telemetry_coverage": "14/14",
+  "telemetry": {
+    "n_telemetry": 14,
+    "timeouts": 2,
+    "recovered": 2,
+    "used_fallback": 0,
+    "errored": 0,
+    "valid_output": 14,
+    "llm_parse_fired": 0,
+    "llm_parse_skipped": 0,
+    "llm_parse_errored": 0,
+    "refine_called": 0,
+    "refine_committed": 0,
+    "refine_second_attempts": 0,
+    "solve_sec_mean": 69.77729336538219,
+    "solve_sec_p50": 81.37144324509427,
+    "solve_sec_p90": 82.02886211220175
+  },
+  "layers": {
+    "commonsense_pass_count": 14,
+    "commonsense_micro": 100.0,
+    "commonsense_macro": 100.0,
+    "logical_micro": 88.59060402684564,
+    "logical_macro": 35.714285714285715,
+    "conditional_logical_micro": 88.59060402684564,
+    "all_pass_count": 5
+  },
+  "quality_n": {
+    "requested": 14,
+    "evaluated": 14,
+    "missing": 0
+  },
+  "scheduler": {
+    "constraints_ok": 5,
+    "self_overall_mean": 59.5151,
+    "self_fpr_mean": 35.7143,
+    "passes": [
+      {
+        "index": 1,
+        "kind": "triage",
+        "queries": 14,
+        "budget_sec": 61.0,
+        "workers": 2,
+        "improved": 14,
+        "completed": 14,
+        "failed": 0,
+        "elapsed_sec": 353.0
+      },
+      {
+        "index": 2,
+        "kind": "repair",
+        "queries": 9,
+        "budget_sec": 90.0,
+        "workers": 2,
+        "improved": 0,
+        "completed": 9,
+        "failed": 0,
+        "elapsed_sec": 407.3
+      },
+      {
+        "index": 3,
+        "kind": "polish",
+        "queries": 5,
+        "budget_sec": 90.0,
+        "workers": 2,
+        "improved": 1,
+        "completed": 5,
+        "failed": 0,
+        "elapsed_sec": 122.6
+      }
+    ],
+    "fallbacks_prewritten": 14,
+    "remaining_sec": 824.3,
+    "elapsed_sec": 885.7017373549752,
+    "empty_plans": 0,
+    "variants_source": {
+      "parent": 14
+    }
+  }
+}

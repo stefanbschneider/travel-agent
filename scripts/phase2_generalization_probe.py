@@ -46,6 +46,8 @@ for _p in (str(PROJECT_ROOT), str(PROJECT_ROOT / "scripts")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
+from chinatravel.agent.phase2 import coverage_signal  # noqa: E402
+
 
 # --- Oracle clause -> constraint-family classification --------------------
 #
@@ -216,6 +218,8 @@ def measure_set(label: str, kind: str, name: str, *, limit: int | None = None,
     n_parse_gap = 0
     n_queries_parse_gap = 0
     per_query_clause_cov = []
+    coverage_trigger_uids = []
+    coverage_trigger_categories = Counter()
 
     for uid in ids:
         q = dict(data[uid])
@@ -240,6 +244,15 @@ def measure_set(label: str, kind: str, name: str, *, limit: int | None = None,
         oracle_fams: set[str] = set()
         for v in oracle_variants:
             oracle_fams |= _families(v)
+
+        # Roadmap P17(a): the coverage-signal trigger rate, oracle-free (only nl + parsed_variants,
+        # not hard_logic_py or oracle_fams above). Must stay near-zero on familiar-100, same bar as
+        # P13's phrase-heuristic precedent -- see coverage_signal's module docstring.
+        fired = coverage_signal.uncovered_mentions(nl, parsed_variants)
+        if fired:
+            coverage_trigger_uids.append(uid)
+            for category in fired:
+                coverage_trigger_categories[category] += 1
         covered_here = 0
         query_parse_gap = False
         for clause in clauses:
@@ -335,6 +348,13 @@ def measure_set(label: str, kind: str, name: str, *, limit: int | None = None,
             "by_kind_uncovered": dict(clause_kind_uncovered.most_common()),
         },
         "family_stats": _family_rollup(rows),
+        "coverage_signal": {
+            "n_queries_triggered": len(coverage_trigger_uids),
+            "pct_queries_triggered": round(
+                100.0 * len(coverage_trigger_uids) / len(ids), 1) if ids else 0.0,
+            "by_category": dict(coverage_trigger_categories.most_common()),
+            "example_uids": coverage_trigger_uids[:10],
+        },
         "examples": examples,
     }
 
@@ -605,7 +625,9 @@ def main() -> None:
         d = Path(args.out_dir)
         d.mkdir(parents=True, exist_ok=True)
         (d / "probe.json").write_text(out, encoding="utf-8")
-        (d / "summary.md").write_text(render_markdown(report), encoding="utf-8")
+        (d / "summary.md").write_text(
+            render_markdown(report) + "\n\n" + render_coverage_signal_markdown(report) + "\n",
+            encoding="utf-8")
         (d / "fix_headroom.json").write_text(
             json.dumps({h["label"]: h for h in report["fix_headroom"]},
                        ensure_ascii=False, indent=2), encoding="utf-8")
@@ -618,6 +640,8 @@ def main() -> None:
         print(f"[probe] wrote {d}/probe.json, summary.md, fix_headroom.json, "
               f"residual_gaps_after_fix.json", file=sys.stderr)
     print(render_markdown(report))
+    print()
+    print(render_coverage_signal_markdown(report))
     print()
     print(render_fix_markdown(report))
 
@@ -634,6 +658,22 @@ def render_markdown(report: dict) -> str:
             f"{cc['n_parse_gap']}/{cc['n_oracle_clauses']} ({100.0*cc['parse_gap_rate']:.1f}%) | "
             f"{cc['clpr_ceiling_parse_gap_only']} | {cc['pct_queries_with_parse_gap']}% | "
             f"{cc['fpr_ceiling_from_parse_gaps']} |"
+        )
+    return "\n".join(lines)
+
+
+def render_coverage_signal_markdown(report: dict) -> str:
+    """Roadmap P17(a) tripwire table: per-set trigger rate for the "text mentions something the
+    parse has no family for" coverage signal. Same reading rule as the phrasing-generalization
+    floor -- familiar-100 near-zero is the precondition this item's own bar requires, not a result
+    to celebrate; the informative numbers are the free-prose rows."""
+    lines = ["| set | n | queries triggered | trigger rate | by category |",
+             "| --- | --- | --- | --- | --- |"]
+    for s in report["sets"]:
+        cov = s.get("coverage_signal") or {}
+        lines.append(
+            f"| {s['label']} | {s['n']} | {cov.get('n_queries_triggered', 0)} | "
+            f"{cov.get('pct_queries_triggered', 0)}% | {cov.get('by_category', {})} |"
         )
     return "\n".join(lines)
 

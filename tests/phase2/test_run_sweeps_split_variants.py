@@ -38,7 +38,7 @@ def test_run_sweeps_split_parses_once_via_canonical_path_and_forwards_variants(t
     captured = {}
 
     def fake_run_sweeps(*, uids, queries, deadline, config, on_result, best=None,
-                         variants=None, log=print):
+                         variants=None, coverage_unknown=None, log=print):
         captured["uids"] = list(uids)
         captured["variants"] = variants
         captured["queries"] = queries
@@ -112,7 +112,7 @@ def test_run_sweeps_split_degrades_to_empty_variants_on_parse_failure(tmp_path, 
     captured = {}
 
     def fake_run_sweeps(*, uids, queries, deadline, config, on_result, best=None,
-                         variants=None, log=print):
+                         variants=None, coverage_unknown=None, log=print):
         captured["variants"] = variants
         return {"passes": [], "final_pass_scores": {}}
 
@@ -159,7 +159,7 @@ def test_run_sweeps_split_records_parent_parse_failures_in_summary(tmp_path, mon
     uid, query = _one_uid_and_query()
 
     def fake_run_sweeps(*, uids, queries, deadline, config, on_result, best=None,
-                         variants=None, log=print):
+                         variants=None, coverage_unknown=None, log=print):
         return {"passes": [], "final_pass_scores": {}}
 
     def raising_parse_to_ir(*args, **kwargs):
@@ -210,7 +210,7 @@ def test_run_sweeps_split_records_no_parent_parse_failures_on_success(tmp_path, 
     uid, query = _one_uid_and_query()
 
     def fake_run_sweeps(*, uids, queries, deadline, config, on_result, best=None,
-                         variants=None, log=print):
+                         variants=None, coverage_unknown=None, log=print):
         return {"passes": [], "final_pass_scores": {}}
 
     monkeypatch.setattr(sweeps, "run_sweeps", fake_run_sweeps)

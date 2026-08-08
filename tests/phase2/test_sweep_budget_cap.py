@@ -39,7 +39,7 @@ def _run_sweeps_split_capturing_config(tmp_path, monkeypatch, *, budget_sec, met
     captured = {}
 
     def fake_run_sweeps(*, uids, queries, deadline, config, on_result, best=None,
-                         variants=None, log=print):
+                         variants=None, coverage_unknown=None, log=print):
         captured["config"] = config
         return {"passes": [], "final_pass_scores": {}}
 
@@ -186,7 +186,7 @@ def test_run_split_summary_records_the_cap_actually_in_force(tmp_path, monkeypat
     uid, query = _one_uid_and_query()
 
     def fake_run_sweeps(*, uids, queries, deadline, config, on_result, best=None,
-                         variants=None, log=print):
+                         variants=None, coverage_unknown=None, log=print):
         return {"passes": [], "final_pass_scores": {}}
 
     monkeypatch.setattr(sweeps, "run_sweeps", fake_run_sweeps)
