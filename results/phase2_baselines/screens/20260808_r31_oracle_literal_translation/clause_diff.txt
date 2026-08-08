@@ -1,0 +1,140 @@
+clause_count_mismatch: 0 []
+fail->pass flips (expected, from translation lifting the cap): 74
+pass->fail flips (RED if any -- translation changed a literal's meaning): 0
+
+=== fail->pass flips (sample of 15) ===
+uid=e20241028160845920703 clause#3
+  A(control):    restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'火锅'}<=restaurant_type_set)
+  B(translated): restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Hot pot'}<=restaurant_type_set)
+uid=e20241028160855113315 clause#3
+  A(control):    restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'川菜'}<=restaurant_type_set)
+  B(translated): restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Sichuan cuisine'}<=restaurant_type_set)
+uid=e20241028160902013119 clause#3
+  A(control):    attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'历史古迹'}<=attraction_type_set)
+  B(translated): attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'historical site'}<=attraction_type_set)
+uid=e20241028160904677400 clause#3
+  A(control):    restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'火锅'}<=restaurant_type_set)
+  B(translated): restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Hot pot'}<=restaurant_type_set)
+uid=e20241028160906602324 clause#3
+  A(control):    attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'商业街区'}<=attraction_type_set)
+  B(translated): attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'commercial district'}<=attraction_type_set)
+uid=e20241028160908981620 clause#3
+  A(control):    restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'川菜'}<=restaurant_type_set)
+  B(translated): restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Sichuan cuisine'}<=restaurant_type_set)
+uid=e20241028160911184742 clause#3
+  A(control):    restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'海鲜'}<=restaurant_type_set)
+  B(translated): restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Seafood'}<=restaurant_type_set)
+uid=e20241028160916850792 clause#3
+  A(control):    restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'日本料理'}<=restaurant_type_set)
+  B(translated): restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Japanese cuisine'}<=restaurant_type_set)
+uid=e20241028160918445815 clause#3
+  A(control):    restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'粤菜'}<=restaurant_type_set)
+  B(translated): restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Cantonese cuisine'}<=restaurant_type_set)
+uid=e20241028160920077469 clause#3
+  A(control):    attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'博物馆/纪念馆'}<=attraction_type_set)
+  B(translated): attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'Museum/Memorial Hall'}<=attraction_type_set)
+uid=e20241028160932644544 clause#3
+  A(control):    restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'自助餐'}<=restaurant_type_set)
+  B(translated): restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'buffet'}<=restaurant_type_set)
+uid=e20241028160934978800 clause#3
+  A(control):    attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'商业街区'}<=attraction_type_set)
+  B(translated): attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'commercial district'}<=attraction_type_set)
+uid=e20241028160937967706 clause#3
+  A(control):    attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'商业街区'}<=attraction_type_set)
+  B(translated): attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'commercial district'}<=attraction_type_set)
+uid=e20241028160939613971 clause#3
+  A(control):    attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'人文景观'}<=attraction_type_set)
+  B(translated): attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'Cultural Landscape'}<=attraction_type_set)
+uid=e20241028160944911300 clause#3
+  A(control):    restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'火锅'}<=restaurant_type_set)
+  B(translated): restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Hot pot'}<=restaurant_type_set)
