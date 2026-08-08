@@ -397,6 +397,70 @@ def test_unresolvable_name_dropped_leaves_other_satisfiable_names_in_the_same_fi
     assert out["required_hotels"] == ["Hangzhou West Lake Zhongwei Xiangyi Hotel"]
 
 
+# --- P22 follow-up (R30, 2026-08-07): salvage a real POI name before a full drop -----------------
+
+
+def test_salvage_recovers_tail_swallowed_poi_before_dropping():
+    # The exact loss R30's e2e gate found (uid 20250324075652034944, Hangzhou): the parser's
+    # required_attractions capture is the real attraction plus an unrelated trailing clause the
+    # regex swallowed. Pre-fix this dropped the whole value; post-fix it salvages the real name,
+    # which is provably safe -- the solver's own lenient matcher (`_match_constraint_text`) would
+    # already have credited this exact name as satisfying the pre-drop kept-verbatim value (R30's
+    # own diagnosis of why the OFF arm passed this query).
+    variant = {"required_attractions": [
+        "Xixi Paradise Commercial Street, wish to stay in single-bed rooms",
+    ]}
+    catalog = normalize.load_city_entity_catalog("Hangzhou")
+    out = normalize.resolve_entities(variant, {"target_city": "Hangzhou"}, catalog, drop_unresolved=True)
+    assert out["required_attractions"] == ["Xixi Paradise Commercial Street"]
+
+
+def test_salvage_does_not_fire_on_genuinely_unsatisfiable_capture():
+    # P22's original target case must still drop cleanly: a whole free-prose sentence with no real
+    # POI name embedded anywhere in it.
+    variant = {"required_attractions": [
+        "Nanjing for a day by myself with a budget of 1800 RMB",
+    ]}
+    catalog = normalize.load_city_entity_catalog("Nanjing")
+    out = normalize.resolve_entities(variant, {"target_city": "Nanjing"}, catalog, drop_unresolved=True)
+    assert "required_attractions" not in out
+
+
+def test_salvage_does_not_fire_on_category_value_mistaken_for_a_name():
+    # The other R30-confirmed-safe drop (uid 20250322180344489669): a hotel-type phrase captured as
+    # a required_hotels name, with no real hotel name embedded in it either.
+    variant = {"required_hotels": ["a hotel of the following type: Sauna"]}
+    catalog = normalize.load_city_entity_catalog("Beijing")
+    out = normalize.resolve_entities(variant, {"target_city": "Beijing"}, catalog, drop_unresolved=True)
+    assert "required_hotels" not in out
+
+
+def test_salvage_catalog_name_refuses_short_accidental_match():
+    # A short, common catalog-style token must not hijack an unrelated sentence just because it
+    # appears as a substring -- the length floor exists precisely for this.
+    match = normalize._salvage_catalog_name(
+        "I would like to see China during my trip", ["China"])
+    assert match is None
+
+
+def test_salvage_catalog_name_refuses_ambiguous_tie():
+    # Two catalog names of the same (maximal) length both match -- refuse to guess, same posture as
+    # every other resolution step in this module.
+    match = normalize._salvage_catalog_name(
+        "West Lake Gardens or East Lake Gardens, not sure which one",
+        ["West Lake Gardens", "East Lake Gardens"],  # same normalized length, both tied
+    )
+    assert match is None
+
+
+def test_salvage_catalog_name_picks_unambiguous_longest_match():
+    match = normalize._salvage_catalog_name(
+        "Zhongshan Memorial Hall and then somewhere unrelated after that",
+        ["Zhongshan Memorial Hall", "Memorial Hall"],
+    )
+    assert match == "Zhongshan Memorial Hall"
+
+
 def test_resolvable_name_is_never_dropped_bar_requirement():
     # The roadmap's bar: "a unit test pinning that a resolvable name is never dropped." An
     # exact-catalog-match must survive with the flag on, unchanged from the flag-off behavior.

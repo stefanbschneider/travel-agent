@@ -22,13 +22,18 @@ variants, the map is 1:1: this script fails loudly if it is not.
         --out-dir results/phase2_baselines/screens/<date>_oracle_literal_translation
 
 Applying the map to a materialized split's oracle is a **separate, evaluation-only** step and the
-result must never ship (same rule as `scripts/materialize_hf_split.py`: delete after scoring). This
-script only builds, verifies and prices; use `--emit-map` to write the map for that consumer.
+result must never ship (same rule as `scripts/materialize_hf_split.py`: delete after scoring, and
+never committed -- see `.gitignore`'s `*_en_oracle` rule). This script builds and verifies the map,
+prices the cap (`build_map` / `price_cap`), and exposes the literal-level rewrite
+(`translate_clause` / `translate_hard_logic`) that `scripts/materialize_hf_split.py
+--translate-oracle-literals` applies to a materialized split's `hard_logic_py`; use `--emit-map` to
+write the map standalone for inspection.
 """
 
 from __future__ import annotations
 
 import argparse
+import ast
 import glob
 import json
 import os
@@ -58,6 +63,13 @@ HF_SPLITS = ("easy", "medium", "human", "preference_base50")
 # A negated clause ("... not in ...") over an untranslated literal is trivially *true*, not
 # unsatisfiable, so it must not be counted toward the cap.
 NEGATION = re.compile(r"not\s+in|!=|not\s*\(|==\s*False")
+
+# Matches a single- or double-quoted Python string literal, escapes included. Used to find the
+# exact spans a translation is allowed to touch -- a bare CJK regex over the whole clause would
+# also match Chinese text that happens to sit outside a literal (comments, or in principle an
+# identifier), and the DSL never puts Chinese anywhere else, but scoping to literals is free and
+# strictly safer.
+STRING_LITERAL = re.compile(r"'(?:[^'\\]|\\.)*'|\"(?:[^\"\\]|\\.)*\"")
 
 
 def build_map() -> tuple[dict[str, str], dict]:
@@ -120,6 +132,59 @@ def build_map() -> tuple[dict[str, str], dict]:
                 mapping.setdefault(zh_part, en_value)
 
     return mapping, {"database_rows": dict(row_counts), "entries": len(mapping)}
+
+
+def translate_clause(clause: str, mapping: dict[str, str]) -> tuple[str, list[str]]:
+    """Rewrite every fully-mappable Chinese string literal in one ``hard_logic_py`` clause to its
+    English equivalent. Returns ``(possibly-rewritten clause, unmapped CJK runs left as-is)``.
+
+    Only touches quoted string literals (never bare identifiers or comments), and only rewrites a
+    literal when *every* CJK run inside it is in the map -- a partially-mappable literal (a
+    POI-name fragment like a branch suffix, or a generic location) is left untouched verbatim and
+    its unmapped run(s) reported, rather than guessed at. A literal with no CJK content, or one
+    that fails to parse as a Python string (should not happen on real ``hard_logic_py``, but the
+    fallback is "leave it alone" rather than raise, since one malformed clause must not abort a
+    whole split), passes through unchanged.
+    """
+    unmapped: list[str] = []
+
+    def _sub(match: re.Match) -> str:
+        raw = match.group(0)
+        try:
+            value = ast.literal_eval(raw)
+        except (ValueError, SyntaxError):
+            return raw
+        if not isinstance(value, str):
+            return raw
+        tokens = CJK.findall(value)
+        if not tokens:
+            return raw
+        if not all(token in mapping for token in tokens):
+            unmapped.extend(token for token in tokens if token not in mapping)
+            return raw
+        translated = value
+        for token in tokens:
+            translated = translated.replace(token, mapping[token])
+        return repr(translated)
+
+    return STRING_LITERAL.sub(_sub, clause), unmapped
+
+
+def translate_hard_logic(clauses: list[str], mapping: dict[str, str]) -> dict:
+    """Translate one query's ``hard_logic_py`` clause list. Returns the new clause list plus a
+    small report (clauses changed, CJK runs that had no map entry) -- evaluation-only, and the
+    caller is responsible for never shipping the result (see module docstring)."""
+    new_clauses = []
+    changed = 0
+    unmapped_all: list[str] = []
+    for clause in clauses:
+        new_clause, unmapped = translate_clause(clause, mapping)
+        if new_clause != clause:
+            changed += 1
+        unmapped_all.extend(unmapped)
+        new_clauses.append(new_clause)
+    return {"clauses": new_clauses, "changed": changed,
+            "unmapped": sorted(set(unmapped_all))}
 
 
 def price_cap(mapping: dict[str, str], *, limit: int | None = None) -> list[dict]:

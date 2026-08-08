@@ -1073,6 +1073,45 @@ def _resolve_generic_location(text: str, catalog: dict[str, list[str]],
     return None if drop_unresolved else cleaned
 
 
+# P22 follow-up (R30, 2026-08-07): before a full drop, try to salvage a real catalog POI name
+# embedded in an otherwise-unmatched capture -- the loss R30's e2e gate found
+# (`20250324075652034944`: "Xixi Paradise Commercial Street, wish to stay in single-bed rooms",
+# the real attraction plus an unrelated tail-swallowed clause). `_match_catalog_name`'s own
+# containment step already tries this but is gated at >=60% text coverage specifically to protect
+# genuine multi-entity segmentation from being hijacked by a short catalog name (see its
+# docstring); the R30 loss falls below that floor because the tail-swallowed garbage is nearly as
+# long as the real name. This salvage step runs strictly after `_match_catalog_name` and
+# `_segment_entity_list` have already failed, so that risk is smaller (segmentation had its turn),
+# and it uses the *even more* lenient matcher the solver's own constraint-application step already
+# relies on when scoring a kept-verbatim value against a plan (`TPCAgent._match_constraint_text` /
+# `parsed_verifier._match_text`: normalized `c == q or q in c or c in q`, no coverage floor at
+# all) -- so a name this finds is provably one the solver would already have credited as
+# satisfying the constraint had the whole garbage value been kept, per R30's own diagnosis. A
+# minimum length guards against an accidental hit on a short, common catalog name (the database
+# has entries as short as two characters); an ambiguous tie (more than one catalog name of the same
+# maximal length matches) is refused rather than guessed, matching every other step in this file.
+_SALVAGE_MIN_NORM_LEN = 10
+
+
+def _salvage_catalog_name(text: str, catalog_names: list[str]) -> str | None:
+    norm_text = _norm_entity_key(text)
+    if not norm_text:
+        return None
+    hits = []
+    for name in catalog_names:
+        norm_name = _norm_entity_key(name)
+        if not norm_name or len(norm_name) < _SALVAGE_MIN_NORM_LEN:
+            continue
+        if norm_name == norm_text or norm_name in norm_text or norm_text in norm_name:
+            hits.append(name)
+    if not hits:
+        return None
+    hits.sort(key=lambda n: len(_norm_entity_key(n)), reverse=True)
+    longest_len = len(_norm_entity_key(hits[0]))
+    tied = [h for h in hits if len(_norm_entity_key(h)) == longest_len]
+    return tied[0] if len(tied) == 1 else None
+
+
 def _resolve_one_required_name(text: str, field: str, catalog: dict[str, list[str]], slug: str | None,
                                 drop_unresolved: bool = False) -> dict:
     """Steps 1-6 of the resolution pipeline for one entry of a required_/excluded_ name family.
@@ -1082,7 +1121,11 @@ def _resolve_one_required_name(text: str, field: str, catalog: dict[str, list[st
     every exact/segmentation/fuzzy match against the *union* of all three catalogs (own pool via
     ``own_catalog`` above, plus the other two via the step-6 reroute loop) has already failed --
     exactly the "no feasible point" condition ``scripts/phase2_unsatisfiable_names_probe.py``
-    measures. Default False keeps the raw string (preserves recall; the pre-P22 behavior)."""
+    measures. Before dropping, one more attempt: ``_salvage_catalog_name`` (the P22 R30 follow-up)
+    checks the *even more* lenient matcher the solver itself uses when scoring a kept value, in
+    case a real POI name is embedded as a tail-swallowed fragment (recall-preserving; only ever
+    turns a drop into a clean matched name, never turns a resolved match into something else).
+    Default False keeps the raw string (preserves recall; the pre-P22 behavior)."""
     category = _ENTITY_CATEGORY_FOR_FIELD[field]
     cleaned = _strip_entity_label(text)
     if not cleaned:
@@ -1124,6 +1167,9 @@ def _resolve_one_required_name(text: str, field: str, catalog: dict[str, list[st
             return {"kind": "reroute_position", "value": other_match}
 
     if drop_unresolved:
+        salvage = _salvage_catalog_name(cleaned, own_catalog)
+        if salvage:
+            return {"kind": "name", "value": salvage}
         return {"kind": "drop"}
     return {"kind": "keep", "value": cleaned}
 
