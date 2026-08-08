@@ -36,6 +36,7 @@ def test_unset_environment_reports_the_library_floor():
         "window_push": False,
         "window_insert": False,
         "window_push_max_min": None,
+        "window_relocate_day": False,
     }
 
 
@@ -56,6 +57,7 @@ def test_harness_promotion_is_visible_in_the_snapshot():
         "window_push": True,
         "window_insert": True,
         "window_push_max_min": None,
+        "window_relocate_day": False,
     }
 
 

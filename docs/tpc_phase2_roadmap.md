@@ -301,7 +301,7 @@ is available again — gate any candidate against R28.
 | **P21** | [Promote deterministic entity resolution](#p21--promote-deterministic-entity-resolution) | doc/bookkeeping only, no behavioral code change needed | already-landed flag, never measured alone: familiar-100 parse F1 `0.9552 → 0.9949`, `local_released_150` `0.8222 → 0.8451`, zero LLM calls; also takes familiar-100's unsatisfiable-name count `7 → 0` | **[R29 closed GREEN 2026-08-07](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end); found the flag was already harness-default-on since `b53a0747` (predates R28/`v1`) — remaining work is documenting that explicitly, not flipping a switch** |
 | **P24** | [Stop inventing satisfiable but unrequested constraints](#p24--stop-inventing-satisfiable-but-unrequested-constraints) | half day | Diagnosis revised 2026-08-07: the `intercity_mode` half was a measurement bug, not invention (fixed, spurious `172→0`); `required_attractions`/`required_hotels` were real (fixed, spurious `310→25` / `55→6`, 92%/89%, matched unchanged) | **landed 2026-08-07 (code + tests + two static screens GREEN, `pytest tests` green); e2e effect needs its own R-numbered arm, not yet run** |
 | **P23** | [Make the free-prose register scoreable](#p23--make-the-free-prose-register-scoreable) | half day | lifts a `38.67–46.0` FPR ceiling off every free-prose measurement we make, and makes P20's `required_attraction_types` half gateable at volume (R26 found exactly `1` locally-measurable clause; translation unlocks `~380`) | **landed 2026-08-08 (static build-and-verify only — `scripts/materialize_hf_split.py --translate-oracle-literals`, `pytest tests` green, 14 new tests); no solve run yet, that is [R31](tpc_phase2_eval.md#r31--the-first-real-free-prose-fpr-gate), now unblocked** |
-| **P25** | [Cross-day timed-window relocation](#p25--cross-day-timed-window-relocation) | 1–2 days | the one solver move R25 identified as the binding blocker on failing queries, and the only unbuilt member of the family that produced our single largest gain (`+11.0` FPR) | **open, newly scoped** |
+| **P25** | [Cross-day timed-window relocation](#p25--cross-day-timed-window-relocation) | 1–2 days | the one solver move R25 identified as the binding blocker on failing queries, and the only unbuilt member of the family that produced our single largest gain (`+11.0` FPR) | **landed 2026-08-08, library default off; quick A/B screen GREEN LIGHT (familiar_100_val n=40: FPR `40.0 → 45.0`, `+2/40` flips, `0` regressions) — pinned end-to-end gate is the next, Evaluation-workstream step** |
 | **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | landed | prevents the recurrence of the failure that cost this cycle | **landed 2026-08-07 (`dfdace2a`); gates parse gaps only — two precision conditions still open, see below** |
 | **P6** | [Validator-in-loop Qwen repair](#p6--validator-in-loop-qwen-repair) | 1 day spike | tests the successful Kiro/Claude interaction shape without allowing generated facts or unchecked plans | **open; independent spike, default off** |
 | **P20** | [Close the two dominant family-recall gaps](#p20--close-the-two-dominant-family-recall-gaps) | landed | P19 attributed `202` released clause misses to `required_attraction_types` and `cuisine_preference`, over 2x the next family | **landed 2026-08-07 (`f413eb2a`); R22 GREEN; [R26 GREEN](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets) 2026-08-07, and the whole-run row it authorized is done — [R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main), byte-identical to R19** |
@@ -676,6 +676,47 @@ screen which of the two tools a "zero measurable misses" claim came from; an ite
 a blind spot is how P20 came to ship a fallback it believed it could not measure at all.
 
 ### P25 — cross-day timed-window relocation
+
+**Landed 2026-08-08, library default off.** `TPC_WINDOW_RELOCATE_DAY`
+(`TPCAgent._relocate_timed_windows_across_days`, wired into `_pack_plan` after
+`TPC_WINDOW_INSERT`): finds a `timed_visit_named_poi` activity that is present in the plan for its
+required type but does not satisfy its window on the day it currently sits on, and — reusing the
+P9 insert helpers (`_insert_activity_before_first`/`_insert_activity`/`_insert_activity_after_last`)
+plus a new `_remove_movable_activity` (deletes one movable activity and re-legs its neighbours,
+including a legitimate pull-earlier of an overnight accommodation tail) — tries a different day's
+slots in one atomic delete+insert trial. Skips any target day that already carries the POI (the
+duplicate-avoidance trap below), and gates the combined trial against the plan as it stood at
+function entry via the shared `_repair_commit_allowed` two-regime rule. Bounded to one relocation
+per call. 11 unit tests (`tests/phase2/test_window_relocate_day.py`) cover the three named shapes
+(window already passed with a day that has a free span; no day has a free span; relocation would
+duplicate the POI) plus atomicity, absence (P9's job, not this one's), single-day itineraries, and
+`_remove_movable_activity`'s neighbour re-legging. `pytest tests` green (full suite).
+`CANDIDATE_SOLVER_FLAGS` gains the flag; not in `PROMOTED_SOLVER_FLAGS`.
+
+**Quick A/B screen (`familiar_100_val`, `n=40`, `budget=60s`, stacked on the harness-default window
+moves): GREEN LIGHT.** FPR `40.0 → 45.0` (+2/40 queries), `overall_true 62.581 → 65.140`, 0
+regressions, 0 new timeouts, gate PASS. Corroborated beyond the aggregate mean, since **all 40
+plans differ between arms** (a known search-perturbation confound — the extra per-restart
+grounding work shifts which random-restart draws complete within the fixed 60s budget even on
+queries where the move never fires, the same effect [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries-closed-2026-08-07-negative-result)
+found for P22): re-evaluating all 40 uids' oracle clauses directly against both arms confirms
+exactly 2 fail→pass flips and 0 regressions; `scripts/phase2_timed_window_shapes.py` before/after
+shows `forward_shift` instances and queries both drop by exactly 2, matching the flips; and both
+flipped plans were spot-checked directly, each showing a genuine cross-day move (an attraction
+deleted from one day and inserted into another, inside its window). Full account:
+[screen README](../results/phase2_baselines/screens/20260808_p25_window_relocate_day/README.md).
+**Not exercised at `n=40`:** the `backward_shift` shape the diagnosis below named as primary was
+unchanged (`7/7` both arms) — the two flips came from a `forward_shift` residual the move also
+reaches, not the "already passed" sub-case specifically; a `backward_shift`-driven flip is plausible
+but wasn't sampled in this half of the val split. Solver-only mode also supplies oracle-derived,
+reliably-populated `activity_time_windows` — the shipped parsed path may fire less often, since
+parse-side window extraction is imperfect ([P15](#p15--finish-phrasing-robust-extraction)).
+
+**Next step:** a pinned end-to-end gate on the eval machine (Evaluation-workstream job, not run
+here — see the two-VM rule) to confirm the gain survives a full budget/restart count before this
+flag is a `PROMOTED_SOLVER_FLAGS` candidate.
+
+**Original diagnosis and scoping (2026-08-07), retained below.**
 
 **The one solver move R25 pointed at, and the only member of its family still unbuilt.** Newly given
 an identifier on 2026-08-07; the residual itself was measured on 2026-08-06 and has been sitting in

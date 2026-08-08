@@ -558,6 +558,21 @@ class TPCAgent(BaseAgent):
         """Opt-in named-POI insertion for absent timed visits (P9)."""
         return os.environ.get("TPC_WINDOW_INSERT", "0") not in ("", "0", "false", "False")
 
+    def _window_relocate_day_enabled(self):
+        """Opt-in cross-day relocation for a timed visit whose window cannot be met on the day it
+        is currently scheduled (roadmap P25).
+
+        The three landed window moves (anchor P1, push P8, insert P9) all operate *within* one
+        day. The residual this targets is different in kind: a POI that is already present in the
+        plan for its required activity type, but on a day where no in-day reshuffle can land it in
+        its window -- the window has effectively already "passed" for that day's own structure
+        (fixed predecessor/successor times, or the day's own open span). Default OFF, so the
+        deterministic floor is unchanged: ``_pack_plan`` skips
+        ``_relocate_timed_windows_across_days`` entirely. Enable with
+        ``TPC_WINDOW_RELOCATE_DAY=1``. Only meaningful together with ``TPC_PIN_TIMED_WINDOWS``,
+        which is what puts the named POI in the plan at all."""
+        return os.environ.get("TPC_WINDOW_RELOCATE_DAY", "0") not in ("", "0", "false", "False")
+
     def _repair_intercity_enabled(self):
         """Opt-in flag for intercity endpoint grounding repair.
 
@@ -1328,6 +1343,13 @@ class TPCAgent(BaseAgent):
         if self._window_insert_enabled():
             self._set_transport_context(constraints or {})
             self._insert_absent_timed_window_pois(plan, query, constraints or {}, check)
+        # Cross-day relocation runs last among the window moves (opt-in; roadmap P25): it is the
+        # most drastic (it deletes and re-inserts a real activity, not just a re-time), so it
+        # should only ever act on what anchor/push/insert already could not reach. Off by default,
+        # so the deterministic floor is unchanged.
+        if self._window_relocate_day_enabled():
+            self._set_transport_context(constraints or {})
+            self._relocate_timed_windows_across_days(plan, query, constraints or {}, check)
         if not self._accepted(*check(plan)):
             return plan
         if not self._packing_enabled():
@@ -3180,6 +3202,217 @@ class TPCAgent(BaseAgent):
                     inserted = True
                     break
         return inserted
+
+    def _remove_movable_activity(self, trial, day_idx, act_idx, city, people):
+        """Delete one movable (meal/attraction) activity from a day and re-leg its neighbours so
+        the day stays a schema-valid, continuous itinerary (roadmap P25's move-then-delete half).
+
+        Mutates ``trial`` in place. Refuses (leaving ``trial`` unchanged) rather than producing a
+        day whose legs cannot be grounded: an unreachable direct predecessor->successor route, or
+        a fixed tail (an intercity leg) that can no longer be met on time. An overnight
+        accommodation tail may still have its ``start_time`` pulled later, mirroring
+        ``_relayout_movable_block``'s own ``retime_stay_tail`` convention -- that time records
+        when the traveller got back to the hotel, not a departure that can be missed."""
+        activities = trial["itinerary"][day_idx].get("activities", []) or []
+        if not (0 <= act_idx < len(activities)):
+            return False
+        if activities[act_idx].get("type") not in self._WINDOW_ACTIVITY_TYPES:
+            return False
+
+        prev_pos, prev_end = None, None
+        if act_idx > 0:
+            prev_act = activities[act_idx - 1]
+            prev_pos = self._activity_end_position(prev_act)
+            if not prev_pos:
+                return False
+            prev_end = str(prev_act.get("end_time", ""))
+        elif day_idx > 0:
+            hotel_name = self._find_hotel_for_day(trial, day_idx)
+            if hotel_name:
+                prev_pos = hotel_name
+                prev_end = "08:30"
+
+        next_idx = act_idx + 1
+        if next_idx < len(activities):
+            nxt = activities[next_idx]
+            next_pos = self._activity_start_position(nxt)
+            if not next_pos:
+                return False
+            try:
+                next_start_min = time_to_minutes(str(nxt.get("start_time", "")))
+            except Exception:
+                return False
+            if prev_pos:
+                try:
+                    transports, arrival = self._best_transport_via_get_transport(
+                        city, prev_pos, next_pos, prev_end or "00:00", people)
+                except Exception:
+                    return False
+                if transports is None or arrival is None:
+                    return False
+                try:
+                    arrival_min = time_to_minutes(str(arrival))
+                except Exception:
+                    return False
+                if arrival_min > next_start_min:
+                    if nxt.get("type") == "accommodation" and arrival_min < 24 * 60:
+                        nxt["start_time"] = minutes_to_time(arrival_min)
+                    else:
+                        return False
+                nxt["transports"] = transports
+            else:
+                # No predecessor remains (day-start removal with no known hotel anchor): the
+                # successor becomes the day's new first activity, matching
+                # ``_relayout_movable_block``'s own no-fixed-head convention (keeps its own
+                # start/end time, empty transports).
+                nxt["transports"] = []
+        del activities[act_idx]
+        return True
+
+    def _relocate_timed_windows_across_days(self, plan, query, constraints, check):
+        """Move a present-but-window-missing timed visit to a different day (roadmap P25).
+
+        Scope, deliberately narrow. This only handles a POI ``_window_has_planned_position``
+        already finds *somewhere* in the plan for its required activity type -- a genuinely absent
+        POI is ``_insert_absent_timed_window_pois``'s job (P9), not this one's. Among present
+        occurrences, only a target whose window no existing copy satisfies is a candidate (an
+        already-satisfied window has nothing left to fix). The relocated copy always lands on a
+        *different* day: same-day reshuffling already belongs to ``_anchor_timed_windows``/
+        ``_push_timed_windows``, which run before this pass, so a same-day fix would already have
+        committed by the time this runs.
+
+        Move-then-delete, not copy: a duplicate visit trips the repeated-attraction commonsense
+        rule, so the source occurrence is always removed from its old day in the same trial that
+        adds the new one, and the combined trial is re-checked as one atomic unit before it may
+        replace either day in ``plan``.
+
+        Bounded to one relocation per call, in a fixed ascending-day-index target order, matching
+        the roadmap's "one relocation per attempt" bar -- this pass runs again on the next
+        ``_pack_plan`` invocation (a later restart/repair pass), so a second residual gets its own
+        call rather than this one cascading unboundedly through a single plan.
+        """
+        city = str(query.get("target_city", ""))
+        itinerary = plan.get("itinerary", []) or []
+        if len(itinerary) < 2:
+            return False  # nothing to relocate *to*
+        people = int(query.get("people_number", 1) or 1)
+
+        bounds_by_target = {}
+        for window in (constraints.get("activity_time_windows", []) or []):
+            if not isinstance(window, dict) or not window.get("location"):
+                continue
+            try:
+                lo = time_to_minutes(str(window["earliest"])) if window.get("earliest") else None
+                hi = time_to_minutes(str(window["end_before"])) if window.get("end_before") else None
+            except Exception:
+                continue
+            for activity_type in self._window_activity_types(window) or ():
+                if activity_type not in self._WINDOW_ACTIVITY_TYPES:
+                    continue
+                location = str(window["location"])
+                poi = self._resolve_timed_window_poi(city, location, activity_type)
+                canonical_location = str(poi.get("name", location)) if poi else location
+                # Keyed exactly like _insert_absent_timed_window_pois's bounds_by_target: two
+                # window clauses that are aliases of the same catalog POI (e.g. "Museum Garden"
+                # and "Museum Scenic Area") must intersect into one target, not two, or a POI with
+                # sibling-alias windows can never be fully satisfied by either alone.
+                key = (canonical_location, activity_type)
+                old_lo, old_hi = bounds_by_target.get(key, (None, None))
+                bounds_by_target[key] = (
+                    lo if old_lo is None else (max(old_lo, lo) if lo is not None else old_lo),
+                    hi if old_hi is None else (min(old_hi, hi) if hi is not None else old_hi),
+                )
+        if not bounds_by_target:
+            return False
+
+        try:
+            was_accepted = self._accepted(*check(plan))
+        except Exception:
+            was_accepted = False
+        before_key = self._accepted_eval_key(plan)
+
+        # ``location`` here is each key's *canonical* catalog name (matching
+        # _insert_absent_timed_window_pois's own re-binding) -- re-resolving and re-matching
+        # against it works because a plan's own activities are positioned with catalog names too,
+        # and _match_window_location/_resolve_timed_window_poi both accept an already-canonical
+        # name as trivially matching itself.
+        for (location, activity_type), (lo, hi) in bounds_by_target.items():
+            poi = self._resolve_timed_window_poi(city, location, activity_type)
+            if poi is None:
+                continue
+            poi_open, poi_close = self._poi_open_bounds(poi)
+            lo2 = poi_open if lo is None else max(lo, poi_open)
+            hi2 = poi_close if hi is None else min(hi, poi_close)
+            if hi2 <= lo2:
+                continue
+
+            matching_types = ({"breakfast", "lunch", "dinner"}
+                              if activity_type in ("breakfast", "lunch", "dinner")
+                              else {activity_type})
+            occurrences = [
+                (d, a) for d, day in enumerate(itinerary)
+                for a, act in enumerate(day.get("activities", []) or [])
+                if act.get("type") in matching_types
+                and self._match_window_location(str(act.get("position", "")), location)
+            ]
+            if not occurrences:
+                continue  # absent -- P9's (_insert_absent_timed_window_pois) job, not this one's
+            if any(self._activity_in_window(plan, d, a, lo2, hi2) for d, a in occurrences):
+                continue  # some existing copy already satisfies the window
+
+            source_day, source_idx = occurrences[0]
+            occurrence_days = {d for d, _ in occurrences}
+            source_activities = itinerary[source_day].get("activities", []) or []
+            movable_slots = [
+                i for i, act in enumerate(source_activities)
+                if act.get("type") in self._WINDOW_ACTIVITY_TYPES and str(act.get("position", ""))
+            ]
+            if source_idx not in movable_slots:
+                continue
+            if movable_slots[-1] - movable_slots[0] + 1 != len(movable_slots):
+                continue  # not a contiguous block -- same precondition every other window move shares
+
+            for target_day in range(len(itinerary)):
+                if target_day in occurrence_days:
+                    # Already has a (still-unsatisfying) copy of this POI -- inserting a second one
+                    # here would create the exact duplicate the repeated-attraction commonsense
+                    # rule rejects. Skip rather than risk it; a day with a genuinely free span and
+                    # no existing copy is what this move exists to find.
+                    continue
+                trial = deepcopy(plan)
+                if not self._remove_movable_activity(trial, source_day, source_idx, city, people):
+                    continue
+                target_activities = trial["itinerary"][target_day].get("activities", []) or []
+                if not target_activities:
+                    continue
+                # ``original`` must be the plan as it stood at function entry, not the post-removal
+                # trial: _repair_commit_allowed's unaccepted-input regime (TPC_COMMONSENSE_FIRST)
+                # would otherwise compare the insertion against a baseline this move itself just
+                # broke by deleting the source activity, so a plan that regresses relative to the
+                # true starting point could still satisfy "improves on original".
+                repair_context = (deepcopy(plan), query, was_accepted)
+                placed = self._insert_activity_before_first(
+                    trial, target_day, poi, activity_type, (lo2, hi2), city, people, check,
+                    repair_context)
+                if not placed:
+                    for prev_idx in range(len(target_activities) - 1):
+                        if self._insert_activity(
+                                trial, target_day, prev_idx, poi, activity_type, (lo2, hi2), city,
+                                people, check, repair_context):
+                            placed = True
+                            break
+                if not placed:
+                    placed = self._insert_activity_after_last(
+                        trial, target_day, poi, activity_type, (lo2, hi2), city, people, check,
+                        repair_context)
+                if not placed:
+                    continue
+                if was_accepted and self._accepted_eval_key(trial) < before_key:
+                    continue
+                plan["itinerary"][source_day] = trial["itinerary"][source_day]
+                plan["itinerary"][target_day] = trial["itinerary"][target_day]
+                return True
+        return False
 
     # --- Stage 3 LLM refine support (roadmap Next step 7 / TPC_P2_LLM_REFINE) ------------------
     #
