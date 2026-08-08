@@ -223,7 +223,11 @@ salvage-before-drop gap, one search perturbation) — see item 4 below.
    [R30](#r30--does-dropping-unsatisfiable-names-flip-queries-closed-2026-08-07-negative-result) and
    the [screen README](../results/phase2_baselines/screens/20260807_r30_unsatisfiable_names_e2e/README.md)
    for the full causal analysis and a concrete follow-up (salvage-before-drop) for the implementation
-   workstream.
+   workstream. **That follow-up landed 2026-08-08** (static half — `_salvage_catalog_name`, verified
+   against the exact loss uid, `25–33 %` recovery rate on every released/HF set; see
+   [its screen](../results/phase2_baselines/screens/20260808_p22_salvage_before_drop/README.md)). A
+   re-run of R30's exact e2e A/B to confirm the loss is closed end-to-end (not just statically) is
+   the next step and belongs to the evaluation machine, not yet scheduled with an R-number.
 5. **P23 landed 2026-08-08, static half only.** `scripts/materialize_hf_split.py
    --translate-oracle-literals` now exists and reproduces the cap-pricing table above byte-for-byte,
    plus a full-split dry run of the rewrite itself: `331` free-prose queries across the four sets get
@@ -241,8 +245,10 @@ salvage-before-drop gap, one search perturbation) — see item 4 below.
 
 **Parallel execution plan.** **R28, R29 and R30 are all closed**, so the evaluation machine's next slot
 is **R31** — P23 landed 2026-08-08 (tool only, no solve run; see its screen), so nothing blocks R31
-starting now — then R27 after P6. On implementation machines, the salvage-before-drop follow-up R30
-identified for P22 is next. Do not run two solver
+starting now — then R27 after P6. The salvage-before-drop follow-up R30 identified for P22 also
+landed 2026-08-08 (static half, implementation machine); its own e2e re-confirmation (re-run R30's
+exact paired A/B, check the target uid now passes and no new loss appears) is available for the
+evaluation machine's queue whenever there is a slot, not yet numbered. Do not run two solver
 screens concurrently on one host: wall-clock limits then change the number of restarts each arm gets.
 R20 needs no expensive run unless a new parse-level arm first beats the current deterministic floor.
 **R9 is closed**, per R25's own gating text: it needed a genuine per-uid flip on the restart axis, and

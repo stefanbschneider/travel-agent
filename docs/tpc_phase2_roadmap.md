@@ -297,7 +297,7 @@ is available again — gate any candidate against R28.
 
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
-| **P22** | [Drop provably unsatisfiable required-name constraints](#p22--drop-provably-unsatisfiable-required-name-constraints) | half day | un-pins the `23–50 %` of free-prose queries that currently cannot pass at any budget; the only item with a dominance argument rather than an estimate | **landed 2026-08-07, library default off; [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries-closed-2026-08-07-negative-result) closed 2026-08-07 with a negative e2e result (0/103 flip to passing, 2 regress) — stays default-off; a salvage-before-drop follow-up is identified but not built** |
+| **P22** | [Drop provably unsatisfiable required-name constraints](#p22--drop-provably-unsatisfiable-required-name-constraints) | half day | un-pins the `23–50 %` of free-prose queries that currently cannot pass at any budget; the only item with a dominance argument rather than an estimate | **landed 2026-08-07, library default off; [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries-closed-2026-08-07-negative-result) closed 2026-08-07 with a negative e2e result (0/103 flip to passing, 2 regress) — stays default-off. Salvage-before-drop follow-up landed 2026-08-08 (`_salvage_catalog_name`, static only): recovers `25–33 %` of what would otherwise be a full drop on every released/HF set (`100 %` on familiar-100), verified against R30's exact loss; e2e re-confirmation is an Evaluation-workstream job, not yet run** |
 | **P21** | [Promote deterministic entity resolution](#p21--promote-deterministic-entity-resolution) | doc/bookkeeping only, no behavioral code change needed | already-landed flag, never measured alone: familiar-100 parse F1 `0.9552 → 0.9949`, `local_released_150` `0.8222 → 0.8451`, zero LLM calls; also takes familiar-100's unsatisfiable-name count `7 → 0` | **[R29 closed GREEN 2026-08-07](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end); found the flag was already harness-default-on since `b53a0747` (predates R28/`v1`) — remaining work is documenting that explicitly, not flipping a switch** |
 | **P24** | [Stop inventing satisfiable but unrequested constraints](#p24--stop-inventing-satisfiable-but-unrequested-constraints) | half day | Diagnosis revised 2026-08-07: the `intercity_mode` half was a measurement bug, not invention (fixed, spurious `172→0`); `required_attractions`/`required_hotels` were real (fixed, spurious `310→25` / `55→6`, 92%/89%, matched unchanged) | **landed 2026-08-07 (code + tests + two static screens GREEN, `pytest tests` green); e2e effect needs its own R-numbered arm, not yet run** |
 | **P23** | [Make the free-prose register scoreable](#p23--make-the-free-prose-register-scoreable) | half day | lifts a `38.67–46.0` FPR ceiling off every free-prose measurement we make, and makes P20's `required_attraction_types` half gateable at volume (R26 found exactly `1` locally-measurable clause; translation unlocks `~380`) | **landed 2026-08-08 (static build-and-verify only — `scripts/materialize_hf_split.py --translate-oracle-literals`, `pytest tests` green, 14 new tests); no solve run yet, that is [R31](tpc_phase2_eval.md#r31--the-first-real-free-prose-fpr-gate), now unblocked** |
@@ -363,11 +363,23 @@ satisfy anyway) — real and large, but this per-query-budget screen can't show 
 envelope scheduler (`sweeps.py`) turns that into more passes elsewhere; that needs a `full_runs/`
 row, not a screen. Full causal analysis:
 [screen README](../results/phase2_baselines/screens/20260807_r30_unsatisfiable_names_e2e/README.md).
-**Follow-up, not yet built:** before falling back to a full drop, try to salvage a real catalog POI
-name that is a prefix/cleanly-separable substring of an otherwise-unmatched capture, using the same
-matcher the solver's own constraint-application step already relies on more leniently than
-`_exact_catalog_match`/`_match_catalog_name`. That would keep the demonstrated solve-time win while
-closing the one clean-causal loss R30 found.
+**Follow-up landed 2026-08-08 (static half):** before falling back to a full drop, try to salvage a
+real catalog POI name that is a prefix/cleanly-separable substring of an otherwise-unmatched capture,
+using the same matcher the solver's own constraint-application step already relies on more leniently
+than `_exact_catalog_match`/`_match_catalog_name`. `_salvage_catalog_name`
+(`chinatravel/agent/phase2/normalize.py`) does exactly this: it reuses
+`TPCAgent._match_constraint_text`'s own logic (normalized `c == q or q in c or c in q`, no coverage
+floor), guarded by a minimum length and an ambiguous-tie refusal. Verified against the exact R30 loss
+(`20250324075652034944`: `{"kind": "drop"}` → `{"kind": "name", "value": "Xixi Paradise Commercial
+Street"}`), and measured across every released/HF set: recovers `25–33 %` of what would otherwise be
+a full drop (`100 %`, `11/11`, on familiar-100), never on the genuinely-unsatisfiable cases P22
+targets. 5 new unit tests, `pytest tests` green (54/54 in `test_entity_resolution.py`), the original
+P22 static screen's bar re-confirmed unchanged (every set still `0` in both arms). Full account,
+salvage-rate table, and one salvage case checked explicitly against the catalog because it looked
+wrong at first glance ("Disneyland" → "Dream World (Shanghai Disneyland Store)", confirmed correct):
+[screen README](../results/phase2_baselines/screens/20260808_p22_salvage_before_drop/README.md).
+**Not done here:** re-running R30's own e2e A/B to confirm the target uid now passes end-to-end with
+no new loss — an Evaluation-workstream job (this box must not run it; see the two-VM rule).
 
 **Two design points that decided the shape of the fix.**
 
