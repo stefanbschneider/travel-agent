@@ -2,16 +2,25 @@
 
 The Phase 2 technical report for team `fabiundstefan`, in the official IJCAI template.
 
-`fabiundstefan.pdf` is **version 3** (2026-08-07), 3 pages, built from
-`fabiundstefan.tex`. It supersedes v2. The owner's annotated review of v2 is kept at
+`fabiundstefan.pdf` is **version 4** (2026-08-09), 4 pages, built from
+`fabiundstefan.tex`. It supersedes v3. The owner's annotated review of v2 is kept at
 [`feedback/fabiundstefan_v2.pdf`](feedback/fabiundstefan_v2.pdf); every annotation is addressed
 below.
 
-**What changed structurally in v3.** The report now presents the final pipeline first, then the
-evaluation, then the measured division of labor between coding agents, Qwen parsing, and deterministic
-optimization. It incorporates the official per-metric v1 result, the current-main R28 baseline, the
-latest phrasing-robust extraction work, and P22's static precision result without claiming the pending
-end-to-end gain.
+**What changed in v4.** The report now describes the *submitted* `v2` system and the evidence for it:
+the five-team leaderboard reading (the whole gap to first place is the per-clause rate; a full-plan
+rate of zero is the entire field, not one system's defect), a new subsection on what `v2` changes with
+the paired free-prose measurement behind it (new `figures/v1_v2_free_prose.pdf`), the familiar-register
+whole-run regression check, the negative validator-in-loop LLM-repair result, and a section on using the
+competition as a deliberately low-risk vibe-coding experiment — including the repository-scale numbers
+(798 commits, 100 merged pull requests of 109 opened, 1339 tests, 47 committed screens, 63 recorded
+rows) and the two honest limits that go with them. The superseded phrasing-register figure was dropped
+to stay inside four pages.
+
+**Note on review comment 10.** v3 removed repository-history counts because the v2 review called them
+questionable. v4 reintroduces them at the owner's explicit request (2026-08-08), with every number
+taken from `git` at the commit the report is built from rather than estimated, and paired with a
+statement that output volume is not itself a result.
 
 ## v2 review comments and how each is addressed
 
@@ -59,7 +68,7 @@ cd report && PATH="/Library/TeX/texbin:$PATH" make
 ```
 
 `make` prints a loud warning above 4 pages and still writes the PDF. **Check for that warning before
-submitting** — v3 currently builds at 3 pages.
+submitting** — v4 builds at exactly 4 pages, so any addition needs a matching cut.
 
 Needs a TeX installation providing `pdflatex`, `bibtex` and the packages the report loads (`times`,
 `url`, `hyperref`, `caption`, `graphicx`, `amsmath`, `amsthm`, `booktabs`). On Debian/Ubuntu:
