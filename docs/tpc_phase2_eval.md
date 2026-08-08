@@ -615,6 +615,22 @@ envelope makes concurrent rows non-comparable by construction), `--workers 8`, `
 Result: see the two `full_runs/` rows and the summary table in
 [the screen](../results/phase2_baselines/screens/20260809_v2_whole_run_gate/README.md).
 
+### R34 — does the intercity recall fix convert? *(closed 2026-08-09)*
+
+**The e2e half of [P26](tpc_phase2_roadmap.md#p26--free-prose-intercity-transport-mode).** Static
+recall is not a score: an extracted requirement can still fail to be satisfied, and a *newly
+constrained* query can lose ground elsewhere (both endpoint legs are now pinned). Contract: paired
+free-prose A/B on `hf_medium` (n=150), per-query mode, `--budget-sec 90`, `--lang en`, both arms
+launched simultaneously with two shards each so contention is shared, scored against R31's translated
+oracle. Baseline arm is the same tree with the fix reverted at the flag level — here, the pinned
+pre-P26 revision (`0b4c44a4`) plus the candidate flag pair, so the *only* difference is the parser.
+
+**Bar, written before the run.** GREEN needs C-LPR up **and** no FPR fall, plus the clause-level
+check: `fail→pass` must exceed `pass→fail`. Any C-LPR fall, or a net clause loss, is RED and P26 comes
+back out of `v2` — the change is unflagged, so RED means revert, not "leave it off".
+
+Result: see [the screen](../results/phase2_baselines/screens/20260809_r34_intercity_e2e/README.md).
+
 ### R20 — does grounded fill-only LLM extraction convert? *(HOLD; not promoted)*
 
 P16 fixed two real grounding defects and remains useful infrastructure. It does not yet satisfy the

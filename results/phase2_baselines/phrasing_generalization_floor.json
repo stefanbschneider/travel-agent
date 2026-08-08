@@ -1,8 +1,9 @@
 {
   "_meta": {
-    "generated": "2026-08-07",
-    "git_sha": "a6c80e05",
-    "note": "Frozen floor for the P18/R22 phrasing-generalization gate. tpc_phase2_familiar_100 must stay pinned at 0. Other sets: a parser change may lower a count but must never raise it -- see docs/tpc_phase2_roadmap.md#p18--make-phrasing-robustness-a-gate. EXCEPTION recorded 2026-08-07 (P24, intercity_mode oracle-side fix, commit a6c80e05): easy/medium/human raised manually, not via --update-floor (which can only ratchet a set's count down and cannot express this case). `_parse_intercity` (chinatravel/agent/tpc_agent/solver_constraints.py) did not recognize the `intercity_transport_set` equality shape the HF free-prose generator actually uses, so the oracle side of clause_is_covered() silently dropped a real `intercity_mode` requirement on every query using that shape and classified its clause as `schema_gap` (uninformative) instead of `parse_gap`. Fixing that oracle-side gap correctly reclassifies those clauses -- most become covered (the NL fallback already had the right value), and the remainder (easy +2, medium +33, human +27) become newly-visible, real parse gaps ('we have chosen to fly' / 'traveling by high-speed train (G)' phrasing the NL parser does not yet catch) that were always there but invisible to this gate. Reproducible at a6c80e05 alone. EXCEPTION 2 (P24, required_attractions/required_hotels precision guards, this commit -- NOT reproducible at a6c80e05 alone; needs this commit's parse_constraints.py changes on top): medium/human raised again, same mechanism -- clause_is_covered() checks family *presence*, not value correctness, so a query whose garbage capture (e.g. \"Nanjing for a day by myself with a budget of 1800 RMB\" mis-captured as an attraction name) used to count as 'covered' correctly loses that credit once the garbage is dropped and no real attraction/hotel name was ever extracted for it. easy and preference_base50 unchanged by this commit (their revealed gaps were already counted after the intercity fix, or the guard's removals didn't uncover a new all-families-absent query). See docs/tpc_phase2_roadmap.md#p24--stop-inventing-satisfiable-but-unrequested-constraints and results/phase2_baselines/screens/20260807_p24_attractions_hotels_precision/README.md."
+    "generated": "2026-08-08",
+    "git_sha": "104a90d8",
+    "note": "Frozen floor for the P18/R22 phrasing-generalization gate. tpc_phase2_familiar_100 must stay pinned at 0. Other sets: a parser change may lower a count but must never raise it -- see docs/tpc_phase2_roadmap.md#p18--make-phrasing-robustness-a-gate. EXCEPTION recorded 2026-08-07 (P24, intercity_mode oracle-side fix, commit a6c80e05): easy/medium/human raised manually, not via --update-floor (which can only ratchet a set's count down and cannot express this case). `_parse_intercity` (chinatravel/agent/tpc_agent/solver_constraints.py) did not recognize the `intercity_transport_set` equality shape the HF free-prose generator actually uses, so the oracle side of clause_is_covered() silently dropped a real `intercity_mode` requirement on every query using that shape and classified its clause as `schema_gap` (uninformative) instead of `parse_gap`. Fixing that oracle-side gap correctly reclassifies those clauses -- most become covered (the NL fallback already had the right value), and the remainder (easy +2, medium +33, human +27) become newly-visible, real parse gaps ('we have chosen to fly' / 'traveling by high-speed train (G)' phrasing the NL parser does not yet catch) that were always there but invisible to this gate. Reproducible at a6c80e05 alone. EXCEPTION 2 (P24, required_attractions/required_hotels precision guards, this commit -- NOT reproducible at a6c80e05 alone; needs this commit's parse_constraints.py changes on top): medium/human raised again, same mechanism -- clause_is_covered() checks family *presence*, not value correctness, so a query whose garbage capture (e.g. \"Nanjing for a day by myself with a budget of 1800 RMB\" mis-captured as an attraction name) used to count as 'covered' correctly loses that credit once the garbage is dropped and no real attraction/hotel name was ever extracted for it. easy and preference_base50 unchanged by this commit (their revealed gaps were already counted after the intercity fix, or the guard's removals didn't uncover a new all-families-absent query). See docs/tpc_phase2_roadmap.md#p24--stop-inventing-satisfiable-but-unrequested-constraints and results/phase2_baselines/screens/20260807_p24_attractions_hotels_precision/README.md. RATCHET 2026-08-08 (P26, free-prose intercity mode, commit 104a90d8): easy 99->97, medium 131->111, human 109->85 via --update-floor, i.e. a genuine ratchet *down* -- the two exceptions above raised counts because the measurement got more honest; this one lowers them because the parser got better. familiar_100 and tpc_phase2_test are unchanged and stay pinned (the fix is byte-identical on both). See docs/tpc_phase2_roadmap.md#p26--free-prose-intercity-transport-mode.",
+    "previous_git_sha": "a6c80e05"
   },
   "floor": {
     "tpc_phase2_familiar_100": {
@@ -14,15 +15,15 @@
       "n_oracle_clauses": 522
     },
     "easy": {
-      "n_parse_gap": 99,
+      "n_parse_gap": 97,
       "n_oracle_clauses": 1579
     },
     "medium": {
-      "n_parse_gap": 131,
+      "n_parse_gap": 111,
       "n_oracle_clauses": 1264
     },
     "human": {
-      "n_parse_gap": 109,
+      "n_parse_gap": 85,
       "n_oracle_clauses": 687
     },
     "preference_base50": {

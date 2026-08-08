@@ -91,6 +91,23 @@ LITERALS: dict[str, Literal] = {
     "gap_hf_easy": Literal(13.9, "screens/20260806_generalization_probe/probe.json"),
     "gap_hf_human": Literal(21.2, "screens/20260806_generalization_probe/probe.json"),
     "gap_hf_medium": Literal(28.7, "screens/20260806_generalization_probe/probe.json"),
+    # R32: the submitted v1 build vs the v2 candidate on the same free-prose set (n=150), paired,
+    # same host, scored against the English-literal oracle so FPR has a real denominator.
+    "r32_v1_clpr": Literal(
+        75.5538, "screens/20260808_v2_candidate_freeprose/README.md", "v1 build be196d00"
+    ),
+    "r32_v1_fpr": Literal(10.6667, "screens/20260808_v2_candidate_freeprose/README.md"),
+    "r32_v1_overall": Literal(44.4077, "screens/20260808_v2_candidate_freeprose/README.md"),
+    "r32_v2_clpr": Literal(
+        88.6867, "screens/20260808_v2_candidate_freeprose/README.md", "v2 candidate configuration"
+    ),
+    "r32_v2_fpr": Literal(45.3333, "screens/20260808_v2_candidate_freeprose/README.md"),
+    "r32_v2_overall": Literal(65.0127, "screens/20260808_v2_candidate_freeprose/README.md"),
+    # The organizers' board, read 2026-08-08: the leading team's C-LPR and ours.
+    "board_rank1_clpr": Literal(
+        67.7669, "organizer portal, read 2026-08-08", "leading team's held-out C-LPR"
+    ),
+    "board_ours_clpr": Literal(55.1966, "organizer portal, read 2026-08-08", "our v1 held-out C-LPR"),
 }
 
 
@@ -388,6 +405,44 @@ def figure_registers_single(path: Path) -> None:
     plt.close(fig)
 
 
+def figure_v1_v2_free_prose(path: Path) -> None:
+    """What the submitted v1 build and the v2 candidate score on *unfamiliar* phrasing.
+
+    One register (150 free-prose queries), one budget, one host, the two builds run as a paired
+    A/B, scored against the English-literal oracle so the full-plan rate has a real denominator.
+    The held-out reference lines are the organizers' returned clause rates, on a different query
+    set: they say how large the competitive gap is, not what this system would score there.
+    """
+    import matplotlib.pyplot as plt
+
+    metrics = ["clause rate\n(C-LPR)", "full plans\n(FPR)", "overall"]
+    v1 = [LITERALS["r32_v1_clpr"].value, LITERALS["r32_v1_fpr"].value,
+          LITERALS["r32_v1_overall"].value]
+    v2 = [LITERALS["r32_v2_clpr"].value, LITERALS["r32_v2_fpr"].value,
+          LITERALS["r32_v2_overall"].value]
+
+    fig, ax = plt.subplots(figsize=(3.4, 2.35))
+    x = range(len(metrics))
+    width = 0.36
+    b1 = ax.bar([i - width / 2 for i in x], v1, width, label="submitted v1", color="#9db8d6")
+    b2 = ax.bar([i + width / 2 for i in x], v2, width, label="v2 (this system)", color="#3a5f8f")
+    for rect, value in list(zip(b1, v1)) + list(zip(b2, v2)):
+        ax.text(rect.get_x() + rect.get_width() / 2, value + 1.8, f"{value:.1f}",
+                ha="center", fontsize=6.6, fontweight="bold")
+    ax.axhline(LITERALS["board_ours_clpr"].value, color="#a33b3b", linewidth=0.7, linestyle=":")
+    ax.text(1.0, LITERALS["board_ours_clpr"].value + 2.5, "our held-out v1 clause rate",
+            fontsize=5.8, color="#a33b3b", ha="center")
+    ax.set_xticks(list(x))
+    ax.set_xticklabels(metrics, fontsize=6.6)
+    ax.set_ylabel("score (0–100)", fontsize=7.2)
+    ax.set_ylim(0, 100)
+    ax.tick_params(axis="y", labelsize=7.0)
+    ax.legend(fontsize=6.2, loc="upper right", frameon=False)
+    fig.tight_layout(pad=0.3)
+    fig.savefig(path, bbox_inches="tight")
+    plt.close(fig)
+
+
 def figure_ablation(path: Path) -> None:
     """Mechanism ablation on the tuned register, and external baselines."""
     import matplotlib.pyplot as plt
@@ -472,6 +527,7 @@ def main() -> int:
         "architecture.pdf": figure_architecture,
         "registers.pdf": figure_registers,
         "registers_single.pdf": figure_registers_single,
+        "v1_v2_free_prose.pdf": figure_v1_v2_free_prose,
         "ablation.pdf": figure_ablation,
     }
     print("\nFigures:")
