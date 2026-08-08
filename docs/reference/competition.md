@@ -192,12 +192,12 @@ counts, so a worse `v2` costs only the slot. Identity of the tested bytes:
 | | |
 | --- | --- |
 | File | `submissions/phase2/fabiundstefan_v2.zip` (committed, so the tested bytes are the uploaded bytes) |
-| SHA-256 | `9a8cc9c849c09cfe5cd22979bc837539fb1117df525c0be32c29bb0d246296e4` |
-| Built from | `441a1d5bdc40a8b86c4d2160fea61e5d0f7bf9dc` on `submission/v2-candidate`, merged to `main` |
+| SHA-256 | `ddfa44b9c5f7a2abac5f90fdbc55456a1fdebcefef88d274f1406c54a4dcdd70` |
+| Built from | `1c8267cdad0a0b4629f65c4e2b9b056ec5f37956` (branch `submission/v2-candidate`, fast-forwarded to `main` in the same PR) |
 | Size | `1724` entries, `4.6 MB` compressed / `17.5 MB` unpacked, `1721` tracked files |
 | Evaluator parity | `c89cfca` |
-| Configuration | `v1`'s promoted set **plus** `TPC_WINDOW_PUSH`/`TPC_WINDOW_INSERT` (R14), `TPC_WINDOW_RELOCATE_DAY` (R33), `TPC_P2_DROP_UNSATISFIABLE_NAMES` (R32/R33), `TPC_P2_ENTITY_RESOLUTION` (R29), and the unflagged parser work: the 2026-08-06 phrasing fix, P15, P20, P24, P26 |
-| Measured against `v1` | free prose, n=150, paired: C-LPR `75.5538 → 89.6361`, FPR `10.6667 → 48.0000`, overall `44.4077 → 66.6182` ([R32](../tpc_phase2_eval.md#r32--what-landed-since-v1-measured-on-free-prose), [R34](../tpc_phase2_eval.md#r34--does-the-intercity-recall-fix-convert)); familiar-100 whole-run `64.6878 → 65.7354` ([R33](../tpc_phase2_eval.md#r33--the-v2-whole-run-gate-on-familiar-100)) |
+| Configuration | `v1`'s promoted set **plus** `TPC_WINDOW_PUSH`/`TPC_WINDOW_INSERT` (R14), `TPC_WINDOW_RELOCATE_DAY` (R33), `TPC_P2_DROP_UNSATISFIABLE_NAMES` (R32/R33), `TPC_P2_ENTITY_RESOLUTION` (R29), and the unflagged parser work: the 2026-08-06 phrasing fix, P15, P20, P24, P26, P27 |
+| Measured against `v1` | free prose (`hf_medium`, n=150, paired, translated oracle): C-LPR `75.5538 → 89.6361`, FPR `10.6667 → 48.0000`, overall `44.4077 → 66.6182`, `205` of `1264` clauses fail→pass against `27` lost ([R32](../tpc_phase2_eval.md#r32--what-landed-since-v1-measured-on-free-prose), [R34](../tpc_phase2_eval.md#r34--does-the-intercity-recall-fix-convert)); human prose (`hf_human`, n=154) `67.8013 → 68.5027` for P27's part alone ([R35](../tpc_phase2_eval.md#r35--the-preference-verb-trigger-arm)); familiar-100 whole-run `64.6878 → 65.7354` ([R33](../tpc_phase2_eval.md#r33--the-v2-whole-run-gate-on-familiar-100)) |
 
 **Verification, beyond the assembler's own unpack-and-run.** A development tree is always warm, so
 every row below was produced from a **pristine unpack** of the committed zip, on a 10-core M1 Pro:
@@ -212,8 +212,8 @@ every row below was produced from a **pristine unpack** of the committed zip, on
 | `flags` read back from the same telemetry | **`drop_unsatisfiable_names: true`**, `entity_resolution: true`, `disjunction: true`, `dynamic_budget: true`, `llm_parse: false`, `llm_refine: false`, `llm_repair_loop: false` |
 | LLM / network | `llm_backend: "none"`, `llm_backend_source: "none"`, `improve_llm_called: false` on every query; no `.env`, `*.pem`, `.netrc` or key material in the zip; `agent_env/config.toml` synthesized credential-free (`harness = "tpc"`, `lang = "en"`, **no** `split`, **no** `method`) |
 | Archive hygiene | no `results/`, `submissions/` or `report/` tree; no materialized HF split under `chinatravel/data/en/` (only `TPC_IJCAI_2026_phase1_EN` and the familiar-100 data) |
-| Shipped bytes carry the shipped work | `parse_constraints.py` contains P26's free-prose fallback; `solve_phase2.py` contains both promotions |
-| **Third** pristine tree, installed from the archive alone (`uv venv --python 3.12` + `requirements-submission.txt`) and driven by **its own** interpreter under `env -i` | `6/6` plans non-empty, `67` activities, same `solver_flags`, `llm_backend none` — the archive plus its declared dependencies is sufficient |
+| Shipped bytes carry the shipped work | `parse_constraints.py` contains P26's free-prose fallback and P27's trigger set; `solve_phase2.py` contains both promotions |
+| **Third** pristine tree, installed from the archive alone (`uv venv --python 3.12` + `requirements-submission.txt`, `34` distributions) and driven by **its own** interpreter under `env -i` | `6/6` plans non-empty, `67` activities, same `solver_flags`, `llm_backend none` — the archive plus its declared dependencies is sufficient |
 | **The bare organizer command**, no other flags, second pristine tree (`--method organizer_shape --split tpc_phase2_familiar_100_test`) | reads its own config, resolves the split, `harness=tpc solver=deterministic TPCAgent (no LLM, no subprocess)`, writes to `results/organizer_shape/<uid>.json` |
 | Interrupt safety: `SIGTERM` at `150 s` of the 5 h envelope | `20/20` plans on disk, `0` schema-broken, **all `20` already non-empty** |
 
