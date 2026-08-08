@@ -367,11 +367,13 @@ PROMOTED_SOLVER_FLAGS: tuple[str, ...] = (
 # ``TPC_WINDOW_PUSH_MAX_MIN``, is snapshotted anyway because it is a *bound* on the now-promoted
 # ``TPC_WINDOW_PUSH`` pass rather than a pass of its own -- R14 measured it at its code default
 # (30 min) rather than exporting an override, and the ledger's comparability rule requires a row to
-# state its own configuration rather than rely on its label. On promotion, move a flag from here
+# state its own configuration rather than rely on its label. ``TPC_WINDOW_RELOCATE_DAY`` (roadmap
+# P25, unmeasured e2e as of landing) is the newest addition. On promotion, move a flag from here
 # into ``PROMOTED_SOLVER_FLAGS`` -- the two tuples must stay disjoint, and the drift guard in
 # ``tests/phase2/test_solver_flag_telemetry.py`` enforces both.
 CANDIDATE_SOLVER_FLAGS: tuple[str, ...] = (
     "TPC_WINDOW_PUSH_MAX_MIN",
+    "TPC_WINDOW_RELOCATE_DAY",
 )
 
 RECORDED_SOLVER_FLAGS: tuple[str, ...] = PROMOTED_SOLVER_FLAGS + CANDIDATE_SOLVER_FLAGS
