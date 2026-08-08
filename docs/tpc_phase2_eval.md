@@ -651,6 +651,26 @@ against 8), and it reproduced **every metric to the last decimal**. Per-query so
 therefore insensitive to host load here, which is what licenses comparing arms across the two screens.
 See [the screen](../results/phase2_baselines/screens/20260809_r34_intercity_e2e/README.md).
 
+### R35 — the preference-verb trigger arm *(closed 2026-08-09, GREEN, small)*
+
+**The last arm run before the `v2` build, and the only surviving piece of
+[P27](tpc_phase2_roadmap.md#p27--the-remaining-attraction-type-residual-is-interpretive-not-lexical-investigated-and-closed-2026-08-09).**
+Contract: paired A/B on **`hf_human`** (n=154, the human-written register), per-query, `90 s`,
+translated oracle, two shards per arm launched together, arms differing only by the trigger patch.
+
+**Result: GREEN, small.** FPR `51.9481 → 53.2468` (two more queries fully pass), C-LPR
+`84.8617 → 85.0073`, overall `67.8013 → 68.5027`; `2` clauses fail→pass against `1` pass→fail;
+EPR-micro/macro flat.
+
+**The reason it is safe to ship on that evidence alone** is the blast radius, which was *measured*:
+the full parsed solver dicts were diffed query by query across five sets, and **`4` of `854` queries
+change, all on `hf_human`** — familiar-100, `local_released_150`, `hf_medium` and `hf_easy` are
+byte-identical. That also means R33 and R34 still describe the shipped configuration exactly. See
+[the screen](../results/phase2_baselines/screens/20260809_r35_preference_verb_trigger/README.md), which
+also records the one honest caveat (a shared-noun OR whose second arm P20's guard cannot see) and the
+larger negative finding: the rest of the attraction-type residual is interpretive, and the oracle's own
+labels for it are inconsistent, so a deterministic mapping would be guessing.
+
 ### R20 — does grounded fill-only LLM extraction convert? *(HOLD; not promoted)*
 
 P16 fixed two real grounding defects and remains useful infrastructure. It does not yet satisfy the

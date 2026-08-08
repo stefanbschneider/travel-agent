@@ -332,6 +332,58 @@ is available again — gate any candidate against R28.
 | ~~P14~~ | ~~Promote P8/P9 to harness defaults~~ | — | **landed 2026-08-06** | landed |
 | ~~P0/P7~~ | ~~Reproducible restart seed; worker count from affinity~~ | — | **landed 2026-08-05** | landed |
 
+### P27 — the remaining attraction-type residual is interpretive, not lexical *(investigated and closed 2026-08-09)*
+
+**Read this before adding another attraction-type pattern.** After P26, the largest remaining
+parse-gap family on free prose is `attraction_type` — `37` clauses on `hf_human`, `12` on `hf_medium`.
+It looks like the same shape P20 and P26 fixed. It is not, and the difference is worth recording so the
+next agent does not spend a night on it.
+
+**What the residual actually consists of** (read off the uncovered queries, not guessed): *"experience
+some of the historical areas"*, *"explore the local history and culture"*, *"they are more interested in
+history and culture"*, *"attractions suitable for children"*, *"see the rivers and relax… focusing
+mainly on wellness"*, *"Going on a date, please recommend an itinerary"*, *"experience the atmosphere of
+prestigious universities"*. These are not lexical variants of a category name; they are inferences from
+an interest to a category.
+
+**And the oracle's own labeling of those phrasings is inconsistent**, which caps what any deterministic
+mapping can score. Measured across all five sets by scanning oracle `attraction_type_set` literals for
+each phrase (`/tmp` probe, reproducible from the description here — the phrase list is in this entry):
+
+| phrase in the query text | oracle's required type(s), by frequency |
+| --- | --- |
+| `historical and cultural` / `cultural and historical` | `人文景观` ×5, `{博物馆/纪念馆, 历史古迹}` ×3, `历史古迹` ×2, `{大学校园, 文化旅游区}` ×1 |
+| `history and culture` (any order) | `人文景观` ×5, `历史古迹` ×5, `{博物馆/纪念馆, 历史古迹}` ×3, `{大学校园, 文化旅游区}` ×1 |
+| `I/we like|love|prefer|enjoy …` | **no attraction-type clause at all ×15**, then `人文景观` ×2, `自然风光` ×2, three others ×1 |
+| `universit(y\|ies)` | no clause ×23, `大学校园` ×10 (P20 already measured and rejected the bare form) |
+| `historical area`, `suitable for children`, `going on a date`, `food court` | one instance each |
+
+So the modal answer for the biggest phrase class is a coin flip between two canonical values, and the
+most inviting new trigger (`I like X`) has **no** type clause in two thirds of its occurrences. P20's
+own rule — *drop rather than guess, because a dropped extraction stays `missing` (no regression) while a
+wrong value risks making a satisfiable query infeasible* — decides this: do not add these mappings.
+
+**One addition survived the measurement, and it is the only thing P27 landed.** Adding
+`like|love|prefer|keen on|focus on|experience` to the free-prose *trigger* set — no new value
+mappings, so it can only fire the existing table — moves `hf_human` parse gaps `85 → 81` and costs
+`0.008` of parse precision there. Because the static columns of the other four sets did not move, the
+full parsed **solver dicts** were diffed query by query rather than trusted:
+**`4` of `854` queries change, all on `hf_human`**; familiar-100, `local_released_150`, `hf_medium` and
+`hf_easy` are byte-identical. End-to-end on translated `hf_human`
+([R35](tpc_phase2_eval.md#r35--the-preference-verb-trigger-arm), n=154): FPR `51.9481 → 53.2468`
+(two more queries fully pass), C-LPR `84.8617 → 85.0073`, overall `67.8013 → 68.5027`, `2` clauses
+fail→pass against `1` pass→fail. GREEN, and small — kept, with the caveat recorded in the screen that
+one of the four is a shared-noun OR (`"cultural or natural attractions"`) whose second arm P20's OR
+guard cannot see.
+
+**What this implies for the system, and it is in the report.** This residual is the boundary where a
+deterministic extractor stops being the right tool: recognizing that *"going on a date"* implies
+`约会圣地` is exactly the inference an LLM does well, provided its output is then resolved against the
+closed category vocabulary rather than trusted as text. That is [P16](#p16--ground-llm-extracted-values-into-the-closed-vocabulary)'s
+grounded fill-only path, still library-default-off because it has never beaten the deterministic floor
+on a measured register — and this entry is the sharpest available argument for why that path is worth
+finishing rather than dropping.
+
 ### P26 — free-prose intercity transport mode
 
 **Landed 2026-08-08.** The generalization probe's own residual table named this: after the

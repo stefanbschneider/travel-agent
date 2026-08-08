@@ -387,11 +387,66 @@ def test_free_prose_intercity_mode_reaches_the_solver_dict():
 
 
 def test_familiar_100_contains_no_budget_wording(familiar_100_texts):
-    """The structural reason the guard holds: there is no familiar-100 text for the new
-    alternatives to fire on. If a future dataset refresh introduces the word, the floor tests above
+    """The structural reason the guard holds: there is no familiar-100 text for the new    alternatives to fire on. If a future dataset refresh introduces the word, the floor tests above
     stop being trivially safe -- this test is the tripwire that says so."""
     with_budget = [uid for uid, t in familiar_100_texts if re.search(r"\bbudget", t, re.I)]
     assert with_budget == [], with_budget
     with_currency_within = [uid for uid, t in familiar_100_texts
                             if re.search(r"within\s+\d[\d,.]*\s*(?:RMB|CNY|yuan|元)", t, re.I)]
     assert with_currency_within == [], with_currency_within
+
+
+# --- 6. preference-verb triggers for attraction types (P27) ------------------
+#
+# The one measured survivor of P27's investigation: the free-prose *phrase table* is deliberately
+# not extended (the oracle labels the remaining phrasings inconsistently -- see the roadmap entry),
+# but a bare statement of interest re-uses the existing table and converts end-to-end (R35).
+
+@pytest.mark.parametrize("text,expected", [
+    ("I like natural scenery, please help me plan a travel itinerary in Nanjing.",
+     ["natural scenery"]),
+    ("We love museums and would like a relaxed pace.", ["Museum/Memorial Hall"]),
+    ("I prefer gardens, with a budget of 2000 RMB.", ["Garden"]),
+    ("They are keen on cultural attractions.", ["Cultural Tourism Area"]),
+])
+def test_preference_verbs_fire_the_existing_type_table(text, expected):
+    assert pc.parse_required_attraction_types(text) == expected
+
+
+@pytest.mark.parametrize("text", [
+    # A preference about something that is not an attraction category.
+    "I like spicy food and would rather not walk much.",
+    # A preference naming a specific POI: the proper-noun guard must still hold.
+    "We love the Humble Administrator's Garden and want to see it early.",
+    # Negation must still win.
+    "I do not like museums.",
+])
+def test_preference_verbs_do_not_invent_a_type(text):
+    assert pc.parse_required_attraction_types(text) in (None, [])
+
+
+def test_preference_verbs_leave_the_familiar_template_alone(familiar_100_texts):
+    """Byte-identity on the register the trigger set must never touch. The template always states
+    the family through "Include the following attraction types: X", which an anchored pattern
+    already claims, so the free-prose fallback never runs -- asserted over all 100 queries rather
+    than argued."""
+    changed = [uid for uid, t in familiar_100_texts
+               if pc.parse_required_attraction_types(t) != _pre_p27_required_attraction_types(t)]
+    assert changed == [], changed
+
+
+def _pre_p27_required_attraction_types(text):
+    """``parse_required_attraction_types`` with the pre-P27 trigger set, by patching the module
+    constant for one call -- the trigger regex is the entire change, so restoring it restores the
+    old behaviour exactly, without copying 200 lines of scanning logic."""
+    pre = re.compile(
+        r"\b(?:visit(?:ing)?|see|explor(?:e|ing)|tour(?:ing)?|interested\s+in|enjoy(?:ing)?|"
+        r"go\s+to|go\s+shopping\s+in|take\s+walks?\s+in|spend\s+(?:some\s+)?(?:leisure\s+)?time\s+in)\b",
+        re.I,
+    )
+    current = pc._ATTRACTION_TYPE_FREE_PROSE_TRIGGER
+    pc._ATTRACTION_TYPE_FREE_PROSE_TRIGGER = pre
+    try:
+        return pc.parse_required_attraction_types(text)
+    finally:
+        pc._ATTRACTION_TYPE_FREE_PROSE_TRIGGER = current

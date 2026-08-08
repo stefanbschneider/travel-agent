@@ -839,8 +839,19 @@ _ATTRACTION_TYPE_FREE_PROSE_VALUES = [
 # routinely drops -- "would like to [stay in a room ... and] visit garden attractions" has no
 # adjacent "to visit"). Precision is carried by `_negated_before` and `_looks_like_generic_mention`
 # below, not by a narrow trigger.
+#
+# The preference verbs (`like`/`love`/`prefer`/`keen on`/`focus on`/`experience`) were added
+# 2026-08-09 (P27). They were the only *measured* survivor of that entry's investigation: the phrase
+# table itself is deliberately not extended, because the oracle labels the remaining free-prose
+# phrasings inconsistently, but a bare statement of interest ("I like natural scenery") re-uses the
+# existing table and converts. Blast radius, checked by diffing the full parsed solver dicts rather
+# than inferred from aggregate probe columns: **4** of 854 queries across the five measured sets
+# change, all on `hf_human`; familiar-100, `local_released_150`, `hf_medium` and `hf_easy` are
+# byte-identical. End-to-end on translated `hf_human` (R35): FPR `51.95 -> 53.25`, overall
+# `67.80 -> 68.50`, 2 clauses fail->pass against 1 pass->fail.
 _ATTRACTION_TYPE_FREE_PROSE_TRIGGER = re.compile(
     r"\b(?:visit(?:ing)?|see|explor(?:e|ing)|tour(?:ing)?|interested\s+in|enjoy(?:ing)?|"
+    r"lik(?:e|es)|love|prefer(?:s)?|keen\s+on|focus(?:ing)?\s+on|experienc(?:e|ing)|"
     r"go\s+to|go\s+shopping\s+in|take\s+walks?\s+in|spend\s+(?:some\s+)?(?:leisure\s+)?time\s+in)\b",
     re.I,
 )
