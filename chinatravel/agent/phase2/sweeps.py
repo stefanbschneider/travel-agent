@@ -144,12 +144,25 @@ def pass_fits(remaining_sec: float, budget_sec: float, n_uids: int, workers: int
     return rounds_needed(n_uids, workers) * budget_sec <= max(float(remaining_sec), 0.0)
 
 
-def repair_order(scores: dict[str, selfscore.PlanScore | None]) -> list[str]:
+def repair_order(
+    scores: dict[str, selfscore.PlanScore | None],
+    coverage_unknown: dict[str, bool] | None = None,
+) -> list[str]:
     """Failing queries, most-nearly-passing first.
 
     Ratio of satisfied parsed constraints first, then the oracle-free overall. Cheap wins are
     taken before expensive ones, which is what keeps a hard query from starving easy ones.
+
+    ``coverage_unknown`` (roadmap P17(a), opt-in) marks a uid whose visible query text mentions
+    something -- a budget, a room type -- that no parsed variant carries a family for. Such a
+    query reads as ``constraints_ok`` here (the checker can only fail a clause it extracted), but
+    the honest answer is "unknown", not "satisfied": it keeps its repair-queue slot instead of
+    being silently promoted to polish. ``score.constraints_ok`` itself is never touched -- that
+    field's meaning (schema+commonsense+logical all pass) is depended on elsewhere (keep-best,
+    ``on_result``'s incumbent comparison), so this is purely an *eligibility* filter for the two
+    ordering functions.
     """
+    coverage_unknown = coverage_unknown or {}
 
     def key(uid: str):
         score = scores.get(uid)
@@ -160,13 +173,28 @@ def repair_order(scores: dict[str, selfscore.PlanScore | None]) -> list[str]:
         )
         return (ratio, score.overall, uid)
 
-    failing = [uid for uid, score in scores.items() if score is None or not score.constraints_ok]
+    failing = [
+        uid for uid, score in scores.items()
+        if score is None or not score.constraints_ok or coverage_unknown.get(uid, False)
+    ]
     return sorted(failing, key=key, reverse=True)
 
 
-def polish_order(scores: dict[str, selfscore.PlanScore | None]) -> list[str]:
-    """Constraint-satisfying queries, largest remaining preference gain first."""
-    passing = [uid for uid, score in scores.items() if score is not None and score.constraints_ok]
+def polish_order(
+    scores: dict[str, selfscore.PlanScore | None],
+    coverage_unknown: dict[str, bool] | None = None,
+) -> list[str]:
+    """Constraint-satisfying queries, largest remaining preference gain first.
+
+    ``coverage_unknown`` excludes a uid the coverage signal flagged (see ``repair_order``) even
+    though it currently reads ``constraints_ok`` -- it stays in ``repair_order``'s eligible set
+    instead.
+    """
+    coverage_unknown = coverage_unknown or {}
+    passing = [
+        uid for uid, score in scores.items()
+        if score is not None and score.constraints_ok and not coverage_unknown.get(uid, False)
+    ]
     return sorted(passing, key=lambda uid: selfscore.max_remaining_gain(scores[uid]), reverse=True)
 
 
@@ -395,6 +423,7 @@ def run_sweeps(
     on_result: Callable[[str, dict, selfscore.PlanScore, dict, bool], None],
     best: dict[str, selfscore.PlanScore] | None = None,
     variants: dict[str, list[dict]] | None = None,
+    coverage_unknown: dict[str, bool] | None = None,
     log: Callable[[str], None] = print,
 ) -> dict[str, Any]:
     """Run triage -> repair -> polish passes until the deadline.
@@ -403,6 +432,9 @@ def run_sweeps(
     branch-local solver constraint list the caller already parsed for that query (roadmap P10) --
     the same list is handed to both the solver and ``selfscore.score_plan`` for every attempt, so
     the scheduler's own opinion of a plan can never diverge from what the solver actually searched.
+    ``coverage_unknown`` (roadmap P17(a), opt-in, ``None``/omitted is the library-default no-op)
+    keeps a uid in the repair rotation instead of promoting it to polish when its query text
+    mentions something the parse has no family for -- see ``repair_order``.
     ``on_result(uid, plan, score, telemetry, improved)`` is called for every completed attempt,
     with ``improved`` saying whether it beat the incumbent for that query. The caller owns
     writing: persisting an improved plan immediately is what makes the run safe to kill at any
@@ -429,6 +461,7 @@ def run_sweeps(
                 last_budget=last_budget,
                 remaining_sec=remaining(),
                 config=config,
+                coverage_unknown=coverage_unknown,
             )
             if chosen is None:
                 log(
@@ -547,10 +580,12 @@ def _next_pass(
     uids: Sequence[str],
     best_scores: dict[str, selfscore.PlanScore],
     stalled_repairs: int,
+    coverage_unknown: dict[str, bool] | None = None,
 ) -> tuple[str, list[str]]:
     """The single highest-value pass to run next (see ``_candidate_passes`` for the fallbacks)."""
     return _candidate_passes(
-        index=index, uids=uids, best_scores=best_scores, stalled_repairs=stalled_repairs
+        index=index, uids=uids, best_scores=best_scores, stalled_repairs=stalled_repairs,
+        coverage_unknown=coverage_unknown,
     )[0]
 
 
@@ -560,6 +595,7 @@ def _candidate_passes(
     uids: Sequence[str],
     best_scores: dict[str, selfscore.PlanScore],
     stalled_repairs: int,
+    coverage_unknown: dict[str, bool] | None = None,
 ) -> list[tuple[str, list[str]]]:
     """Passes worth running next, best first.
 
@@ -570,8 +606,8 @@ def _candidate_passes(
     if index == 1:
         return [("triage", [uid for uid in uids if uid not in best_scores])]
     scores: dict[str, selfscore.PlanScore | None] = {uid: best_scores.get(uid) for uid in uids}
-    repair = ("repair", repair_order(scores))
-    polish = ("polish", polish_order(scores))
+    repair = ("repair", repair_order(scores, coverage_unknown))
+    polish = ("polish", polish_order(scores, coverage_unknown))
     if stalled_repairs >= MAX_STALLED_REPAIR_PASSES:
         return [polish, repair]
     return [repair, polish]
@@ -586,6 +622,7 @@ def _choose_pass(
     last_budget: dict[str, float],
     remaining_sec: float,
     config: SweepConfig,
+    coverage_unknown: dict[str, bool] | None = None,
 ) -> tuple[str, list[str], float] | None:
     """Pick the pass to run and the budget to run it at, or ``None`` when nothing is worth doing.
 
@@ -597,7 +634,8 @@ def _choose_pass(
       the queries that actually fit instead of being started and cut off.
     """
     for kind, candidates in _candidate_passes(
-        index=index, uids=uids, best_scores=best_scores, stalled_repairs=stalled_repairs
+        index=index, uids=uids, best_scores=best_scores, stalled_repairs=stalled_repairs,
+        coverage_unknown=coverage_unknown,
     ):
         if not candidates:
             continue

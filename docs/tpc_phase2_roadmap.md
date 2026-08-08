@@ -309,7 +309,7 @@ is available again — gate any candidate against R28.
 | **P15** | [Finish phrasing-robust extraction](#p15--finish-phrasing-robust-extraction) | half day | the measured residual beyond budget/room-type; compounds through the FPR threshold | **landed (partial) 2026-08-07; residual re-scoped, see below** |
 | P4 | [Fix the 300 s per-query cap](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass) | half day | correctness fix (currently disables the intended `900 s` cap); R25 found it will not itself buy flips | **landed 2026-08-08, correctness-only, no score effect claimed (R24 already measured 0 flips at 900s outer cap); no `full_runs/` row yet — Evaluation-workstream job** |
 | P5 | [Spend the idle envelope on fresh seeds](#p5--spend-the-idle-envelope-on-fresh-seeds) | half day | R25's own gate ("a positive R25 arm before default-on implementation") was not met — `0/10` flips at 10x restarts; the recurring blocker (timed-window placement) does not respond to search volume | **not implemented; R25 removed the case for default-on** |
-| P17 | [Stop trusting our own "satisfied" verdict](#p17--stop-trusting-our-own-satisfied-verdict) | half day (a), 2 h (b) | (a) re-aims the repair queue, worth more under large parse gaps; (b) idle envelope, worth ~0 until FPR > 0 | open, (a) only |
+| P17 | [Stop trusting our own "satisfied" verdict](#p17--stop-trusting-our-own-satisfied-verdict) | half day (a), 2 h (b) | (a) re-aims the repair queue, worth more under large parse gaps; (b) idle envelope, worth ~0 until FPR > 0 | **(a) landed 2026-08-08, library default off; whole-run screen NEUTRAL by construction (0 fires on the only registers `--mode whole-run` can reach) -- benefit-on-a-firing-register is a residual. (b) still parked** |
 | **P19** | [Find the unidentified half of the gap](#p19--find-the-unidentified-half-of-the-gap) | 1 h | produced the density and family ranking that defines P20 | **closed 2026-08-07** |
 | ~~P1~~ | ~~`timed_visit_named_poi` window-aware move~~ (`TPC_WINDOW_ANCHOR`) | — | **promoted 2026-08-05**: `overall +5.83`, `FPR +11.0` | landed |
 | ~~P8/P9~~ | ~~Window push / absent-POI insert~~ | — | **promoted 2026-08-06** (R14 GREEN, `+0.5471`); fire rarely | landed |
@@ -1020,9 +1020,43 @@ coverage, or LLM merge policy — different failure and precision risks.
 
 ### P17 — stop trusting our own "satisfied" verdict
 
-Two halves. **(a) is the real fix. (b) was the safe one, and the 2026-08-07 breakdown demoted it to
-approximately worthless: idle-envelope work buys preference points, and every preference term is `0`
-on the held-out set because FPR is `0`. Do (a); park (b) until FPR is above zero.**
+Two halves. **(a) is the real fix, landed 2026-08-08, library default off. (b) was the safe one,
+and the 2026-08-07 breakdown demoted it to approximately worthless: idle-envelope work buys
+preference points, and every preference term is `0` on the held-out set because FPR is `0`. (b)
+stays parked until FPR is above zero.**
+
+**(a) landed as `TPC_P2_COVERAGE_UNKNOWN`.** `chinatravel/agent/phase2/coverage_signal.py` ships
+two closed, checkable categories -- a currency amount and a room-type noun -- each measured
+`0/100` on familiar-100 and `0/150` on `local_released_150` before landing (the P13 trigger-rate
+precedent this section's own bar requires). A third category, cuisine, was built and **rejected on
+measurement**: a closed-vocabulary substring match against the environment's own cuisine values
+triggered on `58/100` familiar-100 queries, almost all false positives from a cuisine word
+appearing inside a restaurant *name* a query correctly handled through an entirely different
+family (e.g. `excluded_restaurants`) -- exactly the P12 failure mode restated for a word list
+instead of a phrase. Named-POI mention is deferred for the same reason (needs catalog grounding, not
+a word list); both are residuals, not built here. `sweeps.repair_order`/`polish_order` gained an
+opt-in `coverage_unknown` eligibility filter (never touching `PlanScore.constraints_ok` itself,
+which keep-best and the incumbent comparison depend on) so a flagged query keeps its repair-queue
+slot instead of being silently promoted to polish; `run_sweeps_split` computes the signal once per
+query in the parent (oracle-free: visible text + already-parsed variants only) and threads it
+through. 25 new unit tests across `tests/phase2/test_coverage_signal.py`,
+`tests/phase2/test_sweeps.py`, and `tests/phase2/test_coverage_unknown_wiring.py`; `pytest tests`
+green (full suite, `-m integration` included).
+
+**Whole-run screen (`familiar_100_val`, `n=14`, `--mode whole-run` -- required, since this item
+changes pass *selection*, machinery a `solver-only`/`end-to-end` screen never reaches): NEUTRAL by
+construction, not a caution sign.** FPR/`overall_true` flat (as pre-registered: the only two
+split-sets `--mode whole-run` supports are ones the static probe had already measured at `0`
+trigger rate), and both arms' raw run summaries record `coverage_unknown_uids: []` even with the
+flag on -- proof the observed pass-composition/`+2`-timeout deltas are solve-to-solve noise on a
+shared 2-core box, not an effect of this item's code (the eligibility filter is a no-op on every
+uid when nothing is flagged, by construction). Full account:
+[screen README](../results/phase2_baselines/screens/20260808_p17a_coverage_unknown/README.md).
+**Residual, explicitly not built here:** `--mode whole-run`'s split-set choices exclude every
+register where the signal fires at nonzero volume (`hf_human` 4/154; `local_released_150` before
+cuisine was dropped, 6/150) -- proving the mechanism *helps* (not just "is safe and correctly
+wired") needs a whole-run-equivalent screen on one of those, which needs a tooling extension or a
+bespoke driver. Evaluation-workstream job either way.
 
 **(b) Spend the residual envelope, ~2 h, no correctness risk.** Every run ends early, and under parse
 gaps it ends early *and* idles on queries it wrongly believes are done (`1546 s` of `1800 s` unspent on

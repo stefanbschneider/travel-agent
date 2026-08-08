@@ -62,6 +62,17 @@ DEFAULT_METHOD_PREFIX = "phase2_e2e_"
 DEFAULT_BUDGET_SEC = orch.DEFAULT_BUDGET_SEC  # 300s (our working default); override via --budget-sec
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "agent_env" / "config.toml"
 
+
+def _coverage_unknown_enabled() -> bool:
+    """Opt-in flag for the P17(a) coverage signal (roadmap): keep a query the checker calls
+    ``constraints_ok`` in the sweep scheduler's repair rotation, instead of promoting it to
+    polish, when its visible text mentions something (a budget, a room type) the parse produced no
+    family for. Library default off, so ``run_sweeps_split``'s pass selection is byte-identical
+    unless this is set. Scheduler-level, like ``TPC_PIN_TIMED_WINDOWS``/``TPC_WINDOW_ANCHOR`` --
+    not a ``Flags`` field, since it governs which pass a query enters rather than how one query is
+    solved."""
+    return os.environ.get("TPC_P2_COVERAGE_UNKNOWN", "0") not in ("", "0", "false", "False")
+
 # --- Total wall-clock envelope -------------------------------------------------------------
 # The organizers confirmed (2026-08-04) a single 5-hour wall-clock budget for the whole
 # 100-query run, with no per-query timeout. A fixed per-query budget cannot honour that: at the
@@ -588,6 +599,13 @@ def run_sweeps_split(
     # previously this was discarded, so a run could not tell you which queries (if any) fell back
     # to the per-worker re-parse in orchestrator.solve_phase2.
     parent_parse_failed_uids: list[str] = []
+    # Roadmap P17(a), opt-in: computed once per query here (never per attempt), from the same
+    # visible text + parsed variants the rest of this loop already has -- oracle-free by
+    # construction, since neither input is hard_logic*.
+    coverage_unknown_flag = _coverage_unknown_enabled()
+    coverage_unknown: dict[str, bool] = {}
+    if coverage_unknown_flag:
+        from chinatravel.agent.phase2 import coverage_signal
     for quid in selected:
         full_query = query_data[quid]
         full_query.setdefault("uid", quid)
@@ -606,6 +624,11 @@ def run_sweeps_split(
             # on both sides, the guarantee this parent-side parse exists to provide.
             variants[quid] = []
             parent_parse_failed_uids.append(quid)
+        if coverage_unknown_flag:
+            text = str(visible[quid].get("nature_language") or "")
+            coverage_unknown[quid] = bool(
+                coverage_signal.uncovered_mentions(text, variants[quid])
+            )
 
     # Insurance first: a complete, schema-valid submission before a single query is solved.
     fallbacks_written = 0
@@ -685,6 +708,7 @@ def run_sweeps_split(
         on_result=on_result,
         best=best,
         variants=variants,
+        coverage_unknown=coverage_unknown if coverage_unknown_flag else None,
     )
 
     summary = {
@@ -703,6 +727,10 @@ def run_sweeps_split(
         "incumbents_scored": len(best),
         "fallbacks_prewritten": fallbacks_written,
         "parent_parse_failed_uids": parent_parse_failed_uids,
+        # Roadmap P17(a): telemetry for the coverage signal, off (empty) unless
+        # TPC_P2_COVERAGE_UNKNOWN=1 -- a row has to state whether/how much this fired.
+        "coverage_unknown_flag": coverage_unknown_flag,
+        "coverage_unknown_uids": sorted(uid for uid, flagged in coverage_unknown.items() if flagged),
         "uids": list(selected),
         **sweep_summary,
     }
