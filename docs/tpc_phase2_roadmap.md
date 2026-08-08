@@ -307,7 +307,7 @@ is available again — gate any candidate against R28.
 | **P20** | [Close the two dominant family-recall gaps](#p20--close-the-two-dominant-family-recall-gaps) | landed | P19 attributed `202` released clause misses to `required_attraction_types` and `cuisine_preference`, over 2x the next family | **landed 2026-08-07 (`f413eb2a`); R22 GREEN; [R26 GREEN](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets) 2026-08-07, and the whole-run row it authorized is done — [R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main), byte-identical to R19** |
 | **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | landed | detects unfamiliar requirements, but current-tree `matched 311 < 320` deterministic and `hf_medium` e2e is flat | **landed, library default off; not promoted** |
 | **P15** | [Finish phrasing-robust extraction](#p15--finish-phrasing-robust-extraction) | half day | the measured residual beyond budget/room-type; compounds through the FPR threshold | **landed (partial) 2026-08-07; residual re-scoped, see below** |
-| P4 | [Fix the 300 s per-query cap](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass) | half day | correctness fix (currently disables the intended `900 s` cap); R25 found it will not itself buy flips | open, correctness-only |
+| P4 | [Fix the 300 s per-query cap](#p4--the-per-query-cap-is-300-s-by-accident-and-it-structurally-forbids-a-second-repair-pass) | half day | correctness fix (currently disables the intended `900 s` cap); R25 found it will not itself buy flips | **landed 2026-08-08, correctness-only, no score effect claimed (R24 already measured 0 flips at 900s outer cap); no `full_runs/` row yet — Evaluation-workstream job** |
 | P5 | [Spend the idle envelope on fresh seeds](#p5--spend-the-idle-envelope-on-fresh-seeds) | half day | R25's own gate ("a positive R25 arm before default-on implementation") was not met — `0/10` flips at 10x restarts; the recurring blocker (timed-window placement) does not respond to search volume | **not implemented; R25 removed the case for default-on** |
 | P17 | [Stop trusting our own "satisfied" verdict](#p17--stop-trusting-our-own-satisfied-verdict) | half day (a), 2 h (b) | (a) re-aims the repair queue, worth more under large parse gaps; (b) idle envelope, worth ~0 until FPR > 0 | open, (a) only |
 | **P19** | [Find the unidentified half of the gap](#p19--find-the-unidentified-half-of-the-gap) | 1 h | produced the density and family ranking that defines P20 | **closed 2026-08-07** |
@@ -1054,6 +1054,33 @@ separately, plus `overall`/`FPR` on both registers. If it fires on familiar-100 
 `overall` there does not fall.
 
 ### P4 — the per-query cap is 300 s by accident, and it structurally forbids a second repair pass
+
+**Landed 2026-08-08.** `run_split` (`agent_env/scripts/solve_phase2.py`) no longer resolves
+`budget_sec` to `DEFAULT_BUDGET_SEC` (`300`) before deciding whether to hand off to the sweep
+scheduler — it now forwards the raw, possibly-`None` value through to `run_sweeps_split`, which
+only sets `SweepConfig.max_query_sec` from it when an operator explicitly passed `--budget-sec`;
+otherwise `SweepConfig`'s own default, `sweeps.DEFAULT_MAX_QUERY_SEC` (`900`), applies — the
+smaller-diff shape this section named ("stop passing `budget_sec` as `max_query_sec`"), chosen
+over deriving the cap from envelope÷query-count. The organizers' exact entry point takes no other
+flags, so **every real run now uses the `900 s` cap by default**, not `300`. The plain per-query
+*development*-gate loop (no `--total-budget-sec`) is untouched — an omitted `--budget-sec` still
+resolves to `300` there, and `scripts/phase2_quick_eval.py --mode whole-run`'s explicit
+`--budget-sec` still overrides the sweep scheduler's cap exactly as before, so that screen's
+calibrated per-pass timing is unaffected. The whole-run summary's `budget_sec` field now records
+the cap actually in force (`900` by default, or the explicit override) rather than blindly echoing
+the raw operator input, with a new `budget_sec_explicit` field alongside it for the raw value — a
+recorded row has to state its own configuration. 6 new unit tests
+(`tests/phase2/test_sweep_budget_cap.py`), `pytest tests` green (full suite, `-m integration`
+included).
+
+**No `full_runs/` row on this fix exists yet** — R28 predates it, and this is exactly the "no
+query has ever been solved above `300 s`" regime the section below says was untested rather than
+tested-and-flat. R24 already measured `0` flips at a `900 s` *outer* cap with the internal
+`400`-restart/`30 s` CP-SAT limits unchanged, so **no score effect is claimed here**; this is a
+correctness fix that makes the intended `900 s` per-query cap reachable for the first time, nothing
+more. A `full_runs/` row against the current tree is an Evaluation-workstream job, not run here (see
+the two-VM rule) — no screen was run for this item either, since its own bar (R24) already exists
+and is negative on score, and a screen would only re-measure that.
 
 **Re-opened 2026-08-07; R25 closed 2026-08-07 as a correctness-only fix (below).**
 Previously filed as a score-neutral tidy-up. It is not a tidy-up: it is why every run stops at roughly

@@ -539,7 +539,7 @@ def run_sweeps_split(
     query_data: dict,
     deadline: float,
     run_start: float,
-    budget_sec: float,
+    budget_sec: float | None,
     total_budget_sec: float,
     lang: str,
     workers: int | None,
@@ -559,6 +559,16 @@ def run_sweeps_split(
     - **Nothing runs past the deadline.** The scheduler stops starting work it cannot finish, and
       this function does no post-deadline work (evaluation is a separate step, see
       ``scripts/phase2_full_run.py``) -- the organizers' clock covers the whole process.
+
+    ``budget_sec`` here is ``None`` unless an operator explicitly passed ``--budget-sec`` alongside
+    ``--total-budget-sec`` (roadmap P4). The shipped harness invocation never does -- the organizers'
+    exact entry point takes no other flags -- so by default the sweep scheduler's own per-query cap,
+    ``sweeps.DEFAULT_MAX_QUERY_SEC`` (900s), governs a repair/polish pass, not the unrelated 300s
+    per-query *development*-gate default this function used to inherit by accident (it silently
+    capped every whole-run pass at 300s and made ``MIN_BUDGET_GROWTH``'s re-entry threshold, 375s,
+    unreachable -- see the roadmap item for the full mechanism). An explicit ``--budget-sec`` still
+    overrides ``max_query_sec`` here too, since ``scripts/phase2_quick_eval.py --mode whole-run``
+    relies on exactly that to keep its calibrated per-pass timing.
     """
     from chinatravel.agent.phase2 import normalize, selfscore, sweeps
 
@@ -653,13 +663,19 @@ def run_sweeps_split(
         hb.write_json(result_method_dir / f"{quid}.json", plan)
         hb.write_json(run_dir / "output.json", plan)
 
-    config = sweeps.SweepConfig(
-        workers=workers, lang=lang, max_query_sec=budget_sec
-    ).apply_env_overrides()
+    # roadmap P4: only an *explicit* --budget-sec overrides the sweep scheduler's own per-query
+    # cap. Omitted (the shipped harness path), the scheduler's intended sweeps.DEFAULT_MAX_QUERY_SEC
+    # (900s) applies via SweepConfig's own default -- not this function's unrelated 300s
+    # development-gate default, which used to reach here whether or not an operator asked for it.
+    config_kwargs = dict(workers=workers, lang=lang)
+    if budget_sec is not None:
+        config_kwargs["max_query_sec"] = float(budget_sec)
+    config = sweeps.SweepConfig(**config_kwargs).apply_env_overrides()
     print(
         f"[sweep] {len(selected)} queries, {workers} worker(s), "
         f"{(deadline - time.monotonic()) / 60:.1f} min usable of a "
-        f"{total_budget_sec / 3600:.2f} h envelope, per-query cap {budget_sec:.0f}s"
+        f"{total_budget_sec / 3600:.2f} h envelope, per-query cap {config.max_query_sec:.0f}s"
+        + ("" if budget_sec is not None else " (sweep default, no --budget-sec override)")
     )
     sweep_summary = sweeps.run_sweeps(
         uids=selected,
@@ -675,7 +691,11 @@ def run_sweeps_split(
         "split": split,
         "method": method,
         "strategy": "sweeps",
-        "budget_sec": budget_sec,
+        # The cap actually in force (roadmap P4): equals the operator's --budget-sec when given,
+        # otherwise sweeps.DEFAULT_MAX_QUERY_SEC (900s) via SweepConfig's own default -- a row must
+        # state its own configuration, not the possibly-irrelevant 300s development-gate default.
+        "budget_sec": config.max_query_sec,
+        "budget_sec_explicit": budget_sec,
         "total_budget_sec": total_budget_sec,
         "elapsed_sec": time.monotonic() - run_start,
         "selected": len(selected),
@@ -723,7 +743,10 @@ def run_split(
     start rather than here, so interpreter and database load count against the envelope.
     """
     method = method or _default_method_for_split(split)
-    budget_sec = float(budget_sec if budget_sec is not None else DEFAULT_BUDGET_SEC)
+    # Resolved only for the plain per-query loop below (roadmap P4): the sweep branch needs to
+    # tell "operator explicitly passed --budget-sec" apart from "nothing was passed", so it is
+    # handed the raw, possibly-None value instead.
+    budget_sec_explicit = budget_sec
     run_start = float(start_monotonic if start_monotonic is not None else time.monotonic())
     deadline = (
         run_start + float(total_budget_sec) * (1.0 - TOTAL_BUDGET_RESERVE_FRAC)
@@ -763,7 +786,7 @@ def run_split(
             query_data=query_data,
             deadline=deadline,
             run_start=run_start,
-            budget_sec=budget_sec,
+            budget_sec=budget_sec_explicit,
             total_budget_sec=float(total_budget_sec),
             lang=lang,
             workers=workers,
@@ -771,6 +794,10 @@ def run_split(
             result_method_dir=result_method_dir,
             work_root=work_root,
         )
+
+    # The plain per-query loop below: DEFAULT_BUDGET_SEC (300s) is this path's own default, same
+    # as always -- only the sweep branch above needed the None distinction.
+    budget_sec = float(budget_sec_explicit if budget_sec_explicit is not None else DEFAULT_BUDGET_SEC)
 
     # Build the deterministic TPCAgent-backed solve function once (unless injected).
     if solve_fn is None:
