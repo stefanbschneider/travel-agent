@@ -583,7 +583,6 @@ def run_sweeps_split(
     """
     from chinatravel.agent.phase2 import normalize, selfscore, sweeps
 
-    workers = int(workers) if workers else sweeps.default_workers()
     # Parse once per query, here in the parent, through the same canonical path the solver uses
     # (normalize.parse_to_ir -> normalize.ir_to_solver_variants) instead of the coarser, single-
     # variant selfscore.derive_parsed_constraints. That parse used to disagree with the solver's
@@ -593,6 +592,14 @@ def run_sweeps_split(
     # cannot diverge by configuration either. ``llm_client=None`` is deliberate: the parent must
     # stay zero-LLM even when a backend is configured, and ``flags.llm_parse`` is off by default.
     _llm_client, flags = resolve_llm_client_and_flags()
+    workers = int(workers) if workers else sweeps.default_workers()
+    if flags.llm_repair_loop:
+        # Roadmap P6 item 5: "throttle to at most eight concurrent requests for organizer parity".
+        # Each worker process makes at most one LLM call at a time (Stage 3 is synchronous within
+        # a query's solve), so the worker pool size *is* the concurrent-request ceiling -- clamping
+        # it here needs no separate cross-process semaphore. Only applies when this flag is on;
+        # every other whole-run configuration keeps its full worker count.
+        workers = min(workers, 8)
     visible: dict[str, dict] = {}
     variants: dict[str, list[dict]] = {}
     # Roadmap P13: which uids the parent parse degraded for. Surfaced in the run summary below --

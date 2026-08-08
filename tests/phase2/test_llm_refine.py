@@ -431,3 +431,105 @@ def test_prompt_lists_allowed_ops_and_edit_cap():
         assert op in prompt
     assert "Museum" in prompt
     assert str(R.MAX_REFINE_EDITS) in prompt
+
+
+# --- max_attempts loop (roadmap P6, TPC_P2_LLM_REPAIR_LOOP) ------------------------------------
+#
+# TPC_P2_LLM_REFINE's own default (max_attempts=2, unchanged) is covered exhaustively above; these
+# generalize the same "rejected -> retry with post-edit failure" mechanism past two rounds.
+
+def _n_attempt_hooks(*, key_before, n_rounds_before_accept, applied=1):
+    """Rejects the first ``n_rounds_before_accept`` post-edit checks, then accepts. Each round's
+    failure summary is distinct (family name includes the round index) so a test can confirm round
+    k's prompt is built from round (k-1)'s post-edit failure, not a stale one."""
+    calls = {"gac": 0, "are": 0}
+
+    def ground_and_check(plan):
+        idx = calls["gac"]
+        calls["gac"] += 1
+        failure = {"failed_constraint_families": [f"family_{idx}"]}
+        accepted = idx > n_rounds_before_accept
+        return accepted, plan, key_before, failure
+
+    def apply_refine_edits(plan, edits):
+        calls["are"] += 1
+        trial = dict(plan)
+        trial["itinerary"] = list(plan.get("itinerary", [])) + [
+            {"day": 90 + calls["are"], "activities": [], "_edited": True}
+        ]
+        reasons = [{"op": e.get("op"), "committed": bool(applied), "reason": "committed" if applied else "test_stub"}
+                   for e in (edits or [])]
+        return trial, applied, reasons
+
+    return ground_and_check, apply_refine_edits, calls
+
+
+def test_default_max_attempts_is_two_reproducing_todays_behaviour(one_query):
+    """No max_attempts argument at all -- the library default must still be exactly 2, so every
+    TPC_P2_LLM_REFINE caller (and every test above) is unaffected by this item."""
+    plan = _plan()
+    llm = FakeClient(EDIT_RESPONSE)
+    gac, are, calls = _n_attempt_hooks(key_before=(0.5, 0.5, 1, 0), n_rounds_before_accept=1)
+    out, info = O.llm_refine(plan, one_query, llm, 30.0, gac, are)
+    assert info["improve_committed"] is True
+    assert info["improve_attempts"] == 2
+    assert len(llm.calls) == 2
+
+
+def test_max_attempts_six_commits_on_a_later_round(one_query):
+    plan = _plan()
+    llm = FakeClient(EDIT_RESPONSE)
+    gac, are, calls = _n_attempt_hooks(key_before=(0.5, 0.5, 1, 0), n_rounds_before_accept=4)
+    out, info = O.llm_refine(plan, one_query, llm, 30.0, gac, are, max_attempts=6)
+    assert info["improve_committed"] is True
+    assert info["improve_attempts"] == 5
+    assert len(llm.calls) == 5
+    assert out != plan
+
+
+def test_max_attempts_six_prompts_use_each_rounds_own_post_edit_failure(one_query):
+    plan = _plan()
+    llm = FakeClient(EDIT_RESPONSE)
+    gac, are, calls = _n_attempt_hooks(key_before=(0.5, 0.5, 1, 0), n_rounds_before_accept=4)
+    O.llm_refine(plan, one_query, llm, 30.0, gac, are, max_attempts=6)
+    assert len(llm.calls) == 5
+    for i, call in enumerate(llm.calls):
+        assert f"family_{i}" in call["prompt"]
+
+
+def test_max_attempts_exhausted_without_committing_reports_final_skip_reason(one_query):
+    plan = _plan()
+    llm = FakeClient(EDIT_RESPONSE)
+    gac, are, calls = _n_attempt_hooks(key_before=(0.5, 0.5, 1, 0), n_rounds_before_accept=99)
+    out, info = O.llm_refine(plan, one_query, llm, 30.0, gac, are, max_attempts=6)
+    assert out is plan
+    assert info["improve_committed"] is False
+    assert info["improve_skip_reason"] == "not_accepted_or_regressed"
+    assert info["improve_attempts"] == 6
+    assert len(llm.calls) == 6
+
+
+def test_max_attempts_one_never_retries():
+    plan = _plan()
+    llm = FakeClient(EDIT_RESPONSE)
+    gac, are, calls = _n_attempt_hooks(key_before=(0.5, 0.5, 1, 0), n_rounds_before_accept=1)
+    out, info = O.llm_refine(plan, {"uid": "u1"}, llm, 30.0, gac, are, max_attempts=1)
+    assert out is plan
+    assert info["improve_committed"] is False
+    assert info["improve_attempts"] == 1
+    assert len(llm.calls) == 1
+
+
+def test_max_attempts_six_still_stops_on_deadline_mid_loop(monkeypatch, one_query):
+    plan = _plan()
+    llm = FakeClient(EDIT_RESPONSE, timeout=10.0)
+    gac, are, calls = _n_attempt_hooks(key_before=(0.5, 0.5, 1, 0), n_rounds_before_accept=99)
+    # loop_start=0.0, then round 2's deadline check reads 25.0 -- 30-25=5s remains, less than the
+    # 10s client timeout, so the loop must stop after round 1 rather than starting round 2.
+    ticks = iter([0.0, 25.0])
+    monkeypatch.setattr(O.time, "perf_counter", lambda: next(ticks))
+    out, info = O.llm_refine(plan, one_query, llm, 30.0, gac, are, max_attempts=6)
+    assert out is plan
+    assert info["improve_second_attempt_skip_reason"] == "skipped_deadline"
+    assert info["improve_attempts"] == 1
+    assert len(llm.calls) == 1

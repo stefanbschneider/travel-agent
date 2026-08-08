@@ -16,7 +16,9 @@ import json
 # Typed edit vocabulary the refine prompt asks for and the parser accepts. Free-form plan
 # rewrites are never allowed -- every op is applied by a bounded, WorldEnv-grounded TPCAgent
 # helper (see tpc_agent.py's apply_refine_edits/_refine_* methods).
-REFINE_ALLOWED_OPS = frozenset({"reorder_day", "shift_activity_window", "swap_activity", "drop_activity"})
+REFINE_ALLOWED_OPS = frozenset({
+    "reorder_day", "shift_activity_window", "swap_activity", "drop_activity", "insert_activity",
+})
 MAX_REFINE_EDITS = 6
 
 
@@ -69,8 +71,8 @@ def build_llm_refine_prompt(query: dict, plan: dict, failure_summary: dict) -> s
         "decide facts: every edit you propose is re-grounded against the real environment (POI\n"
         "existence, opening hours, transport routes) and only kept if the deterministic checker then\n"
         "accepts the plan and its quality does not get worse. Propose the SMALLEST set of edits that\n"
-        "could fix the listed failures -- do not rewrite the plan, do not invent new POI names or\n"
-        "days that are not already in the plan below.\n\n"
+        "could fix the listed failures -- do not rewrite the plan, and do not invent a day that is\n"
+        "not already in the plan below.\n\n"
         "Return STRICT JSON only (no markdown/code fences) with this schema:\n"
         "{\n"
         "  \"edits\": [\n"
@@ -78,14 +80,21 @@ def build_llm_refine_prompt(query: dict, plan: dict, failure_summary: dict) -> s
         "     \"start_time\": \"HH:MM\", \"end_time\": \"HH:MM\"},\n"
         "    {\"op\": \"swap_activity\", \"day\": int, \"location_a\": string, \"location_b\": string},\n"
         "    {\"op\": \"drop_activity\", \"day\": int, \"location\": string},\n"
-        "    {\"op\": \"reorder_day\", \"day\": int, \"order\": [string, ...]}\n"
+        "    {\"op\": \"reorder_day\", \"day\": int, \"order\": [string, ...]},\n"
+        "    {\"op\": \"insert_activity\", \"day\": int, \"location\": string,\n"
+        "     \"activity_type\": \"attraction\"|\"breakfast\"|\"lunch\"|\"dinner\",\n"
+        "     \"start_time\": \"HH:MM\", \"end_time\": \"HH:MM\"}\n"
         "  ]\n"
         "}\n"
         f"Propose at most {MAX_REFINE_EDITS} edits, only the ops above (any other \"op\" value is\n"
-        "dropped). \"location\"/\"location_a\"/\"location_b\"/entries in \"order\" must each be the\n"
-        "exact \"position\" of an activity ALREADY in the plan below -- never a new place. \"day\" is\n"
-        "the plan's 1-based day number, matching the \"day\" field below. If nothing you propose\n"
-        "could plausibly help, return {\"edits\": []}.\n\n"
+        "dropped). For every op except insert_activity, \"location\"/\"location_a\"/\"location_b\"/\n"
+        "entries in \"order\" must each be the exact \"position\" of an activity ALREADY in the plan\n"
+        "below -- never a new place. insert_activity is the one exception: its \"location\" names a\n"
+        "POI NOT currently in the plan (e.g. one \"failed_clauses\" below names as required) --\n"
+        "it is looked up in the real catalog and the edit is dropped if no such POI exists, so\n"
+        "naming a place you are unsure of costs nothing but the edit slot. \"day\" is the plan's\n"
+        "1-based day number, matching the \"day\" field below. If nothing you propose could plausibly\n"
+        "help, return {\"edits\": []}.\n\n"
         "Visible request JSON:\n"
         f"{json.dumps(visible, ensure_ascii=False, indent=2)}\n\n"
         "Current plan (day/activities only; each activity's position is its name):\n"

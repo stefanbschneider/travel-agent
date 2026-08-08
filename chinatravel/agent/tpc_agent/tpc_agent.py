@@ -3589,6 +3589,7 @@ class TPCAgent(BaseAgent):
         ("drop_activity", "_refine_drop_activity"),
         ("swap_activity", "_refine_swap_activity"),
         ("reorder_day", "_refine_reorder_day"),
+        ("insert_activity", "_refine_insert_activity"),
     )
 
     def apply_refine_edits(self, plan, query, edits):
@@ -3851,6 +3852,137 @@ class TPCAgent(BaseAgent):
         if diag is not None:
             diag.append("committed" if ok else "relayout_ungroundable")
         return ok
+
+    def _refine_insert_activity(self, trial, edit, city, people, diag=None):
+        """``insert_activity`` edit (roadmap P6): add a WorldEnv-grounded activity for a named POI
+        the plan does not yet contain -- the one thing the other four ops cannot express, since
+        each of them only ever references an activity already in the plan. A missing required
+        attraction/restaurant is a real, common failure shape a shift/swap/drop/reorder loop can
+        never fix.
+
+        ``location`` is never trusted as free-form JSON: it must resolve to a real catalog row via
+        ``_resolve_timed_window_poi`` or the edit is dropped -- matching the roadmap's "add an
+        insertion/replacement op only through a WorldEnv lookup, never as free-form plan JSON".
+        Placement is derived from the requested ``start_time`` (the first existing activity that
+        starts no earlier becomes the successor; falls back to appending at the end), and every
+        leg on both sides is recomputed via ``_best_transport_via_get_transport`` -- same grounding
+        discipline as ``_insert_activity``/``_insert_activity_before_first``/
+        ``_insert_activity_after_last`` (P8/P9/P25), but without their own per-op accept-gate: like
+        every other ``_refine_*`` handler, acceptance of the whole batch is the caller's job via
+        ``ground_and_check``."""
+        def _fail(reason):
+            if diag is not None:
+                diag.append(reason)
+            return False
+
+        day_idx = self._refine_day_index(trial, edit.get("day"))
+        if day_idx is None:
+            return _fail("day_not_found")
+        activity_type = str(edit.get("activity_type") or "").strip().lower()
+        if activity_type not in self._WINDOW_ACTIVITY_TYPES:
+            return _fail("bad_activity_type")
+        location = edit.get("location")
+        if not isinstance(location, str) or not location.strip():
+            return _fail("missing_location")
+        poi = self._resolve_timed_window_poi(city, location, activity_type)
+        if poi is None:
+            return _fail("poi_not_found_in_catalog")
+        poi_name = str(poi.get("name", location))
+
+        activities = trial["itinerary"][day_idx].get("activities", []) or []
+        matching_types = ({"breakfast", "lunch", "dinner"}
+                          if activity_type in ("breakfast", "lunch", "dinner")
+                          else {activity_type})
+        for act in activities:
+            if act.get("type") in matching_types and self._match_constraint_text(
+                    str(act.get("position", "")), poi_name):
+                # Already present for this type -- adding a second copy would trip the
+                # repeated-attraction commonsense rule and reject the whole batch for nothing.
+                return _fail("already_present")
+
+        try:
+            req_start = time_to_minutes(str(edit["start_time"])) if edit.get("start_time") else None
+            req_end = time_to_minutes(str(edit["end_time"])) if edit.get("end_time") else None
+        except Exception:
+            return _fail("bad_time_format")
+
+        insert_idx = len(activities)
+        if req_start is not None:
+            for i, act in enumerate(activities):
+                try:
+                    act_start = time_to_minutes(str(act.get("start_time", "")))
+                except Exception:
+                    continue
+                if act_start >= req_start:
+                    insert_idx = i
+                    break
+
+        prev_act = activities[insert_idx - 1] if insert_idx > 0 else None
+        next_act = activities[insert_idx] if insert_idx < len(activities) else None
+        if prev_act is not None and prev_act.get("type") in ("airplane", "train") and next_act is None:
+            # Appending after the day's final intercity departure would place a visit after the
+            # traveller has already left the city -- nonsensical regardless of grounding.
+            return _fail("cannot_append_after_intercity_departure")
+
+        poi_open, poi_close = self._poi_open_bounds(poi)
+        dwell = self._densify_dwell_minutes(poi, activity_type)
+
+        prev_pos = self._activity_end_position(prev_act) if prev_act is not None else None
+        if prev_pos:
+            prev_end = str(prev_act.get("end_time", "")) or minutes_to_time(poi_open)
+            try:
+                transports_in, arrival = self._best_transport_via_get_transport(
+                    city, prev_pos, poi_name, prev_end, people)
+            except Exception:
+                return _fail("inbound_transport_error")
+            if transports_in is None or arrival is None:
+                return _fail("inbound_transport_ungroundable")
+            try:
+                arrival_min = time_to_minutes(str(arrival))
+            except Exception:
+                return _fail("bad_time_format")
+        else:
+            transports_in, arrival_min = [], poi_open
+
+        start_min = max(arrival_min, poi_open, req_start if req_start is not None else arrival_min)
+        end_min = min(req_end if req_end is not None else start_min + dwell, poi_close)
+        if end_min - start_min < 1:
+            return _fail("no_time_available")
+
+        transports_out = None
+        if next_act is not None:
+            next_pos = self._activity_start_position(next_act)
+            if not next_pos:
+                return _fail("next_position_unresolvable")
+            try:
+                transports_out, next_arrival = self._best_transport_via_get_transport(
+                    city, poi_name, next_pos, minutes_to_time(end_min), people)
+            except Exception:
+                return _fail("outbound_transport_error")
+            if transports_out is None or next_arrival is None:
+                return _fail("outbound_transport_ungroundable")
+            next_start = str(next_act.get("start_time", ""))
+            try:
+                if next_start and time_to_minutes(next_arrival) > time_to_minutes(next_start):
+                    return _fail("next_activity_unreachable")
+            except Exception:
+                return _fail("bad_time_format")
+
+        if activity_type == "attraction":
+            activity = self._make_attraction_activity(
+                poi, people, minutes_to_time(start_min), minutes_to_time(end_min), transports_in)
+        else:
+            activity = self._make_meal_activity(
+                activity_type, poi, people, minutes_to_time(start_min), minutes_to_time(end_min),
+                transports_in)
+
+        if next_act is not None:
+            next_act["transports"] = transports_out
+        activities.insert(insert_idx, activity)
+        trial["itinerary"][day_idx]["activities"] = activities
+        if diag is not None:
+            diag.append("committed")
+        return True
 
     def _extend_window_meals(self, plan, query, constraints, check, restaurants):
         """Swap a bounding intercity to a wider-window option and add the meal it unlocks.

@@ -85,6 +85,11 @@ class Flags:
     disjunction: bool = False
     llm_parse: bool = False
     llm_refine: bool = False
+    # Roadmap P6: the same Stage 3 mechanism as llm_refine, but with up to 6 rounds instead of 2
+    # and the insert_activity op available (see llm_refine's max_attempts / refine.py). A separate
+    # flag rather than an llm_refine modifier so it is independently switchable end to end --
+    # setting this alone is enough to enable Stage 3, it does not also require llm_refine=1.
+    llm_repair_loop: bool = False
     dynamic_budget: bool = False
     entity_resolution: bool = False
     # P22: drop a required-POI-name/category-value constraint entity resolution's own catalog
@@ -113,6 +118,7 @@ class Flags:
             llm_parse=_truthy(env_map.get("TPC_P2_LLM_PARSE", "0")),
             llm_parse_mode=raw_mode if raw_mode in ("audit", "extract", "extract_fill") else "audit",
             llm_refine=_truthy(env_map.get("TPC_P2_LLM_REFINE", "0")),
+            llm_repair_loop=_truthy(env_map.get("TPC_P2_LLM_REPAIR_LOOP", "0")),
             dynamic_budget=_truthy(env_map.get("TPC_P2_DYNAMIC_BUDGET", "0")),
             entity_resolution=_truthy(env_map.get("TPC_P2_ENTITY_RESOLUTION", "0")),
             drop_unsatisfiable_names=_truthy(env_map.get("TPC_P2_DROP_UNSATISFIABLE_NAMES", "0")),
@@ -185,9 +191,10 @@ def _llm_refine_attempt(
 
 def llm_refine(
     plan: dict, query: dict, llm_client, budget_sec: float,
-    ground_and_check=None, apply_refine_edits=None,
+    ground_and_check=None, apply_refine_edits=None, max_attempts: int = 2,
 ) -> tuple[dict, dict]:
-    """Stage 3: bounded, acceptance-gated LLM plan repair (v1, ``TPC_P2_LLM_REFINE``).
+    """Stage 3: bounded, acceptance-gated LLM plan repair (v1, ``TPC_P2_LLM_REFINE``; the
+    ``max_attempts > 2`` loop is roadmap P6's ``TPC_P2_LLM_REPAIR_LOOP``).
 
     Repair-only: no-ops on an already-accepted plan (preference-lift on a valid plan is deferred,
     see the roadmap's Stage 3 section). Otherwise asks ``llm_client`` for a small, typed edit list
@@ -198,17 +205,21 @@ def llm_refine(
     hooks ``make_tpcagent_solve_fn`` attaches to the returned ``solve_fn``; either being ``None``
     (a bare injected ``solve_fn``, e.g. unit tests) makes this a pure no-op.
 
-    If the first attempt grounds edits but does not commit -- the checker rejects the batch
-    outright, or accepts it with a preference key that regresses vs. the input (both recorded as
-    ``not_accepted_or_regressed``; roadmap Next step 7 bucket 2) -- a bounded second attempt
-    re-prompts once with the post-edit plan and its own failure summary -- one extra LLM call, only
-    when the remaining ``budget_sec`` slice can still fit it (mirrors the pre-first-call deadline
-    check below; a slice too small for a second call is skipped with
+    If an attempt grounds edits but does not commit -- the checker rejects the batch outright, or
+    accepts it with a preference key that regresses vs. the input (both recorded as
+    ``not_accepted_or_regressed``; roadmap Next step 7 bucket 2) -- the next attempt (up to
+    ``max_attempts``, default ``2`` -- ``TPC_P2_LLM_REFINE``'s original one-retry behaviour, exactly
+    reproduced) re-prompts with the *post-edit* plan and its own failure summary, so each round sees
+    the compact deterministic rejection reason the previous round's edits actually produced (roadmap
+    P6 item 4) -- one extra LLM call per round, only when the remaining ``budget_sec`` slice can
+    still fit it (mirrors the pre-first-call deadline check below; a slice too small is skipped with
     ``improve_second_attempt_skip_reason = "skipped_deadline"`` rather than started and left to time
-    out mid-flight, exactly like the parse stage's ``llm_parse_skipped_deadline``) and the first
-    attempt's stashed retry context is well-formed (else ``"invalid_retry_context"``). Never raises;
-    always returns ``(plan_or_repaired_plan, info)`` where ``info`` is a small telemetry fragment the
-    caller merges into the orchestrator's telemetry dict.
+    out mid-flight, exactly like the parse stage's ``llm_parse_skipped_deadline``) and the previous
+    attempt's stashed retry context is well-formed (else ``"invalid_retry_context"``). The field name
+    stays ``improve_second_attempt_skip_reason`` for any round beyond the first -- singular, since at
+    most one such stop reason is ever recorded (the loop always stops there). Never raises; always
+    returns ``(plan_or_repaired_plan, info)`` where ``info`` is a small telemetry fragment the caller
+    merges into the orchestrator's telemetry dict.
     """
     info: dict[str, Any] = {
         "improve_llm_called": False,
@@ -244,43 +255,37 @@ def llm_refine(
         info["improve_skip_reason"] = "skipped_deadline"
         return plan, info
 
-    attempt_start = time.perf_counter()
-    committed = _llm_refine_attempt(
-        base_plan=grounded_plan, query=query, llm_client=llm_client, before_key=before_key,
-        failure_summary=failure_summary, ground_and_check=ground_and_check,
-        apply_refine_edits=apply_refine_edits, info=info, attempt_no=1,
-    )
-    if committed is not None:
-        return committed, info
+    loop_start = time.perf_counter()
+    base_plan, base_failure = grounded_plan, failure_summary
+    for attempt_no in range(1, max(1, int(max_attempts)) + 1):
+        if attempt_no > 1:
+            retry_base_plan = info.pop("_retry_base_plan", None)
+            retry_failure_summary = info.pop("_retry_failure_summary", None)
+            # A well-formed attempt always stashes a dict plan/summary (ground_and_check's own
+            # contract); guard anyway so a misbehaving hook degrades via a dedicated skip reason
+            # instead of building a prompt from -- and later misclassifying a failure against --
+            # invalid retry context (Copilot review finding on PR #36).
+            if not isinstance(retry_base_plan, dict) or not isinstance(retry_failure_summary, dict):
+                info["improve_second_attempt_skip_reason"] = "invalid_retry_context"
+                break
+            remaining = budget_sec - (time.perf_counter() - loop_start)
+            if client_timeout is not None and remaining < client_timeout:
+                info["improve_second_attempt_skip_reason"] = "skipped_deadline"
+                break
+            base_plan, base_failure = retry_base_plan, retry_failure_summary
 
-    if info["improve_skip_reason"] != "not_accepted_or_regressed":
-        return plan, info
+        committed = _llm_refine_attempt(
+            base_plan=base_plan, query=query, llm_client=llm_client, before_key=before_key,
+            failure_summary=base_failure, ground_and_check=ground_and_check,
+            apply_refine_edits=apply_refine_edits, info=info, attempt_no=attempt_no,
+        )
+        if committed is not None:
+            return committed, info
+        if info["improve_skip_reason"] != "not_accepted_or_regressed":
+            break
 
-    retry_base_plan = info.pop("_retry_base_plan", None)
-    retry_failure_summary = info.pop("_retry_failure_summary", None)
-    # A well-formed attempt 1 always stashes a dict plan/summary (ground_and_check's own contract);
-    # guard anyway so a misbehaving hook degrades via a dedicated skip reason instead of building a
-    # prompt from -- and later misclassifying a failure against -- invalid retry context (Copilot
-    # review finding on PR #36).
-    if not isinstance(retry_base_plan, dict) or not isinstance(retry_failure_summary, dict):
-        info["improve_second_attempt_skip_reason"] = "invalid_retry_context"
-        return plan, info
-
-    remaining = budget_sec - (time.perf_counter() - attempt_start)
-    if client_timeout is not None and remaining < client_timeout:
-        info["improve_second_attempt_skip_reason"] = "skipped_deadline"
-        return plan, info
-
-    committed = _llm_refine_attempt(
-        base_plan=retry_base_plan, query=query, llm_client=llm_client, before_key=before_key,
-        failure_summary=retry_failure_summary, ground_and_check=ground_and_check,
-        apply_refine_edits=apply_refine_edits, info=info, attempt_no=2,
-    )
     info.pop("_retry_base_plan", None)
     info.pop("_retry_failure_summary", None)
-    if committed is not None:
-        return committed, info
-
     return plan, info
 
 
@@ -441,6 +446,7 @@ def solve_phase2(
             "llm_parse": flags.llm_parse,
             "llm_parse_mode": flags.llm_parse_mode,
             "llm_refine": flags.llm_refine,
+            "llm_repair_loop": flags.llm_repair_loop,
             "dynamic_budget": flags.dynamic_budget,
             "entity_resolution": flags.entity_resolution,
             "drop_unsatisfiable_names": flags.drop_unsatisfiable_names,
@@ -558,16 +564,21 @@ def solve_phase2(
     # --- Stage 3: improve (deterministic densify already inside TPCAgent; optional bounded,
     # acceptance-gated LLM refine on top -- see llm_refine) --
     t0 = time.perf_counter()
-    if flags.llm_refine and plan_candidate is not None:
+    if (flags.llm_refine or flags.llm_repair_loop) and plan_candidate is not None:
         last_valid_plan = deepcopy(plan_candidate)
         ground_and_check = getattr(solve_fn, "ground_and_check", None) if solve_fn is not None else None
         apply_refine_edits = getattr(solve_fn, "apply_refine_edits", None) if solve_fn is not None else None
         improve_timeout = max(b.improve_sec, 0.01)
+        # Roadmap P6: TPC_P2_LLM_REPAIR_LOOP raises the round cap from 2 (TPC_P2_LLM_REFINE's
+        # original one-retry behaviour) to 6 ("keep the first spike to six rounds"). If both flags
+        # are set, the loop wins -- it is a strict superset of llm_refine's behaviour.
+        max_attempts = 6 if flags.llm_repair_loop else 2
         try:
             result = func_timeout(
                 improve_timeout,
                 llm_refine,
-                args=(plan_candidate, query, llm_client, b.improve_sec, ground_and_check, apply_refine_edits),
+                args=(plan_candidate, query, llm_client, b.improve_sec, ground_and_check,
+                      apply_refine_edits, max_attempts),
             )
             # llm_refine returns (plan, info); tolerate a bare plan too (older/simplified test
             # stubs monkeypatching this function need not return the tuple).

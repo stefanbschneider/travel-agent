@@ -1,0 +1,304 @@
+{
+  "n_selected": 10,
+  "buckets": {
+    "timed_window": 9,
+    "name_type": 1
+  },
+  "n_flipped_to_accepted_total": 2,
+  "n_flipped_to_accepted_via_llm_repair_loop": 0,
+  "n_llm_called": 8,
+  "n_committed": 0,
+  "n_ungrounded_facts": 0,
+  "n_timed_out": 0,
+  "verdict": "RED: zero accepted flips caused by the repair loop (or ungrounded facts found) -- do not promote",
+  "results": [
+    {
+      "uid": "phase2_familiar_20250321032641509206_00005",
+      "bucket": "timed_window",
+      "failing_families": [
+        "required_attractions",
+        "taxi_cars",
+        "timed_visit_named_poi"
+      ],
+      "accepted": false,
+      "n_clauses_passing": 10,
+      "n_clauses_total": 13,
+      "all_facts_ground": true,
+      "wall_sec": 170.6,
+      "improve_llm_called": true,
+      "improve_attempts": 6,
+      "improve_committed": false,
+      "improve_edit_count": 1,
+      "improve_edit_reasons": [
+        {
+          "op": "shift_activity_window",
+          "committed": true,
+          "reason": "committed"
+        }
+      ],
+      "improve_skip_reason": "not_accepted_or_regressed",
+      "improve_second_attempt_skip_reason": null,
+      "timed_out": false,
+      "improve_timed_out": false
+    },
+    {
+      "uid": "phase2_familiar_20250321044802265544_00014",
+      "bucket": "name_type",
+      "failing_families": [
+        "inner_transport",
+        "required_attractions"
+      ],
+      "accepted": false,
+      "n_clauses_passing": 9,
+      "n_clauses_total": 11,
+      "all_facts_ground": true,
+      "wall_sec": 115.3,
+      "improve_llm_called": true,
+      "improve_attempts": 2,
+      "improve_committed": false,
+      "improve_edit_count": 0,
+      "improve_edit_reasons": [
+        {
+          "op": "shift_activity_window",
+          "committed": false,
+          "reason": "no_time_left_after_arrival"
+        },
+        {
+          "op": "shift_activity_window",
+          "committed": false,
+          "reason": "no_time_left_after_arrival"
+        }
+      ],
+      "improve_skip_reason": "no_groundable_edits",
+      "improve_second_attempt_skip_reason": null,
+      "timed_out": false,
+      "improve_timed_out": false
+    },
+    {
+      "uid": "phase2_familiar_20250321040138918100_00001",
+      "bucket": "timed_window",
+      "failing_families": [
+        "timed_visit_named_poi"
+      ],
+      "accepted": false,
+      "n_clauses_passing": 8,
+      "n_clauses_total": 11,
+      "all_facts_ground": true,
+      "wall_sec": 235.8,
+      "improve_llm_called": true,
+      "improve_attempts": 3,
+      "improve_committed": false,
+      "improve_edit_count": 0,
+      "improve_edit_reasons": [
+        {
+          "op": "reorder_day",
+          "committed": false,
+          "reason": "no_change_proposed"
+        }
+      ],
+      "improve_skip_reason": "no_groundable_edits",
+      "improve_second_attempt_skip_reason": null,
+      "timed_out": false,
+      "improve_timed_out": false
+    },
+    {
+      "uid": "phase2_familiar_20250321155107635610_00035",
+      "bucket": "timed_window",
+      "failing_families": [
+        "timed_visit_named_poi"
+      ],
+      "accepted": true,
+      "n_clauses_passing": 10,
+      "n_clauses_total": 10,
+      "all_facts_ground": true,
+      "wall_sec": 220.3,
+      "improve_llm_called": false,
+      "improve_attempts": 0,
+      "improve_committed": false,
+      "improve_edit_count": 0,
+      "improve_edit_reasons": [],
+      "improve_skip_reason": "already_accepted",
+      "improve_second_attempt_skip_reason": null,
+      "timed_out": false,
+      "improve_timed_out": false
+    },
+    {
+      "uid": "phase2_familiar_20250321210015834839_00021",
+      "bucket": "timed_window",
+      "failing_families": [
+        "timed_visit_named_poi"
+      ],
+      "accepted": true,
+      "n_clauses_passing": 9,
+      "n_clauses_total": 9,
+      "all_facts_ground": true,
+      "wall_sec": 40.6,
+      "improve_llm_called": false,
+      "improve_attempts": 0,
+      "improve_committed": false,
+      "improve_edit_count": 0,
+      "improve_edit_reasons": [],
+      "improve_skip_reason": "already_accepted",
+      "improve_second_attempt_skip_reason": null,
+      "timed_out": false,
+      "improve_timed_out": false
+    },
+    {
+      "uid": "phase2_familiar_20250322022134656894_00087",
+      "bucket": "timed_window",
+      "failing_families": [
+        "timed_visit_named_poi"
+      ],
+      "accepted": false,
+      "n_clauses_passing": 8,
+      "n_clauses_total": 10,
+      "all_facts_ground": true,
+      "wall_sec": 212.0,
+      "improve_llm_called": true,
+      "improve_attempts": 1,
+      "improve_committed": false,
+      "improve_edit_count": 0,
+      "improve_edit_reasons": [
+        {
+          "op": "insert_activity",
+          "committed": false,
+          "reason": "next_activity_unreachable"
+        },
+        {
+          "op": "insert_activity",
+          "committed": false,
+          "reason": "next_activity_unreachable"
+        }
+      ],
+      "improve_skip_reason": "no_groundable_edits",
+      "improve_second_attempt_skip_reason": null,
+      "timed_out": false,
+      "improve_timed_out": false
+    },
+    {
+      "uid": "phase2_familiar_20250322103945146888_00080",
+      "bucket": "timed_window",
+      "failing_families": [
+        "timed_visit_named_poi"
+      ],
+      "accepted": false,
+      "n_clauses_passing": 11,
+      "n_clauses_total": 12,
+      "all_facts_ground": true,
+      "wall_sec": 187.3,
+      "improve_llm_called": true,
+      "improve_attempts": 1,
+      "improve_committed": false,
+      "improve_edit_count": 0,
+      "improve_edit_reasons": [
+        {
+          "op": "shift_activity_window",
+          "committed": false,
+          "reason": "no_time_left_after_arrival"
+        }
+      ],
+      "improve_skip_reason": "no_groundable_edits",
+      "improve_second_attempt_skip_reason": null,
+      "timed_out": false,
+      "improve_timed_out": false
+    },
+    {
+      "uid": "phase2_familiar_20250322114324029605_00039",
+      "bucket": "timed_window",
+      "failing_families": [
+        "budget_total",
+        "timed_visit_named_poi"
+      ],
+      "accepted": false,
+      "n_clauses_passing": 8,
+      "n_clauses_total": 10,
+      "all_facts_ground": true,
+      "wall_sec": 234.7,
+      "improve_llm_called": true,
+      "improve_attempts": 1,
+      "improve_committed": false,
+      "improve_edit_count": 0,
+      "improve_edit_reasons": [
+        {
+          "op": "shift_activity_window",
+          "committed": false,
+          "reason": "next_activity_unreachable"
+        },
+        {
+          "op": "shift_activity_window",
+          "committed": false,
+          "reason": "next_activity_unreachable"
+        },
+        {
+          "op": "shift_activity_window",
+          "committed": false,
+          "reason": "next_activity_unreachable"
+        },
+        {
+          "op": "shift_activity_window",
+          "committed": false,
+          "reason": "location_not_found"
+        }
+      ],
+      "improve_skip_reason": "no_groundable_edits",
+      "improve_second_attempt_skip_reason": null,
+      "timed_out": false,
+      "improve_timed_out": false
+    },
+    {
+      "uid": "phase2_familiar_20250322115606690734_00057",
+      "bucket": "timed_window",
+      "failing_families": [
+        "required_restaurants",
+        "timed_visit_named_poi"
+      ],
+      "accepted": false,
+      "n_clauses_passing": 10,
+      "n_clauses_total": 12,
+      "all_facts_ground": true,
+      "wall_sec": 190.9,
+      "improve_llm_called": true,
+      "improve_attempts": 1,
+      "improve_committed": false,
+      "improve_edit_count": 0,
+      "improve_edit_reasons": [
+        {
+          "op": "shift_activity_window",
+          "committed": false,
+          "reason": "next_activity_unreachable"
+        }
+      ],
+      "improve_skip_reason": "no_groundable_edits",
+      "improve_second_attempt_skip_reason": null,
+      "timed_out": false,
+      "improve_timed_out": false
+    },
+    {
+      "uid": "phase2_familiar_20250322120046083322_00028",
+      "bucket": "timed_window",
+      "failing_families": [
+        "timed_visit_named_poi"
+      ],
+      "accepted": false,
+      "n_clauses_passing": 10,
+      "n_clauses_total": 11,
+      "all_facts_ground": true,
+      "wall_sec": 220.2,
+      "improve_llm_called": true,
+      "improve_attempts": 4,
+      "improve_committed": false,
+      "improve_edit_count": 0,
+      "improve_edit_reasons": [
+        {
+          "op": "reorder_day",
+          "committed": false,
+          "reason": "no_change_proposed"
+        }
+      ],
+      "improve_skip_reason": "no_groundable_edits",
+      "improve_second_attempt_skip_reason": null,
+      "timed_out": false,
+      "improve_timed_out": false
+    }
+  ]
+}
