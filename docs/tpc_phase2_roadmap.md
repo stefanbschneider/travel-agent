@@ -300,7 +300,7 @@ is available again — gate any candidate against R28.
 | **P22** | [Drop provably unsatisfiable required-name constraints](#p22--drop-provably-unsatisfiable-required-name-constraints) | half day | un-pins the `23–50 %` of free-prose queries that currently cannot pass at any budget; the only item with a dominance argument rather than an estimate | **landed 2026-08-07, library default off; [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries-closed-2026-08-07-negative-result) closed 2026-08-07 with a negative e2e result (0/103 flip to passing, 2 regress) — stays default-off; a salvage-before-drop follow-up is identified but not built** |
 | **P21** | [Promote deterministic entity resolution](#p21--promote-deterministic-entity-resolution) | doc/bookkeeping only, no behavioral code change needed | already-landed flag, never measured alone: familiar-100 parse F1 `0.9552 → 0.9949`, `local_released_150` `0.8222 → 0.8451`, zero LLM calls; also takes familiar-100's unsatisfiable-name count `7 → 0` | **[R29 closed GREEN 2026-08-07](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end); found the flag was already harness-default-on since `b53a0747` (predates R28/`v1`) — remaining work is documenting that explicitly, not flipping a switch** |
 | **P24** | [Stop inventing satisfiable but unrequested constraints](#p24--stop-inventing-satisfiable-but-unrequested-constraints) | half day | Diagnosis revised 2026-08-07: the `intercity_mode` half was a measurement bug, not invention (fixed, spurious `172→0`); `required_attractions`/`required_hotels` were real (fixed, spurious `310→25` / `55→6`, 92%/89%, matched unchanged) | **landed 2026-08-07 (code + tests + two static screens GREEN, `pytest tests` green); e2e effect needs its own R-numbered arm, not yet run** |
-| **P23** | [Make the free-prose register scoreable](#p23--make-the-free-prose-register-scoreable) | half day | lifts a `38.67–46.0` FPR ceiling off every free-prose measurement we make, and makes P20's `required_attraction_types` half gateable at volume (R26 found exactly `1` locally-measurable clause; translation unlocks `~380`) | **open; unblocks the gate for P20/P22/P24** |
+| **P23** | [Make the free-prose register scoreable](#p23--make-the-free-prose-register-scoreable) | half day | lifts a `38.67–46.0` FPR ceiling off every free-prose measurement we make, and makes P20's `required_attraction_types` half gateable at volume (R26 found exactly `1` locally-measurable clause; translation unlocks `~380`) | **landed 2026-08-08 (static build-and-verify only — `scripts/materialize_hf_split.py --translate-oracle-literals`, `pytest tests` green, 14 new tests); no solve run yet, that is [R31](tpc_phase2_eval.md#r31--the-first-real-free-prose-fpr-gate), now unblocked** |
 | **P25** | [Cross-day timed-window relocation](#p25--cross-day-timed-window-relocation) | 1–2 days | the one solver move R25 identified as the binding blocker on failing queries, and the only unbuilt member of the family that produced our single largest gain (`+11.0` FPR) | **open, newly scoped** |
 | **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | landed | prevents the recurrence of the failure that cost this cycle | **landed 2026-08-07 (`dfdace2a`); gates parse gaps only — two precision conditions still open, see below** |
 | **P6** | [Validator-in-loop Qwen repair](#p6--validator-in-loop-qwen-repair) | 1 day spike | tests the successful Kiro/Claude interaction shape without allowing generated facts or unchecked plans | **open; independent spike, default off** |
@@ -584,6 +584,24 @@ one deterministic path), so "default-off" here means the roadmap does not yet cl
 change from them, not that a flag needs flipping.
 
 ### P23 — make the free-prose register scoreable
+
+**Landed 2026-08-08 — the static half.** The zh→en map (`build_map`) already existed in
+`scripts/phase2_oracle_literal_translation.py`; what landed now is the rewrite it enables:
+`translate_clause` / `translate_hard_logic` in that same module, wired into
+`scripts/materialize_hf_split.py` as `--translate-oracle-literals`. Full-split dry run: `331` of
+`654` free-prose queries across the four HF sets get at least one `hard_logic_py` clause translated
+(`388` clauses total), `66` still carry a residual unmapped literal (reported per-uid, never
+approximated) — dominated by restaurant/hotel branch-name fragments (`前门店`, "...branch") and
+generic-location words with no catalog row (`河边`, "riverside"), exactly the two shapes this section
+predicted below. The map reproduces the roadmap's own cited `11957` entries byte-for-byte. Output is
+evaluation-only and structurally cannot ship: `--translate-oracle-literals` requires the `_en_oracle`
+name suffix (raises otherwise) and that suffix is gitignored. Full account, per-split tables, and the
+"read the two measurement methods together" caveat:
+[screen README](../results/phase2_baselines/screens/20260808_p23_oracle_literal_translation/README.md).
+**Not done here, and it is the next step**: no solve was run, so there is still no free-prose FPR/C-LPR
+number scored against the lifted cap — that is
+[R31](tpc_phase2_eval.md#r31--the-first-real-free-prose-fpr-gate), unblocked now, an
+Evaluation-workstream job (this box must not run it — see the two-VM rule).
 
 **A measurement fix, and it is the reason several of the items above cannot currently be gated.**
 Instrument: `scripts/phase2_oracle_literal_translation.py`.
