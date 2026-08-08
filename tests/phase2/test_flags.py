@@ -72,9 +72,11 @@ def test_llm_refine_flag_with_no_hook_is_noop_without_llm_call(one_query, fast_s
     calls = {"n": 0}
     orig = O.llm_refine
 
-    def spy(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits):
+    def spy(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits,
+            max_attempts=2):
         calls["n"] += 1
-        return orig(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits)
+        return orig(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits,
+                    max_attempts)
 
     monkeypatch.setattr(O, "llm_refine", spy)
     plan_off, _ = O.solve_phase2(one_query, budget_sec=10.0, solve_fn=fast_solve_fn)
@@ -85,6 +87,48 @@ def test_llm_refine_flag_with_no_hook_is_noop_without_llm_call(one_query, fast_s
     assert calls["n"] == 1
     assert plan_on == plan_off
     assert spy_llm.calls == []
+
+
+def test_llm_repair_loop_flag_alone_enables_stage_3_with_six_attempts(
+    one_query, fast_solve_fn, spy_llm, monkeypatch,
+):
+    """TPC_P2_LLM_REPAIR_LOOP must be sufficient on its own (roadmap P6) -- no need to also set
+    TPC_P2_LLM_REFINE -- and must raise max_attempts from llm_refine's default (2) to 6."""
+    captured = {}
+    orig = O.llm_refine
+
+    def spy(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits,
+            max_attempts=2):
+        captured["max_attempts"] = max_attempts
+        return orig(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits,
+                    max_attempts)
+
+    monkeypatch.setattr(O, "llm_refine", spy)
+    O.solve_phase2(
+        one_query, budget_sec=10.0, solve_fn=fast_solve_fn, llm_client=spy_llm,
+        flags=Flags(llm_repair_loop=True),
+    )
+    assert captured["max_attempts"] == 6
+
+
+def test_llm_refine_flag_alone_still_uses_two_attempts(one_query, fast_solve_fn, spy_llm, monkeypatch):
+    """llm_refine=True without llm_repair_loop must keep today's round cap -- P6 only changes
+    behaviour when its own flag is set."""
+    captured = {}
+    orig = O.llm_refine
+
+    def spy(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits,
+            max_attempts=2):
+        captured["max_attempts"] = max_attempts
+        return orig(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits,
+                    max_attempts)
+
+    monkeypatch.setattr(O, "llm_refine", spy)
+    O.solve_phase2(
+        one_query, budget_sec=10.0, solve_fn=fast_solve_fn, llm_client=spy_llm,
+        flags=Flags(llm_refine=True),
+    )
+    assert captured["max_attempts"] == 2
 
 
 def test_all_flags_off_no_stub_calls(sample_queries, monkeypatch):

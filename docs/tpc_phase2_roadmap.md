@@ -303,7 +303,7 @@ is available again — gate any candidate against R28.
 | **P23** | [Make the free-prose register scoreable](#p23--make-the-free-prose-register-scoreable) | half day | lifts a `38.67–46.0` FPR ceiling off every free-prose measurement we make, and makes P20's `required_attraction_types` half gateable at volume (R26 found exactly `1` locally-measurable clause; translation unlocks `~380`) | **landed 2026-08-08 (static build-and-verify only — `scripts/materialize_hf_split.py --translate-oracle-literals`, `pytest tests` green, 14 new tests); no solve run yet, that is [R31](tpc_phase2_eval.md#r31--the-first-real-free-prose-fpr-gate), now unblocked** |
 | **P25** | [Cross-day timed-window relocation](#p25--cross-day-timed-window-relocation) | 1–2 days | the one solver move R25 identified as the binding blocker on failing queries, and the only unbuilt member of the family that produced our single largest gain (`+11.0` FPR) | **landed 2026-08-08, library default off; quick A/B screen GREEN LIGHT (familiar_100_val n=40: FPR `40.0 → 45.0`, `+2/40` flips, `0` regressions) — pinned end-to-end gate is the next, Evaluation-workstream step** |
 | **P18** | [Make phrasing robustness a gate](#p18--make-phrasing-robustness-a-gate) | landed | prevents the recurrence of the failure that cost this cycle | **landed 2026-08-07 (`dfdace2a`); gates parse gaps only — two precision conditions still open, see below** |
-| **P6** | [Validator-in-loop Qwen repair](#p6--validator-in-loop-qwen-repair) | 1 day spike | tests the successful Kiro/Claude interaction shape without allowing generated facts or unchecked plans | **open; independent spike, default off** |
+| **P6** | [Validator-in-loop Qwen repair](#p6--validator-in-loop-qwen-repair) | 1 day spike | tests the successful Kiro/Claude interaction shape without allowing generated facts or unchecked plans | **closed 2026-08-08 — built and screened, R27 RED (0/10 accepted flips caused by the loop); stays library default off, per the roadmap's own falsification bar** |
 | **P20** | [Close the two dominant family-recall gaps](#p20--close-the-two-dominant-family-recall-gaps) | landed | P19 attributed `202` released clause misses to `required_attraction_types` and `cuisine_preference`, over 2x the next family | **landed 2026-08-07 (`f413eb2a`); R22 GREEN; [R26 GREEN](tpc_phase2_eval.md#r26--gate-p20-on-the-registers-it-targets) 2026-08-07, and the whole-run row it authorized is done — [R28](tpc_phase2_eval.md#r28--a-whole-run-row-on-the-current-main), byte-identical to R19** |
 | **P16** | [Ground LLM-extracted values into the closed vocabulary](#p16--ground-llm-extracted-values-into-the-closed-vocabulary) | landed | detects unfamiliar requirements, but current-tree `matched 311 < 320` deterministic and `hf_medium` e2e is flat | **landed, library default off; not promoted** |
 | **P15** | [Finish phrasing-robust extraction](#p15--finish-phrasing-robust-extraction) | half day | the measured residual beyond budget/room-type; compounds through the FPR threshold | **landed (partial) 2026-08-07; residual re-scoped, see below** |
@@ -1286,6 +1286,45 @@ exercises, so the improvement is P20's alone -- every free-prose set's gap count
 table and the attribution check.
 
 ### P6 — validator-in-loop Qwen repair
+
+**Built and screened 2026-08-08. R27 result: RED — zero accepted flips caused by the repair loop.
+Stays library default off.** All five build items landed: `insert_activity` joined `refine.py`'s
+typed-edit vocabulary (`TPCAgent._refine_insert_activity`, WorldEnv-catalog-grounded, never
+free-form JSON); `orchestrator.llm_refine`'s hardcoded "1 + optional retry" became a
+`max_attempts`-bounded loop (default `2`, reproducing `TPC_P2_LLM_REFINE` byte-for-byte — all 28
+pre-existing tests pass unchanged) that `TPC_P2_LLM_REPAIR_LOOP=1` raises to `6`, each round seeing
+the previous round's own post-edit failure summary (item 4's "deterministic rejection feedback");
+`run_sweeps_split` clamps the worker pool to `min(workers, 8)` when the flag is on (item 5's
+concurrency throttle — each worker makes at most one LLM call at a time, so pool size directly
+bounds concurrency, no cross-process semaphore needed). 36 new/updated unit tests, `pytest tests`
+green (full suite, `-m integration` included).
+
+**R27, run against a live DeepInfra backend (`temperature=0`, `TPC_P2_LLM_TIMEOUT_SEC=15`,
+`budget_sec=600`):** 10 queries selected from a deterministic-failure pool (9 timed_window, 1
+name_type, **0 transport_budget** — the pool's actual residual at this budget/size, reported
+honestly rather than forced into an even three-way split; matches this project's own standing
+diagnosis that `timed_visit_named_poi` dominates the residual). LLM called on 8/10 (2 were already
+accepted deterministically before Stage 3 ran, no call needed). **0/10 accepted flips caused by the
+repair loop** — the roadmap's own stated RED condition. Safety properties all held: 0 ungrounded
+facts, 0 timeouts, real multi-round iteration happened (one query used all 6 rounds), and
+`insert_activity` fired at least once (grounding failed with `next_activity_unreachable`). One edit
+individually grounded in one round: still not enough to clear whole-batch acceptance. The dominant
+per-edit rejection reasons — `no_time_left_after_arrival`, `next_activity_unreachable` — say the
+model's proposed times/insertions are frequently infeasible given the day's real
+transport-and-hours structure, which the compact plan + failure summary in the prompt does not let
+it reliably avoid. Contrast with [P25](#p25--cross-day-timed-window-relocation)'s `+2/40` on the
+same family: P25 is a deterministic search over every grounded candidate slot, this loop proposes
+one edit set per round with no equivalent systematic search — that gap is what the RED result
+measures. Full account, including a measurement pitfall found and fixed while writing it up (2 of
+the 10 "accepted" outcomes were the deterministic solve alone succeeding at the repair arm's larger
+budget, not an LLM-caused flip — the summary now reports both the raw and LLM-attributed counts, and
+the verdict uses only the latter):
+[screen README](../results/phase2_baselines/screens/20260808_r27_llm_repair_loop/README.md).
+
+**Per the roadmap's own bar, this is a stop.** `insert_activity` and the generalized `max_attempts`
+loop stay in the codebase (correctness-neutral, tested, off-by-default) for a future architecture
+that might reuse either primitive, but no score effect is claimed. Not re-attempted here: a larger
+`n` (the bar is met at 10) or richer prompt context (a different experiment).
 
 **Pure unchecked LLM planning is closed; grounded tool-guided planning is not.** The measured `Act`
 arm queried `WorldEnv` for 34-42 turns and then emitted itinerary JSON directly. It had no schema or

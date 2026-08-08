@@ -571,3 +571,107 @@ def test_last_solve_constraints_tracks_exported_best_accepted_not_a_later_candid
     assert agent._last_solve_constraints == {"v": 1}
     recovered = agent.get_timeout_recovery_plan()
     assert recovered.get("_v") == 1
+
+
+# --- insert_activity (roadmap P6) -----------------------------------------------------------------
+#
+# The one op the other four cannot express: adding a WorldEnv-grounded activity for a POI not yet
+# in the plan. Reuses _day_plan()/QUERY -- Museum (09-10) / Cafe X lunch (12-13) / Park Y (14-15) /
+# Hotel Z accommodation (20-24), all on day 1.
+
+def test_insert_activity_adds_a_new_poi_between_two_existing_activities():
+    agent = _bare_agent()
+    agent.env = _env_with_hours(attractions=[
+        {"name": "Gallery", "opentime": "08:00", "endtime": "20:00", "price": 15},
+    ])
+    plan = _day_plan()
+    ok = agent._refine_insert_activity(
+        plan, {"day": 1, "location": "Gallery", "activity_type": "attraction",
+               "start_time": "11:00", "end_time": "11:45"},
+        "Shenzhen", 1,
+    )
+    assert ok is True
+    positions = [a.get("position") for a in plan["itinerary"][0]["activities"]]
+    assert positions == ["Museum", "Gallery", "Cafe X", "Park Y", "Hotel Z"]
+    gallery = plan["itinerary"][0]["activities"][1]
+    assert gallery["type"] == "attraction"
+    assert gallery["start_time"] == "11:00" and gallery["end_time"] == "11:45"
+    # The successor's inbound leg must be recomputed from the new activity, not left stale.
+    assert plan["itinerary"][0]["activities"][2]["transports"] == []  # zero-travel stub
+
+
+def test_insert_activity_drops_when_poi_is_not_in_the_catalog():
+    agent = _bare_agent()
+    agent.env = _env_with_hours(attractions=[])
+    plan = _day_plan()
+    diag = []
+    ok = agent._refine_insert_activity(
+        plan, {"day": 1, "location": "Nonexistent Gallery", "activity_type": "attraction",
+               "start_time": "11:00", "end_time": "11:45"},
+        "Shenzhen", 1, diag,
+    )
+    assert ok is False
+    assert diag == ["poi_not_found_in_catalog"]
+    assert plan == _day_plan()
+
+
+def test_insert_activity_drops_when_the_poi_is_already_present():
+    agent = _bare_agent()
+    agent.env = _env_with_hours(attractions=[
+        {"name": "Museum", "opentime": "08:00", "endtime": "20:00", "price": 15},
+    ])
+    plan = _day_plan()
+    diag = []
+    ok = agent._refine_insert_activity(
+        plan, {"day": 1, "location": "Museum", "activity_type": "attraction",
+               "start_time": "11:00", "end_time": "11:45"},
+        "Shenzhen", 1, diag,
+    )
+    assert ok is False
+    assert diag == ["already_present"]
+
+
+def test_insert_activity_refuses_appending_after_the_days_final_intercity_departure():
+    agent = _bare_agent()
+    agent.env = _env_with_hours(attractions=[
+        {"name": "Gallery", "opentime": "08:00", "endtime": "20:00", "price": 15},
+    ])
+    plan = {"itinerary": [{"day": 1, "activities": [
+        {"type": "attraction", "position": "Museum", "start_time": "09:00", "end_time": "10:00",
+         "price": 0, "cost": 0, "tickets": 1, "transports": []},
+        {"type": "airplane", "From": "Shenzhen", "To": "Beijing", "start_time": "18:00",
+         "end_time": "20:00", "price": 500, "cost": 500, "tickets": 1, "transports": []},
+    ]}]}
+    diag = []
+    ok = agent._refine_insert_activity(
+        plan, {"day": 1, "location": "Gallery", "activity_type": "attraction"},
+        "Shenzhen", 1, diag,
+    )
+    assert ok is False
+    assert diag == ["cannot_append_after_intercity_departure"]
+
+
+def test_insert_activity_drops_on_bad_day_or_type():
+    agent = _bare_agent()
+    plan = _day_plan()
+    assert agent._refine_insert_activity(
+        plan, {"day": 99, "location": "Gallery", "activity_type": "attraction"}, "Shenzhen", 1) is False
+    assert agent._refine_insert_activity(
+        plan, {"day": 1, "location": "Gallery", "activity_type": "not_a_real_type"}, "Shenzhen", 1) is False
+    assert agent._refine_insert_activity(
+        plan, {"day": 1, "location": "", "activity_type": "attraction"}, "Shenzhen", 1) is False
+
+
+def test_apply_refine_edits_dispatches_insert_activity():
+    agent = _bare_agent()
+    agent.env = _env_with_hours(restaurants=[
+        {"name": "Noodle Place", "opentime": "10:00", "endtime": "22:00", "price": 20},
+    ])
+    trial, applied, reasons = agent.apply_refine_edits(_day_plan(), QUERY, [
+        {"op": "insert_activity", "day": 1, "location": "Noodle Place",
+         "activity_type": "dinner", "start_time": "18:00", "end_time": "19:00"},
+    ])
+    assert applied == 1
+    assert reasons == [{"op": "insert_activity", "committed": True, "reason": "committed"}]
+    positions = [a.get("position") for a in trial["itinerary"][0]["activities"]]
+    assert "Noodle Place" in positions

@@ -162,7 +162,8 @@ def test_search_telemetry_surfaces_from_the_solve_fn_hook(one_query, fast_solve_
 
 
 def test_improve_invalid_output_reverts_to_last_valid(one_query, fast_solve_fn, monkeypatch):
-    def invalid_improve(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits):
+    def invalid_improve(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits,
+                         max_attempts=2):
         return {"not": "a plan"}
 
     monkeypatch.setattr(O, "llm_refine", invalid_improve)
@@ -179,7 +180,8 @@ def test_improve_invalid_output_reverts_to_last_valid(one_query, fast_solve_fn, 
 
 
 def test_improve_timeout_reverts_to_last_valid(one_query, fast_solve_fn, monkeypatch):
-    def slow_improve(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits):
+    def slow_improve(plan, query, llm_client, budget_sec, ground_and_check, apply_refine_edits,
+                      max_attempts=2):
         time.sleep(0.3)
         return {"itinerary": []}
 
@@ -210,7 +212,14 @@ def test_flags_default_all_off():
     assert flags.disjunction is False
     assert flags.llm_parse is False
     assert flags.llm_refine is False
+    assert flags.llm_repair_loop is False
     assert flags.dynamic_budget is False
+
+
+def test_llm_repair_loop_flag_reads_from_env():
+    flags = O.Flags.from_env(env={"TPC_P2_LLM_REPAIR_LOOP": "1"})
+    assert flags.llm_repair_loop is True
+    assert flags.llm_refine is False  # independently switchable, not implied by the other
 
 
 def test_dynamic_budget_off_passes_static_solve_slice(one_query):
