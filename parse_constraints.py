@@ -499,6 +499,18 @@ def parse_intercity_mode(text):
         if m:
             outbound = "train" if "train" in m.group(1).lower() else "airplane"
 
+    # --- positive outbound, "fly" verb: "fly to the destination" ---
+    # The mirror of the negated "do not want to fly to the destination" pattern above, which had no
+    # affirmative counterpart: a mixed request ("fly to the destination and take the train back")
+    # therefore recorded only the return leg and left the outbound one free. Deliberately *not*
+    # extended to undirected wording like "fly there" -- that states a mode for the whole trip, and
+    # the oracle's undirected clause constrains every intercity leg, so it belongs to the
+    # both-legs fallback below rather than to the outbound leg alone.
+    if outbound is None:
+        m = re.search(r"\bfly(?:ing)?\s+to\s+(?:the\s+)?destination", text, re.I)
+        if m:
+            outbound = "airplane"
+
     # Fallback: bare "by train" / "by airplane" without direction context.
     if outbound is None and ret is None:
         m = re.search(r"(?:take|by|use)\s+(?:a\s+|the\s+)?(train|airplane|plane|flight)", text, re.I)
@@ -507,12 +519,108 @@ def parse_intercity_mode(text):
             outbound = mode
             ret = mode
 
+    # Free-prose fallback (P26). The two fallbacks above are template-shaped: they need the literal
+    # word "destination", or "take/by/use" immediately followed by the bare mode noun. Ordinary
+    # prose states the same requirement as a *verb* ("we have chosen to fly", "we plan to fly
+    # round-trip") or with a qualifier between the preposition and the noun ("traveling by
+    # high-speed train (G)"), and neither reaches the patterns above -- measured as 33/85 missed
+    # intercity clauses on HF ``medium`` and 27/32 on HF ``human``
+    # (``scripts/phase2_generalization_probe.py``, ``parse_gap_by_kind``).
+    #
+    # Only fires when nothing directional was found, so a mixed request ("fly there, take the
+    # train back") keeps the per-leg reading the patterns above produced. The oracle's clause for
+    # this family constrains the *set* of intercity legs (``intercity_transport_set == {'train'}``),
+    # so an undirected statement means both legs, which is what this sets.
+    if outbound is None and ret is None:
+        mode = _parse_intercity_mode_free_prose(text)
+        if mode:
+            outbound = ret = mode
+
     result = {}
     if outbound:
         result["outbound"] = outbound
     if ret:
         result["return"] = ret
     return result if result else None
+
+
+# A place name, not a mode of travel: "the hotel is near the train station", "close to the
+# high-speed rail station". Stripped before any mode word is looked for, so a station mention can
+# never be read as a transport requirement.
+_INTERCITY_PLACE_NOUN_RE = re.compile(
+    r"\b(?:high[-\s]?speed\s+)?(?:train|railway|rail|bus|coach|subway|metro)\s+"
+    r"(?:station|stations|terminal|terminals|depot)\b|\bairports?\b",
+    re.I,
+)
+
+# "fly", "flying", "flight(s)", "by air/plane" -- an explicit airplane requirement. Each
+# alternative carries its own intent context (a planning/travel verb, a preposition of travel, or
+# an explicit round-trip phrase) so that a bare noun mention cannot fire it.
+_INTERCITY_AIRPLANE_RE = re.compile(
+    r"\b(?:"
+    r"(?:plan|planning|planned|prefer|prefers|preferred|decide|decided|choose|chose|chosen|want|"
+    r"wants|wish|wishes|hope|hopes|intend|intends|will|going|would\s+like)\b"
+    r"(?:\s+\w+){0,4}?\s+(?:to\s+)?fly(?:ing)?\b"
+    r"|fly(?:ing)?\s+(?:round[-\s]?trip|both\s+ways|there|over|out|in|back|to\b|from\b)"
+    r"|\bby\s+(?:air|plane|airplane|aeroplane|flight)\b"
+    r"|(?:round[-\s]?trip|both\s+ways|one[-\s]?way)\s+(?:by\s+)?(?:flight|plane|airplane|air)\b"
+    r"|\b(?:take|takes|taking|catch|catching|board|boarding|book|booking)\s+"
+    r"(?:a\s+|an\s+|the\s+)?(?:round[-\s]?trip\s+)?(?:direct\s+)?(?:flight|plane|airplane)\b"
+    r"|\bwe\s+(?:are|will\s+be|'ll\s+be)\s+flying\b"
+    r")",
+    re.I,
+)
+
+# "high-speed train (G)", "bullet train", "by rail", "take a round-trip train". Same shape: every
+# alternative requires an intent context or an unambiguous mode noun phrase.
+_INTERCITY_TRAIN_RE = re.compile(
+    r"\b(?:"
+    r"high[-\s]?speed\s+(?:train|rail|railway)"
+    r"|bullet\s+train"
+    r"|\bby\s+(?:high[-\s]?speed\s+)?(?:train|rail|railway)\b"
+    r"|(?:round[-\s]?trip|both\s+ways|one[-\s]?way)\s+(?:by\s+)?(?:high[-\s]?speed\s+)?"
+    r"(?:train|rail|railway)\b"
+    r"|\b(?:take|takes|taking|catch|catching|board|boarding|book|booking)\s+"
+    r"(?:a\s+|an\s+|the\s+)?(?:round[-\s]?trip\s+)?(?:high[-\s]?speed\s+)?(?:train|rail|railway)\b"
+    r"|(?:plan|planning|planned|prefer|prefers|preferred|decide|decided|choose|chose|chosen|want|"
+    r"wants|wish|wishes|hope|hopes|intend|intends|will|going|would\s+like)\b"
+    r"(?:\s+\w+){0,4}?\s+(?:to\s+)?(?:take|catch|board|ride)\s+"
+    r"(?:a\s+|an\s+|the\s+)?(?:round[-\s]?trip\s+)?(?:high[-\s]?speed\s+)?(?:train|rail|railway)\b"
+    r")",
+    re.I,
+)
+
+
+# Loose *mentions* of either mode, used only to veto a strict match. A request that names both
+# modes without a direction to attach them to ("still deciding whether to fly or take the
+# high-speed train") is ambiguous, and the cost of guessing is a pinned wrong leg.
+_INTERCITY_AIR_MENTION_RE = re.compile(r"\b(?:fly|flying|flight|flights|plane|airplane|air)\b", re.I)
+_INTERCITY_TRAIN_MENTION_RE = re.compile(r"\b(?:train|trains|rail|railway|high[-\s]?speed)\b", re.I)
+
+
+def _parse_intercity_mode_free_prose(text):
+    """Return ``"airplane"``/``"train"`` for a free-prose intercity mode statement, else ``None``.
+
+    Deliberately conservative, because a *spurious* intercity mode is not free: it pins arrival and
+    departure legs and can invalidate an otherwise-passing plan (the P24 lesson). So:
+
+    - station/airport *place* mentions are removed before matching;
+    - a mode word must come with a planning verb, a preposition of travel, or an explicit
+      round-trip phrase (the strict patterns above decide the value);
+    - a loose mention of the *other* mode vetoes the match, so a request naming both says nothing
+      rather than picking one.
+    """
+    stripped = _INTERCITY_PLACE_NOUN_RE.sub(" ", text or "")
+    air = bool(_INTERCITY_AIRPLANE_RE.search(stripped))
+    train = bool(_INTERCITY_TRAIN_RE.search(stripped))
+    if air == train:  # neither, or both stated strictly -> say nothing
+        return None
+    if air and _INTERCITY_TRAIN_MENTION_RE.search(stripped):
+        return None
+    if train and _INTERCITY_AIR_MENTION_RE.search(stripped):
+        return None
+    return "airplane" if air else "train"
+
 
 
 def parse_inner_transport_restrictions(text):

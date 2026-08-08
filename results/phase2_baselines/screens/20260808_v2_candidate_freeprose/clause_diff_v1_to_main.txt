@@ -1,0 +1,379 @@
+clause_count_mismatch: 0 []
+fail->pass flips (expected, from translation lifting the cap): 191
+pass->fail flips (RED if any -- translation changed a literal's meaning): 29
+
+=== RED: pass->fail flips ===
+uid=e20241028160932644544 clause#5
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028160939613971 clause#5
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+uid=e20241028161012012769 clause#3
+  A(control):    attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'West Lake Scenic Area'}<=attraction_name_set)
+  B(translated): attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'West Lake Scenic Area'}<=attraction_name_set)
+uid=e20241028161049552536 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161119161993 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161120613448 clause#5
+  A(control):    innercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_transports(activity)!=[]: innercity_transport_set.add(innercity_transport_type(activity_transports(activity)))
+result=({'walk'}<=innercity_transport_set)
+  B(translated): innercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_transports(activity)!=[]: innercity_transport_set.add(innercity_transport_type(activity_transports(activity)))
+result=({'walk'}<=innercity_transport_set)
+uid=e20241028161131864997 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161150400837 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161153932651 clause#5
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161158132216 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161207342223 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161208995433 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161215791938 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161232523372 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161238698866 clause#6
+  A(control):    attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Chongqing Happy Valley'}<=attraction_name_set)
+  B(translated): attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Chongqing Happy Valley'}<=attraction_name_set)
+uid=e20241028161247080504 clause#6
+  A(control):    attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Chengdu Museum'}<=attraction_name_set)
+  B(translated): attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Chengdu Museum'}<=attraction_name_set)
+uid=e20241028161258161531 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161307197168 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161312783307 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161312783307 clause#7
+  A(control):    attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Hongya Cave'}<=attraction_name_set)
+  B(translated): attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Hongya Cave'}<=attraction_name_set)
+uid=e20241028161320378455 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161322437990 clause#7
+  A(control):    attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Three Gorges Museum'}<=attraction_name_set)
+  B(translated): attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Three Gorges Museum'}<=attraction_name_set)
+uid=e20241028161327496043 clause#6
+  A(control):    attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Confucius Temple'}<=attraction_name_set)
+  B(translated): attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'Confucius Temple'}<=attraction_name_set)
+uid=e20241028161330699097 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161330699097 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161337180365 clause#6
+  A(control):    intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+  B(translated): intercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))
+result=({'airplane'}==intercity_transport_set)
+uid=e20241028161406841505 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161406841505 clause#7
+  A(control):    attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'The Palace Museum'}<=attraction_name_set)
+  B(translated): attraction_name_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))
+result=({'The Palace Museum'}<=attraction_name_set)
+uid=e20241028161417958159 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+
+=== fail->pass flips (sample of 15) ===
+uid=e20241028160842228543 clause#2
+  A(control):    total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=6000)
+  B(translated): total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=6000)
+uid=e20241028160842228543 clause#3
+  A(control):    innercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_transports(activity)!=[]: innercity_transport_set.add(innercity_transport_type(activity_transports(activity)))
+result=({'metro'}<=innercity_transport_set)
+  B(translated): innercity_transport_set=set()
+for activity in allactivities(plan):
+  if activity_transports(activity)!=[]: innercity_transport_set.add(innercity_transport_type(activity_transports(activity)))
+result=({'metro'}<=innercity_transport_set)
+uid=e20241028160845920703 clause#2
+  A(control):    total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=1000)
+  B(translated): total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=1000)
+uid=e20241028160845920703 clause#3
+  A(control):    restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Hot pot'}<=restaurant_type_set)
+  B(translated): restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Hot pot'}<=restaurant_type_set)
+uid=e20241028160851829629 clause#2
+  A(control):    total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=1500)
+  B(translated): total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=1500)
+uid=e20241028160855113315 clause#3
+  A(control):    restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Sichuan cuisine'}<=restaurant_type_set)
+  B(translated): restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Sichuan cuisine'}<=restaurant_type_set)
+uid=e20241028160857444675 clause#2
+  A(control):    total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=1300)
+  B(translated): total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=1300)
+uid=e20241028160902013119 clause#2
+  A(control):    total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=3000)
+  B(translated): total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=3000)
+uid=e20241028160904677400 clause#2
+  A(control):    total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=3700)
+  B(translated): total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=3700)
+uid=e20241028160904677400 clause#3
+  A(control):    restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Hot pot'}<=restaurant_type_set)
+  B(translated): restaurant_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))
+result=({'Hot pot'}<=restaurant_type_set)
+uid=e20241028160904677400 clause#6
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028160904677400 clause#7
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_type(activity)!=2: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_type(activity)!=2: result=False
+uid=e20241028160906602324 clause#5
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+uid=e20241028160906602324 clause#6
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_type(activity)!=2: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_type(activity)!=2: result=False
+uid=e20241028160908981620 clause#2
+  A(control):    total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=9400)
+  B(translated): total_cost=0 
+for activity in allactivities(plan):
+    total_cost+=activity_cost(activity)
+    total_cost += innercity_transport_cost(activity_transports(activity))
+result=(total_cost<=9400)
