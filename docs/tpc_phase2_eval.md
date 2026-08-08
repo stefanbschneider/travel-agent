@@ -164,8 +164,8 @@ spending.
 Priority order. Every item states its own acceptance criterion so it can be executed without
 re-deriving the argument.
 
-**Current state, 2026-08-07 (fifth revision).** `main`'s tip carries P16, **P18**, P19, **P20**,
-**P22**, **P24**, R25, **R26**, **R28**, **R29** and **R30**. P16 lands useful grounding machinery but
+**Current state, 2026-08-08 (sixth revision).** `main`'s tip carries P16, **P18**, P19, **P20**,
+**P22**, **P23**, **P24**, R25, **R26**, **R28**, **R29**, **R30** and **R31**. P16 lands useful grounding machinery but
 is **not promoted** (same-tree parse arm `matched 311 < 320` deterministic, `hf_medium` e2e flat). P19
 closed the residual diagnosis. R24 changed only the outer timeout; **R25 is closed** — both internal
 limits were tested directly and neither flips a query, so do not schedule the combined
@@ -182,9 +182,17 @@ all 100 plan files — the drift is closed, and this row is now the baseline for
 `v1`) since `b53a0747` (2026-07-13) — see item 2 below. **R30 is closed with a negative result**: 0/103
 target queries flip to fully passing, and 2 regress on `local_released_150` (one a genuine
 salvage-before-drop gap, one search perturbation) — see item 4 below.
-`TPC_P2_DROP_UNSATISFIABLE_NAMES` stays library-default-off; nothing promotes.
+`TPC_P2_DROP_UNSATISFIABLE_NAMES` stays library-default-off; nothing promotes. **R31 is closed
+GREEN**: with the P23 oracle-literal map applied, `hf_medium`'s FPR moves `20.67 → 44.67` and C-LPR
+moves `82.44 → 88.29`, `74` clauses flip fail→pass and, checked clause-by-clause across all 150 uids,
+**zero flip pass→fail** — see item 6 below. This does not promote a solver default; it recalibrates
+the measurement. **R30's own salvage-before-drop follow-up landed and was e2e-reconfirmed 2026-08-08
+too**: the genuine loss it found now passes in both arms, the unrelated loss is unchanged, no new loss
+appears anywhere — still `0/103` fail→pass so the flag stays off, but the regression risk is now
+measured closed, not just claimed closed — see item 4 below.
 
-**The queue's blocker is resolved; R31 remains open, plus corrections from R29 and R30.**
+**R31 is closed, R30's follow-up is reconfirmed, and the evaluation queue is now fully drained: the
+only open items are R27 (blocked on P6), R21 (parked) and R20 (HOLD).**
 
 1. **A whole-run row now exists on the current `main`.** [R28](#r28--a-whole-run-row-on-the-current-main)
    (`20260807T152009Z`, `git_sha aed4363e`) replaces R19 `ae0bd319` as the baseline every later
@@ -225,9 +233,18 @@ salvage-before-drop gap, one search perturbation) — see item 4 below.
    for the full causal analysis and a concrete follow-up (salvage-before-drop) for the implementation
    workstream. **That follow-up landed 2026-08-08** (static half — `_salvage_catalog_name`, verified
    against the exact loss uid, `25–33 %` recovery rate on every released/HF set; see
-   [its screen](../results/phase2_baselines/screens/20260808_p22_salvage_before_drop/README.md)). A
-   re-run of R30's exact e2e A/B to confirm the loss is closed end-to-end (not just statically) is
-   the next step and belongs to the evaluation machine, not yet scheduled with an R-number.
+   [its screen](../results/phase2_baselines/screens/20260808_p22_salvage_before_drop/README.md)). **Its
+   e2e re-confirmation also landed 2026-08-08**: the exact same 103-uid target set and flag pair,
+   re-run end to end — `20250324075652034944` (the salvage-fixable loss) now passes in both arms,
+   `20250322180344489669` (the search-perturbation loss) is unchanged as predicted, every HF set is
+   unchanged from R30, and the solve-time speedup reproduces closely. `local_released_150`'s net
+   regression is halved (`2 lost → 1 lost`). Still `0/103` fail→pass, so
+   `TPC_P2_DROP_UNSATISFIABLE_NAMES` still does not meet R30's own promotion bar and stays
+   library-default-off — but the regression risk R30 identified is now measured closed for the
+   parser-side mechanism. See
+   [the reconfirmation screen](../results/phase2_baselines/screens/20260808_r30_salvage_reconfirmation/README.md).
+   The remaining open question (whether freed solve time converts into more `full_runs/`-level passes)
+   is unchanged and still unscheduled.
 5. **P23 landed 2026-08-08, static half only.** `scripts/materialize_hf_split.py
    --translate-oracle-literals` now exists and reproduces the cap-pricing table above byte-for-byte,
    plus a full-split dry run of the rewrite itself: `331` free-prose queries across the four sets get
@@ -235,20 +252,30 @@ salvage-before-drop gap, one search perturbation) — see item 4 below.
    fragments and generic locations, as predicted — never approximated, only reported). No solve was
    run; that is R31, and nothing code-side blocks it now. See
    [the screen](../results/phase2_baselines/screens/20260808_p23_oracle_literal_translation/README.md).
+6. **R31 landed 2026-08-08, closed GREEN.** Full `hf_medium` (n=150), single solve (query text is
+   byte-identical between the untranslated and translated splits — the agent never reads
+   `hard_logic_py` — so one solve scored twice against each oracle is equivalent to, and cheaper than,
+   two solves), scored two ways: aggregate (`FPR 20.67 → 44.67`, `C-LPR 82.44 → 88.29`, `overall 51.06
+   → 64.57`) and clause-by-clause across all 150 uids (`74` fail→pass, **`0` pass→fail** — the doc's
+   own RED condition, checked directly, not assumed). Recalibrates the measurement; promotes nothing.
+   See [R31](#r31--the-first-real-free-prose-fpr-gate) and
+   [the screen](../results/phase2_baselines/screens/20260808_r31_oracle_literal_translation/README.md).
 
 | Run | Question | Blocked on | Cost |
 | --- | --- | --- | --- |
-| R31 | with the oracle literals translated, what is our real free-prose FPR? | none — P23 landed 2026-08-08, tool ready, no code blocker left | ~1 h |
 | R27 | can bounded Qwen edits plus deterministic rejection feedback flip a failure? | [P6](tpc_phase2_roadmap.md#p6--validator-in-loop-qwen-repair) | `n=10`, at most 60 calls |
 | R20 | should grounded fill-only LLM extraction become a harness default? | no code blocker; precondition re-checked 2026-08-08, still not met (HOLD) | no cold-cache rerun yet |
 | R21 | does spending the unspent envelope on all queries buy preference points? | P17(b), parked until FPR is nonzero | ~1.4 h, low priority |
 
-**Parallel execution plan.** **R28, R29 and R30 are all closed**, so the evaluation machine's next slot
-is **R31** — P23 landed 2026-08-08 (tool only, no solve run; see its screen), so nothing blocks R31
-starting now — then R27 after P6. The salvage-before-drop follow-up R30 identified for P22 also
-landed 2026-08-08 (static half, implementation machine); its own e2e re-confirmation (re-run R30's
-exact paired A/B, check the target uid now passes and no new loss appears) is available for the
-evaluation machine's queue whenever there is a slot, not yet numbered. Do not run two solver
+**Parallel execution plan.** **R28, R29, R30 and R31 are all closed**, and the salvage-before-drop
+follow-up R30 identified for P22 also landed and was re-confirmed end to end 2026-08-08 (see item 4
+above) — **the evaluation queue is now fully drained.** Every remaining item is blocked or parked: R27
+needs P6 (not yet implemented), R21 is parked until FPR is nonzero on a register that counts (R31
+raised `hf_medium`'s ceiling but P6/preference work is still the blocker, not the denominator), and
+R20 is HOLD per its own precondition re-check. The next open (unnumbered) candidate is a
+`full_runs/`-shaped measurement of whether P22's freed solve time converts into more passes at the
+5 h envelope — plausible from both R30 and its reconfirmation, unmeasured by any per-query screen
+contract. Do not run two solver
 screens concurrently on one host: wall-clock limits then change the number of restarts each arm gets.
 R20 needs no expensive run unless a new parse-level arm first beats the current deterministic floor.
 **R9 is closed**, per R25's own gating text: it needed a genuine per-uid flip on the restart axis, and
@@ -401,43 +428,66 @@ substring of an otherwise-unmatched capture. That would keep P22's demonstrated 
 closing the loss this row found. Not done here (eval-workstream row; does not edit
 `chinatravel/agent/`).
 
-### R31 — the first real free-prose FPR gate
+**Follow-up landed 2026-08-08 (static half, implementation machine)** — `_salvage_catalog_name` in
+`chinatravel/agent/phase2/normalize.py`, `25–33 %` recovery rate on every released/HF set (see
+[the screen](../results/phase2_baselines/screens/20260808_p22_salvage_before_drop/README.md)). **Its
+e2e re-confirmation also landed 2026-08-08**, reproducing this row's exact 103-uid target set and flag
+pair: `20250324075652034944` (the clean-causal loss above) now passes in both arms, closing that loss;
+`20250322180344489669` (the search-perturbation loss) is unchanged, as predicted; `local_released_150`'s
+regression is halved (`2 lost → 1 lost`, `0` gained either time); every HF set is unchanged from this
+row (byte-identical clause movement); the solve-time speedup reproduces closely
+(`local_released_150 60.05 → 26.89 s`, `hf_easy 57.74 → 11.74 s`, etc., matching this row's own numbers
+within noise). **Still does not meet this row's own promotion bar** (`0/103` fail→pass) — the flag
+stays library-default-off — but the regression risk this row identified is now measured smaller, not
+just claimed smaller. See
+[the reconfirmation screen](../results/phase2_baselines/screens/20260808_r30_salvage_reconfirmation/README.md).
+The remaining open question (whether the freed solve time converts into more `full_runs/`-level passes)
+is unchanged and still unscheduled.
 
-**P23 is landed as of 2026-08-08** (static build-and-verify only; no solve run yet — see
-[the screen](../results/phase2_baselines/screens/20260808_p23_oracle_literal_translation/README.md)),
-so R31 no longer needs to build the translation pass, only run it. Price the cap first — it costs
-seconds and needs no solve:
+### R31 — the first real free-prose FPR gate *(closed 2026-08-08, GREEN)*
 
-```bash
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/phase2_oracle_literal_translation.py \
-  --out-dir results/phase2_baselines/screens/<date>_oracle_literal_translation
-```
+**P23 landed 2026-08-08** (static build-and-verify only — see
+[the screen](../results/phase2_baselines/screens/20260808_p23_oracle_literal_translation/README.md)).
+R31 ran the translation pass end to end on `hf_medium` (n=150, the full split). Cap re-priced first
+(seconds, no solve) and reproduced byte-identical to the P23 screen: FPR ceiling `38.67`, C-LPR
+ceiling `90.03` — that is the denominator every prior `hf_medium` number in this document should be
+read against, unchanged.
 
-Then materialize the translated arm (the flag P23 added; deterministic, no LLM, delete after
-scoring):
+**Single solve, scored twice.** Confirmed directly (not assumed) that `--translate-oracle-literals`
+touches only `hard_logic_py`; `nature_language` and every other agent-visible field are byte-identical
+between the untranslated (`hf_medium_r31`) and translated (`hf_medium_en_oracle`) materializations for
+all 150 uids. Since the Phase 2 agent never reads `hard_logic_py`, the solved plan cannot depend on
+which split name it ran under — one solve (3-way sharded, `budget-sec=90`, zero LLM calls, `~15 min`
+wall clock, well under the doc's `~1 h` estimate) scored against each split's oracle is equivalent to,
+and cheaper than, the two-solve reading of "score the same free-prose subset twice."
 
-```bash
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/materialize_hf_split.py \
-  --hf-split medium --name hf_medium_en_oracle --translate-oracle-literals \
-  --report-out results/phase2_baselines/screens/<date>_r31/translation_report.json
-```
+**Result** ([full screen](../results/phase2_baselines/screens/20260808_r31_oracle_literal_translation/README.md)):
 
-Then score the same free-prose subset twice: untranslated (today's contract, `--hf-split medium
---name hf_medium_r31` with no translation flag) and translated (`hf_medium_en_oracle` above). The
-untranslated arm is the control that proves the translation is what moved the number.
+| metric | control (untranslated) | translated | Δ |
+| --- | --- | --- | --- |
+| FPR | 20.67 (31/150) | 44.67 (67/150) | **+24.00** |
+| C-LPR | 82.44 | 88.29 | **+5.85** |
+| overall | 51.06 | 64.57 | **+13.51** |
+| MicEPR / MacEPR | 100.0 / 100.0 | 100.0 / 100.0 | flat |
 
-**Acceptance is unusual for this document, because the object being validated is the measurement rather
-than the solver.** GREEN means: the translated arm's C-LPR and FPR are **higher**, the *set of clauses
-we satisfy* is unchanged except for previously-unsatisfiable ones becoming satisfiable, and no clause
-that passed before now fails. A clause flipping pass → fail means the translation changed a literal's
-meaning and the map is wrong — treat that as RED and stop, do not tune around it.
+**GREEN, checked at the acceptance bar this document actually needs — the clause level, not just the
+aggregate.** Two arms can land on the same aggregate C-LPR while satisfying a different clause set, so
+a per-uid, per-clause diff (reusing the real checker,
+`evaluate_hard_constraints_v2`, not a reimplementation) is what the RED condition requires:
+`clause_count_mismatch: 0` across all 150 uids, **`74` clauses flip fail→pass, `0` flip pass→fail**.
+Every sampled flip is a bare CJK literal (`'火锅'`, `'历史古迹'`, `'商业街区'`, …) reading as its
+English catalog equivalent (`'Hot pot'`, `'historical site'`, `'commercial district'`, …) — never a
+value substitution that changes what the clause means. The other `51` of the `125` mappable clauses
+stayed failing: translation lifts the structural cap, it does not manufacture a matching plan, and
+that split is the expected shape.
 
-**Then re-read the history.** Every free-prose row and screen in this document was scored under the cap.
-Do not retroactively rewrite their numbers, but record the ceiling next to them so nobody reads
-`hf_medium FPR 16.67` as `17 %` of the achievable range again — it is `43 %` of it.
-
-**The materialized translated split must never ship.** Delete it after scoring, exactly as with
-`scripts/materialize_hf_split.py`'s output.
+**This recalibrates the measurement; it promotes no solver default.** The translated split was deleted
+after scoring (confirmed absent from `git status`), matching every prior use of
+`--translate-oracle-literals`. Every free-prose FPR/C-LPR number already recorded in this document
+stays as written — read against its ceiling, not retroactively rewritten. The open follow-up this
+unlocks (re-run R26/R29/R30's pinned free-prose e2e screens under the translated oracle to see whether
+their solver-side conclusions look different once the structural cap is lifted) is not yet scheduled
+with an R-number.
 
 <a id="r20--does-grounded-fill-only-llm-extraction-convert"></a>
 ### R20 — does grounded fill-only LLM extraction convert? *(HOLD; not promoted)*
