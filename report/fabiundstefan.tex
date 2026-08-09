@@ -188,13 +188,16 @@ passes in parallel across queries: triage reaches every query cheaply, repair
 revisits the nearest failures with larger budgets, and polish spends what is left
 only after hard requirements pass. A keep-best rule makes updates monotonic, and
 deadline checks prevent starting work that cannot finish.
+%TODO: This could be extended a bit, to further clarify the three phases, indicating what is run in each phase with what time budget and how an increasing time budget is used. and how the agent gracefully handles limited time budgets + interrupts. Refer to the three phases in fig 1 above.
 
 \section{Evaluation}
 \label{sec:evaluation}
 
+% TODO: Would be nice to have 1-2 sentences that briefly give an overview of the upcoming evaluation section. There is so much to possibly evaluate - what do we show here and why (and where; ref to the sec)
+
 \subsection{Official feedback}
 
-The organizers permit two submitted harness versions and retain the better score.
+In the final, second phase of the competition, the organizers permit two submitted harness versions and retain the better score.
 We submitted v1 early to obtain the only available held-out feedback before
 choosing v2. Table~\ref{tab:official} compares that result with the current
 run on 100 familiar released queries. The columns are diagnostic signals, not
@@ -222,10 +225,12 @@ leading team's v1 result on the same held-out set.}
 % ROW: results/phase2_baselines/full_runs/20260807T152009Z.json
 % PORTAL: results/phase2_baselines/heldout/20260807_v1_leaderboard.json
 % PORTAL: results/phase2_baselines/heldout/20260808_leaderboard_5teams.json
+% TODO: If we need more space, we could drop this table. The exact numbers are not so crucial imo and we could just mention the relevant subset in the text.
 
 Grounding generalized: held-out micro EPR remained 99.48, within 0.16 of the best
 entry. Constraint understanding did not: C-LPR fell to 55.20, no query passed
 every requirement, and all preference terms were therefore zero.
+%TODO: We need to remind readers what EPR and C-LPR mean (not just the full names, but their intuition/meaning in this context)
 
 The full field is instructive. Across the five submitted systems, four score a
 full-plan rate of exactly zero and the fifth scores one point, and every
@@ -239,10 +244,12 @@ points. Because the full-plan term is multiplicative in the per-clause rate, it
 stays near zero until roughly 0.8 and then rises steeply; the first system past
 that threshold collects the dormant weight in one step.
 % PORTAL: results/phase2_baselines/heldout/20260808_leaderboard_5teams.json
+% TODO: To me, this overly focuses on the intermediate numbers of our and other team's v1 submissions. It's interesting and can stay in the evaluation; especially with the learnings and improvements for v2, but it should not be so dominant in the eval. Also, are we sure that the constraint density is the issue, not the parsing? I thought it's probably more a parsing issue. 
 
 \subsection{What the second version changes}
 
-Since the v1 build we repaired the phrasing brittleness described below, removed
+% TODO: We could clarify that these fixes were all done in the last 1-2 days before the final deadline. They are interesting, but we might also include more of all the work that we did before. (as space permits)
+Since the v1 build, we repaired the phrasing brittleness described below, removed
 the unsatisfiable-name failure class, and closed the largest remaining recall
 gaps. None of that is visible on the familiar register, where the extractor was
 already complete, so we measured it where it applies: 150 differently phrased
@@ -256,6 +263,7 @@ clause rate rises from 75.6 to 92.3 and the full-plan rate from 10.7 to 65.3.
 Checked clause by clause, 225 of 1264 clauses move from failing to passing
 against 13 lost, and the number of queries satisfying every requirement rises
 from 16 to 98 of 150.
+% TODO: We could reference/footnote the HF dataset that we used; mention that it extends the original public dataset, but was explicitly referenced by the organizers (ie, no leakage)
 % SCREEN: results/phase2_baselines/screens/20260808_v2_candidate_freeprose/README.md
 % SCREEN: results/phase2_baselines/screens/20260809_r34_intercity_e2e/README.md
 On the familiar register, where most of this cannot help, a paired run of the
@@ -274,6 +282,8 @@ queries, paired at equal budget. The dotted line is our v1 clause rate on the
 organizers' held-out set, a different query set, shown for scale.}
 \label{fig:v1v2}
 \end{figure}
+% TODO: use "Our v1 agent" and "Our v2 agent" to clarify they are both our submissions. Also clarify in the figure or caption that higher score is better.
+% TODO: When we talk about v1 vs v2, we should clarify that we did not yet submit v2 at the time of writing, ie, do not yet know the final held-out test score for v2
 
 The largest single fix illustrates a measurement lesson. Our coverage audits
 classified the hotel room count as ``guaranteed by trip metadata'', because the
@@ -286,13 +296,14 @@ full-plan rate on that set from 48\% to 65\%. No coverage table could have found
 this; a near-miss analysis found it in minutes.
 % SCREEN: results/phase2_baselines/screens/20260809_p28_room_count/README.md
 
-We deliberately do not convert these numbers into a predicted held-out score. It
-is one register, and the last prediction we made from a local number was wrong by
-a factor of two. What they establish is direction and size in the metric that
-currently decides the ranking.
+% We deliberately do not convert these numbers into a predicted held-out score. It
+% is one register, and the last prediction we made from a local number was wrong by
+% a factor of two. What they establish is direction and size in the metric that
+% currently decides the ranking.
 
 \subsection{Query phrasing}
 
+% TODO: Somewhere at the beginning of the eval section, we could briefly introduce the different datasets that we later refer to and introduce consistent terminology.
 The familiar released set was presented as in distribution, so prioritizing it was
 a reasonable choice. Its queries use a regular numbered template, whereas other
 released sets express the same requirements in varied prose: offline audits found
@@ -310,6 +321,7 @@ commonsense rule.
 % SCREEN: results/phase2_baselines/screens/20260806_llm_arms/README.md
 These samples are too small to rank systems, but the failure modes support
 retaining deterministic acceptance and optimization.
+% TODO: Highlight how much better we are compared to these baselines.
 
 \section{Where AI Helped --- and Where It Did Not}
 \label{sec:ai}
