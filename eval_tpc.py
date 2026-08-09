@@ -1,6 +1,7 @@
 
 
 import argparse
+import re
 import shutil
 
 import numpy as np
@@ -271,30 +272,121 @@ def update_suboptimal_split_file(split_file_path, query_ids, score_by_query, thr
     return len(deduped_lines)
 
 
-def _resolve_method_dir(method, lang):
+def _solver_default_method(splits):
+    """The method directory `solve_script_with_harness.py` writes when `--method` is omitted.
+
+    Kept in sync with `default_method()` there (harness `tpc`). Duplicated rather than imported
+    because importing the harness pulls in the whole solver stack for a string.
+    """
+    # Mirrors safe_path_component() in the harness exactly; tests/phase2/test_split_method_wiring.py
+    # pins the two together so this copy cannot drift.
+    sanitized = re.sub(r"[^A-Za-z0-9._-]+", "_", str(splits).strip())
+    return "phase2_e2e_{}".format(sanitized.strip("_") or "unnamed")
+
+
+def _existing_result_dirs():
+    try:
+        return sorted(
+            name for name in os.listdir(os.path.join(project_root_path, "results"))
+            if os.path.isdir(os.path.join(project_root_path, "results", name))
+        )
+    except OSError:
+        return []
+
+
+def _resolve_method_dir(method, lang, splits=None, explicit=True):
     """Pick the results directory name for a method under a locale.
 
     For English runs, many methods use an `_en` suffix. However, shared
     aggregate directories like `best` and `constraints_solved` typically do not.
     Prefer an existing directory if available.
+
+    When `--method` was *not* given, the default is a guess, and the guess used to be silently
+    wrong for the most common workflow in this repository: `solve_script_with_harness.py --split S`
+    writes to `results/phase2_e2e_S`, while this script looked in `results/TPCAgent_TPCLLM_en`,
+    found nothing, and reported a clean `0.0` for every metric. So an unspecified method falls
+    back to the split's solver default when that directory is the one that actually exists. A
+    method passed on the command line is never redirected -- an explicit name is an instruction.
     """
-    if lang != "en" or method.endswith("_en"):
-        return method
+    if lang == "en" and not method.endswith("_en"):
+        method_dir = os.path.join("results", method)
+        method_en = "{}_en".format(method)
+        method_en_dir = os.path.join("results", method_en)
 
-    method_dir = os.path.join("results", method)
-    method_en = "{}_en".format(method)
-    method_en_dir = os.path.join("results", method_en)
+        if os.path.exists(method_dir):
+            resolved = method
+        elif os.path.exists(method_en_dir):
+            resolved = method_en
+        elif method in {"best", "constraints_solved"}:
+            # Keep unsuffixed names for common aggregate folders even if not created yet.
+            resolved = method
+        else:
+            resolved = method_en
+    else:
+        resolved = method
 
-    if os.path.exists(method_dir):
-        return method
-    if os.path.exists(method_en_dir):
-        return method_en
+    if explicit or splits is None:
+        return resolved
+    if os.path.isdir(os.path.join(project_root_path, "results", resolved)):
+        return resolved
 
-    # Keep unsuffixed names for common aggregate folders even if not created yet.
-    if method in {"best", "constraints_solved"}:
-        return method
+    solver_default = _solver_default_method(splits)
+    if os.path.isdir(os.path.join(project_root_path, "results", solver_default)):
+        print(
+            "note: --method not given and results/{} does not exist; scoring results/{} "
+            "instead (the directory solve_script_with_harness.py --split {} writes). "
+            "Pass --method explicitly to score a different run.".format(
+                resolved, solver_default, splits
+            )
+        )
+        return solver_default
+    return resolved
 
-    return method_en
+
+def check_results_present(query_index, plans, splits, method, allow_missing):
+    """Fail loudly when the method directory holds no plans for this split.
+
+    `load_result` maps a missing or unreadable plan file to `{}`, and `{}` scores zero on every
+    metric without raising. That is right for a run with a few gaps, and actively misleading when
+    *nothing* was found: a split/method mismatch then prints a full, confident-looking scorecard of
+    `0.0` that reads like a solver failure rather than the lookup failure it is. So: an empty
+    intersection is an error, a partial one is a warning, and `--allow_missing_results` keeps the
+    old behaviour for anyone deliberately scoring a partial directory.
+    """
+    results_dir = os.path.join(project_root_path, "results", method)
+    missing = [uid for uid in query_index if not plans.get(uid)]
+    found = len(query_index) - len(missing)
+
+    print("Evaluating: split={} method={} plans={}/{} from {}".format(
+        splits, method, found, len(query_index), results_dir
+    ))
+
+    if found == 0 and not allow_missing:
+        candidates = _existing_result_dirs()
+        raise SystemExit(
+            "error: no plans found for split '{}' in {}.\n"
+            "  Every metric would score 0.0 because nothing was read, not because the plans are "
+            "bad.\n"
+            "  --method must name the SAME directory the solve wrote to. Solve and score a split "
+            "like this:\n"
+            "      python agent_env/scripts/solve_script_with_harness.py --method {m} --split {s}\n"
+            "      python eval_tpc.py --splits {s} --method {m}\n"
+            "  results/ currently contains: {c}\n"
+            "  Pass --allow_missing_results to score anyway (all zeros).".format(
+                splits, results_dir,
+                m=_solver_default_method(splits), s=splits,
+                c=", ".join(candidates) or "(no results/ directory)",
+            )
+        )
+
+    if missing:
+        sample = ", ".join(missing[:5])
+        print(
+            "warning: {} of {} queries have no plan in {} and will score 0 "
+            "(examples: {}).".format(
+                len(missing), len(query_index), results_dir, sample
+            )
+        )
 
 
 if __name__ == "__main__":
@@ -302,8 +394,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--splits", "-s", type=str, default="tpc_phase1")
     parser.add_argument(
-        "--method", "-m", type=str, default="TPCAgent_TPCLLM_en"
+        "--method", "-m", type=str, default=None,
+        help="Results directory to score: results/<method>/<uid>.json. Must match the --method "
+             "the solve ran with. Defaults to the split's solver default when that exists, "
+             "otherwise to TPCAgent_TPCLLM_en.",
     )  # , choices=METHOD_LIST)
+    parser.add_argument(
+        "--allow_missing_results", action="store_true", default=False,
+        help="Score even when no plan file is found for any query (yields all zeros). Without "
+             "this, an empty method directory is an error rather than a silent 0.0 scorecard.",
+    )
     parser.add_argument("--index", "-id", type=str, default=None,
                         help="Evaluate only this single query ID")
     parser.add_argument("--preference", "-p", action="store_true", default=False)
@@ -317,6 +417,9 @@ if __name__ == "__main__":
         help="Recompute and rewrite _eval_score for all results/best entries using current branch eval rules",
     )
     args = parser.parse_args()
+    method_was_explicit = args.method is not None
+    if not method_was_explicit:
+        args.method = "TPCAgent_TPCLLM_en"
     # Commented out to properly score our best results (without _en suffix). This is different upstream! Check phase 2 harness against upstream scoring.
     # if args.lang == "en" and not _method_has_en_suffix(args.method):
     #     args.method += "_en"
@@ -348,7 +451,9 @@ if __name__ == "__main__":
             )
         )
 
-    args.method = _resolve_method_dir(args.method, args.lang)
+    args.method = _resolve_method_dir(
+        args.method, args.lang, splits=args.splits, explicit=method_was_explicit
+    )
 
     # Optionally restrict to a single query
     if args.index is not None:
@@ -358,6 +463,12 @@ if __name__ == "__main__":
 
     results_dir = os.path.join("results", args.method)
     method_list, result_data = load_result(args, query_index, results_dir)
+
+    for _method in method_list:
+        check_results_present(
+            query_index, result_data[_method], args.splits, args.method,
+            args.allow_missing_results,
+        )
 
     schema_file_path = 'chinatravel/evaluation/output_schema.json'
     schema = load_json_file(schema_file_path)

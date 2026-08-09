@@ -160,8 +160,28 @@ names the output directory. It:
 - writes each plan to **`results/<method>/<uid>.json`**, and per-query telemetry plus a split
   summary under `agent_env/runs/<method>/`.
 
-Omitting `--method` falls back to `phase2_e2e_<split>`; omitting `--split` falls back to `easy`.
-Neither fallback is used when the arguments above are passed.
+### Worked example
+
+Solve a split, then score exactly what was solved. `--method` must be the **same string** in both
+commands -- it is the results directory name, and the scorer reads `results/<method>/<uid>.json`:
+
+```bash
+# 1. solve
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py \\
+    --method my_run --split tpc_phase2_test
+
+# 2. score the same run (note: eval_tpc.py spells the flag --splits, plural)
+.venv/bin/python eval_tpc.py --splits tpc_phase2_test --method my_run
+```
+
+The solve prints the matching `eval_tpc.py` line when it finishes, so the two never have to be
+paired by hand.
+
+`--method` is optional and falls back to `phase2_e2e_<split>`; `eval_tpc.py` picks that same
+directory up when its own `--method` is omitted. `--split` has **no** fallback: a run without it
+stops immediately with the command it should have been given, rather than solving some other
+split. Scoring a method directory that holds no plans is likewise an error, not a scorecard of
+zeros (`--allow_missing_results` overrides).
 
 Optional overrides (not needed for evaluation): `--budget-sec` (per-query cap),
 `--total-budget-sec` (whole-run envelope; `0` disables), `--limit`, `--resume`,
