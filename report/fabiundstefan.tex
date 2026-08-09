@@ -320,7 +320,7 @@ provide a fast, meaningful feedback loop for the
 agents, and what to finally submit.
 Three practices worked well:
 
-\textbf{1. Split the roles by cost and by kind of thinking.} Expensive reasoning
+\textbf{1. Split repeating work into different agent roles.} Expensive reasoning
 models were used for analysis, diagnosis, and planning: reading measurements,
 proposing the next experiment, ranking work by expected effect. Faster, cheaper
 agents then implemented a specified change with tests, and ran evaluations. The
@@ -338,7 +338,7 @@ compared. Agents could then evaluate their own work overnight and report a verdi
 against a criterion written before the run. We split available data into
 validation and held-out sets to limit overfitting.
 
-\textbf{3. Write the invariants down and let them be enforced by tests.} Grounding,
+\textbf{3. Write the invariants down and enforce them by tests.} Grounding,
 no oracle leakage, acceptance-before-emission, and evaluation proof before enabling new features are
 project rules pinned by tests, so an agent that would violate one fails rather than
 persuades. Cold-start verification caught a start-up race that would have shipped
@@ -352,7 +352,7 @@ making rigorous evaluation and promotion essential.
 \subsection{Inside the system}
 
 We tested the LLM in three distinct roles: parsing, repair, and end-to-end
-planning. For these experiments, a DeepInfra API provided the same Qwen3.6-27B
+planning. For these experiments, we used the DeepInfra API, which provides the same Qwen3.6-27B
 model version used by the organizers without a local deployment. LLM-first extraction cut
 missing free-prose constraint families by 40--65\%, but initially converted many
 misses into values that did not match the environment vocabulary.
@@ -388,8 +388,9 @@ targeted repair.
 \section{Conclusion}
 \label{sec:conclusion}
 
-The challenge rewarded a hybrid division of labor. Coding agents accelerated
-construction and analysis; the itinerary agent itself is deterministic and makes
+We approached this travel planning challenge by hybrid division of labor: 
+coding agents accelerated
+construction and analysis, while the final agent itself is deterministic and makes
 zero LLM calls. Environment tools supply facts, deterministic search assembles
 them, and acceptance gates admit only verified plans. Official v1 feedback showed
 that grounding transferred while extraction tuned to familiar phrasing did not;
