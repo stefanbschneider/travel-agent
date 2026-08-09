@@ -167,7 +167,7 @@ commands -- it is the results directory name, and the scorer reads `results/<met
 
 ```bash
 # 1. solve
-.venv/bin/python agent_env/scripts/solve_script_with_harness.py \
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py \\
     --method my_run --split tpc_phase2_test
 
 # 2. score the same run (note: eval_tpc.py spells the flag --splits, plural)
