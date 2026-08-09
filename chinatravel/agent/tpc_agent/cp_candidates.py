@@ -205,7 +205,8 @@ def _hotel_candidates(agent, env, city: str, people: int, days: int, constraints
             continue
         seen.add(key)
         required = bool(required_names and any(agent._match_constraint_text(name, req) for req in required_names))
-        normalized = _normalize_hotel(item, people, days, required=required)
+        normalized = _normalize_hotel(item, people, days, required=required,
+                                      rooms_override=_rooms_override(constraints))
         if required:
             required_rows.append(normalized)
         else:
@@ -351,12 +352,26 @@ def _normalize_restaurant(item: dict, required: bool, cuisine_match: bool) -> di
     return item
 
 
-def _normalize_hotel(item: dict, people: int, days: int, required: bool) -> dict:
+def _rooms_override(constraints: dict | None) -> int | None:
+    """The traveler's stated room count, if any and if usable (P28)."""
+    value = (constraints or {}).get("rooms")
+    try:
+        value = int(value)
+    except (TypeError, ValueError):
+        return None
+    return value if 0 < value <= 20 else None
+
+
+def _normalize_hotel(item: dict, people: int, days: int, required: bool,
+                     rooms_override: int | None = None) -> dict:
     item = dict(item)
     item["name"] = str(item.get("name", ""))
     item["featurehoteltype"] = str(item.get("featurehoteltype", ""))
     numbed = max(1, int(_float(item.get("numbed"), 1)))
-    rooms = max(1, math.ceil(people / numbed))
+    # P28: an explicitly requested room count wins over the ceil(people / beds) derivation. The
+    # oracle checks the count exactly (``room_count(activity) != N``), so deriving it is only right
+    # while the traveler stays silent.
+    rooms = rooms_override if rooms_override else max(1, math.ceil(people / numbed))
     item["numbed"] = numbed
     item["rooms"] = rooms
     item["price_cents"] = _cents(item.get("price"))

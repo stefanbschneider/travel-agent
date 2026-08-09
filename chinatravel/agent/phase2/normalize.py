@@ -41,6 +41,7 @@ _LLM_PARSE_ALLOWED_KEYS = {
     "intercity_mode",
     "excluded_inner_transport",
     "room_type",
+    "rooms",
     "required_hotel_any_types",
     "required_hotel_all_types",
     "hotel_nearby",
@@ -84,6 +85,7 @@ _LLM_PARSE_DICT_KEYS = {"budgets", "intercity_mode", "hotel_nearby", "conditiona
 _LLM_PARSE_SCALAR_KEYS = {
     "free_attractions_only",
     "room_type",
+    "rooms",
     "cuisine_preference",
     "hotel_amenity",
 }
@@ -1437,6 +1439,7 @@ _EXTRACT_FAMILY_SPEC = (
     "excluded_inner_transport: array of strings -- in-city transport modes to avoid"
     " (e.g. \"taxi\", \"metro\").\n"
     "room_type: one of \"single\", \"double\", \"twin\" -- required hotel room type.\n"
+    "rooms: integer -- the number of hotel rooms the traveler asked to book.\n"
     "required_hotel_any_types/required_hotel_all_types: array of hotel feature/type strings from"
     " the traveler's request (e.g. \"Hot spring bathing\", \"Family Room\") -- ANY-of vs ALL-of.\n"
     "required_attractions/excluded_attractions: array of specific attraction names.\n"

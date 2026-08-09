@@ -5035,6 +5035,9 @@ class TPCAgent(BaseAgent):
         self._forced_inner_mode = params.get("forced_inner_mode")
         timing_constraints = constraints.get("timing_constraints", []) or []
         self._active_timing_constraints = timing_constraints
+        # P28: repair and packing passes that recompute a room count reach it through
+        # ``_rooms_for`` without threading the constraint set through their signatures.
+        self._active_constraints = constraints
         budget_limits = self._extract_budget_limits(constraints)
         budget_tracker = self._new_budget_tracker()
         self._budget_limits = budget_limits
@@ -5133,10 +5136,7 @@ class TPCAgent(BaseAgent):
                 return False
             if required_hotel_any_types and not any(self._match_constraint_text(feature_type, t) for t in required_hotel_any_types):
                 return False
-            try:
-                rooms_local = math.ceil(people / int(h.get("numbed", 1)))
-            except Exception:
-                rooms_local = people
+            rooms_local = self._rooms_for(h.get("numbed", 1), people, constraints)
             h_cost = self._safe_float(h.get("price", 0.0), 0.0) * rooms_local * max(days - 1, 0)
             if not self._affordable_main_cost("accommodation", h_cost, budget_limits, budget_tracker):
                 return False
@@ -5184,10 +5184,7 @@ class TPCAgent(BaseAgent):
             for i in range(len(accom_df)):
                 h = accom_df.iloc[i]
                 p = self._safe_float(h.get("price", 0.0), 0.0)
-                try:
-                    rooms_local = math.ceil(people / int(h.get("numbed", 1)))
-                except Exception:
-                    rooms_local = people
+                rooms_local = self._rooms_for(h.get("numbed", 1), people, constraints)
                 h_cost = p * rooms_local * max(days - 1, 0)
                 affordable = self._affordable_main_cost("accommodation", h_cost, budget_limits, budget_tracker)
                 should_take = False
@@ -5203,7 +5200,7 @@ class TPCAgent(BaseAgent):
                     best_affordable = affordable
             hotel = best if best is not None else accom_df.iloc[0]
         hotel_name = str(hotel["name"])
-        rooms_needed = math.ceil(people / int(hotel["numbed"]))
+        rooms_needed = self._rooms_for(hotel["numbed"], people, constraints)
 
         # Pre-register hotel accommodation costs so that subsequent meal/attraction budget checks
         # see the correct remaining budget (hotel is force-appended later without re-registering)
@@ -6370,6 +6367,28 @@ class TPCAgent(BaseAgent):
             "tickets": 0,
             "transports": [],
         }
+
+    def _rooms_for(self, hotel_numbed, people, constraints=None):
+        """Rooms per night for one accommodation activity (roadmap P28).
+
+        The traveler's *stated* count wins; otherwise derive it as ``ceil(people / beds_per_room)``,
+        which is what this agent has always done. The oracle checks the count exactly
+        (``room_count(activity) != N``), and 167 released queries state it outright, so deriving it
+        is only correct while the request is silent. ``constraints`` defaults to the constraint set
+        the current build is running against, so the existing call sites need no new argument.
+        """
+        source = constraints if constraints is not None else getattr(self, "_active_constraints", None)
+        stated = (source or {}).get("rooms")
+        try:
+            stated = int(stated)
+        except (TypeError, ValueError):
+            stated = None
+        if stated and 0 < stated <= 20:
+            return stated
+        try:
+            return max(1, int(math.ceil(float(people) / float(int(hotel_numbed)))))
+        except Exception:
+            return max(1, int(people))
 
     def _make_accommodation_activity(self, hotel, rooms, check_in_time, transports=None):
         """Create an accommodation activity dict."""

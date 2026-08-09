@@ -450,3 +450,101 @@ def _pre_p27_required_attraction_types(text):
         return pc.parse_required_attraction_types(text)
     finally:
         pc._ATTRACTION_TYPE_FREE_PROSE_TRIGGER = current
+
+
+# --- 7. stated room counts (P28) --------------------------------------------
+#
+# The oracle checks the room count exactly (``room_count(activity) != N -> False``) and the solver
+# used to *derive* it as ceil(people / beds_per_room), which is right only while the traveler stays
+# silent. 167 released queries state it outright; on hf_medium 45 such clauses were failing, 28 of
+# them the only failing clause of their query.
+
+@pytest.mark.parametrize("text,expected", [
+    ("We want to eat Sichuan cuisine and book two rooms.", 2),
+    ("My friend and I plan to visit Guangzhou for two days and book a room.", 1),
+    ("We will travel by plane and book three rooms with king-size beds.", 3),
+    ("Two of us are planning to visit Hangzhou; we will book two twin rooms.", 2),
+    ("Four of us want to visit Shenzhen and stay in two rooms.", 2),
+    ("book a single-bed room", 1),
+    ("We will book 2 rooms.", 2),
+    ("We would like to reserve four standard rooms.", 4),
+])
+def test_stated_room_count_extracts(text, expected):
+    assert pc.parse_room_count(text) == expected
+
+
+@pytest.mark.parametrize("text", [
+    # Not a hotel room to book.
+    "The hotel should have a living room and a river view.",
+    "We would like a hotel with a meeting room.",
+    # No count stated at all: silence must leave the solver's derivation in place.
+    "We want a hotel with a swimming pool.",
+    "Please include a visit to the museum.",
+    # A count that is not about rooms.
+    "We will visit three museums and two parks.",
+])
+def test_no_room_count_when_unstated(text):
+    assert pc.parse_room_count(text) is None
+
+
+def test_room_count_reaches_the_solver_dict():
+    q = _q("My friend and I plan to visit Guangzhou for two days with a budget of 3900 RMB. "
+           "We want to eat Cantonese cuisine and book a room.")
+    raw = pc.parse_query_no_oracle(q)
+    assert raw.get("rooms") == 1, raw
+    variants = solver_constraint_variants(q, raw, use_oracle=False)
+    assert variants and variants[0].get("rooms") == 1, variants
+
+
+def test_room_count_is_read_from_the_oracle_side_too():
+    """Without the oracle-side parse, a correct extraction would be scored as ``spurious`` by every
+    parser/oracle diff in the repo."""
+    from chinatravel.agent.tpc_agent.solver_constraints import solver_constraint_variants as scv
+    q = _q("Book two rooms.")
+    q["hard_logic_py"] = [
+        "result=True\nfor activity in allactivities(plan):\n"
+        "  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False"
+    ]
+    variants = scv(q, {}, use_oracle=True)
+    assert variants and variants[0].get("rooms") == 2, variants
+
+
+def test_stated_count_wins_over_the_people_beds_derivation():
+    """The behavioural half: two travelers who ask for one room get one room, not ceil(2/1)=2."""
+    import sys
+    from pathlib import Path as _Path
+    root = _Path(__file__).resolve().parents[2]
+    for _p in (str(root), str(root / "chinatravel")):
+        if _p not in sys.path:
+            sys.path.insert(0, _p)
+    from chinatravel.agent.tpc_agent.tpc_agent import TPCAgent
+    rooms_for = TPCAgent._rooms_for
+    class _Stub:
+        pass
+    stub = _Stub()
+    stub._active_constraints = {"rooms": 1}
+    assert rooms_for(stub, 1, 2) == 1          # stated 1 beats ceil(2/1) = 2
+    stub._active_constraints = {"rooms": 3}
+    assert rooms_for(stub, 2, 2) == 3          # stated 3 beats ceil(2/2) = 1
+    stub._active_constraints = {}
+    assert rooms_for(stub, 1, 2) == 2          # silent -> derive
+    assert rooms_for(stub, 2, 5) == 3          # silent -> derive
+    stub._active_constraints = {"rooms": 0}
+    assert rooms_for(stub, 2, 5) == 3          # nonsense value -> derive
+    stub._active_constraints = {"rooms": "two"}
+    assert rooms_for(stub, 2, 5) == 3          # non-numeric -> derive
+
+
+def test_parsed_verifier_enforces_the_stated_room_count():
+    """The acceptance gate and the oracle-free self-score must see the family, or the scheduler
+    calls a query satisfied while it fails a real clause."""
+    from chinatravel.agent.tpc_agent.parsed_verifier import evaluate_parsed_constraints
+    def plan_with(rooms):
+        return {"people_number": 2, "start_city": "Shanghai", "target_city": "Hangzhou",
+                "itinerary": [{"day": 1, "activities": [
+                    {"type": "accommodation", "position": "Test Hotel", "rooms": rooms,
+                     "room_type": 1, "start_time": "21:00", "end_time": "24:00", "cost": 100.0,
+                     "tickets": rooms, "transports": []}]}]}
+    ok = evaluate_parsed_constraints({"rooms": 1}, plan_with(1), "Hangzhou")
+    bad = evaluate_parsed_constraints({"rooms": 1}, plan_with(2), "Hangzhou")
+    assert ok[0] > bad[0] or (ok[1] and not bad[1]) or ok != bad, (ok, bad)
