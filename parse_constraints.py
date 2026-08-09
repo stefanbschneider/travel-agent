@@ -1203,6 +1203,75 @@ def parse_room_type(text):
     return best[1] if best else None
 
 
+# --- rooms: how many hotel rooms the traveler asked for (P28) --------------
+#
+# The oracle's clause for this family is ``room_count(activity) != N -> False``, i.e. an exact room
+# count per accommodation activity, and ``concept_func.room_count`` reads the plan's own ``rooms``
+# field. The solver has always *derived* that count as ``ceil(people / beds_per_room)``, which is
+# right whenever the traveler does not say otherwise -- and wrong whenever they do. Measured on the
+# released sets: 167 queries state a room count in their text, and this pattern reads all 167
+# exactly as the oracle does (familiar-100 11/11, hf_easy 23/23, hf_medium 126/126, hf_human 7/7).
+# On hf_medium that mattered: 45 room-count clauses were failing, 28 of them the *only* failing
+# clause of their query.
+#
+# Deliberately narrow. The count word must be adjacent to "room(s)" (at most three intervening
+# adjectives, e.g. "two twin-bed rooms"), and a booking/staying context must precede it, so a
+# household noun ("a living room"), a hotel's own description ("the hotel has 200 rooms") or a
+# room-*type* phrase with no count cannot fire it.
+_ROOM_COUNT_WORDS = {
+    "a": 1, "an": 1, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
+    "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+}
+
+# Adjectives that may sit between the count and "room(s)". Anything else (a noun, a possessive, a
+# comma) breaks the phrase and the pattern does not match -- that is the point.
+_ROOM_COUNT_ADJECTIVES = (
+    r"(?:(?:single|twin|double|king|queen|big|large|standard|deluxe|family|separate|"
+    r"individual|bed|beds|bedded|size|sized|-)[\s-]*){0,3}"
+)
+
+_ROOM_COUNT_CONTEXT = (
+    r"(?:book|books|booking|booked|reserve|reserves|reserving|reserved|stay|stays|staying|stayed|"
+    r"get|getting|need|needs|needing|want|wants|wanting|take|takes|taking|share|sharing|"
+    r"share|arrange|arranging|would\s+like|prefer|prefers|with)"
+)
+
+_ROOM_COUNT_RE = re.compile(
+    _ROOM_COUNT_CONTEXT + r"\b(?:\s+\w+){0,3}?\s+(" + "|".join(_ROOM_COUNT_WORDS) + r"|\d{1,2})\s+"
+    + _ROOM_COUNT_ADJECTIVES + r"rooms?\b",
+    re.I,
+)
+
+# A "room" that is not a hotel room to book.
+_ROOM_COUNT_EXCLUDE_RE = re.compile(
+    r"\b(?:living|dining|bath|shower|ball|meeting|conference|dressing|locker|class|"
+    r"waiting|store|storage)[\s-]*rooms?\b",
+    re.I,
+)
+
+
+def parse_room_count(text):
+    """Extract the number of hotel rooms the traveler explicitly asked for, else ``None``.
+
+    ``None`` means "not stated", which leaves the solver's ``ceil(people / beds)`` derivation in
+    place -- the pre-existing behaviour, and the right answer when the request is silent.
+    """
+    if not text:
+        return None
+    scrubbed = _ROOM_COUNT_EXCLUDE_RE.sub(" ", text)
+    match = _ROOM_COUNT_RE.search(scrubbed)
+    if match is None:
+        return None
+    token = match.group(1).lower()
+    if token.isdigit():
+        value = int(token)
+    else:
+        value = _ROOM_COUNT_WORDS.get(token)
+    if not value or value > 20:
+        return None
+    return value
+
+
 def parse_hotel_type(text):
     """Extract preferred hotel amenity type (e.g., Sauna, Swimming pool)."""
     patterns = [
@@ -1994,6 +2063,10 @@ def parse_single_constraint_text(text):
     room = parse_room_type(text)
     if room:
         result["room_type"] = room
+
+    rooms = parse_room_count(text)
+    if rooms:
+        result["rooms"] = rooms
 
     any_hotel_types, all_hotel_types = parse_required_hotel_types(text)
     if any_hotel_types:

@@ -306,6 +306,8 @@ is available again — gate any candidate against R28.
 
 | | Item | Effort | Expected | Status |
 | --- | --- | --- | --- | --- |
+| **P28** | [Honor a stated room count](#p28--honor-a-stated-room-count) | half day | the largest single defect of the cycle: `28` of 150 `hf_medium` queries failed *only* the room-count clause | **landed 2026-08-09; both gates GREEN — free prose FPR `48.0 → 65.3333` / overall `66.6182 → 76.0996`, familiar-100 whole run `65.7354 → 66.8128`; the first change to gain on both registers** |
+| P29 | [Required in-city transport mode](#p29--required-in-city-transport-mode) | half day | `21` clauses on `hf_medium`, `6` sole failures | **built and rejected 2026-08-09: no context cue kept recall while avoiding `23` spurious readings on familiar-100; reverted, reopen with a sentence-role classifier** |
 | **P26** | [Free-prose intercity transport mode](#p26--free-prose-intercity-transport-mode) | 2 h | the largest single remaining ASCII-literal recall gap: `33/85` intercity clauses missed on `hf_medium`, `27/32` on `hf_human`, `0` on familiar-100 | **landed 2026-08-08, unflagged (additive alternatives, floor-gated); static GREEN — `hf_medium` gaps `131 → 111`, `hf_human` `109 → 85`, `hf_easy` `99 → 97`, precision flat or up, familiar-100 and `local_released_150` byte-identical; e2e gate is [R34](tpc_phase2_eval.md#r34--does-the-intercity-recall-fix-convert)** |
 | **P22** | [Drop provably unsatisfiable required-name constraints](#p22--drop-provably-unsatisfiable-required-name-constraints) | half day | un-pins the `23–50 %` of free-prose queries that currently cannot pass at any budget; the only item with a dominance argument rather than an estimate | **landed 2026-08-07, library default off; [R30](tpc_phase2_eval.md#r30--does-dropping-unsatisfiable-names-flip-queries-closed-2026-08-07-negative-result) closed 2026-08-07 with a negative e2e result (0/103 flip to passing, 2 regress) — stays default-off. Salvage-before-drop follow-up landed 2026-08-08 (`_salvage_catalog_name`, static only): recovers `25–33 %` of what would otherwise be a full drop on every released/HF set (`100 %` on familiar-100), verified against R30's exact loss; e2e re-confirmation is an Evaluation-workstream job, not yet run** |
 | **P21** | [Promote deterministic entity resolution](#p21--promote-deterministic-entity-resolution) | doc/bookkeeping only, no behavioral code change needed | already-landed flag, never measured alone: familiar-100 parse F1 `0.9552 → 0.9949`, `local_released_150` `0.8222 → 0.8451`, zero LLM calls; also takes familiar-100's unsatisfiable-name count `7 → 0` | **[R29 closed GREEN 2026-08-07](tpc_phase2_eval.md#r29--does-deterministic-entity-resolution-convert-end-to-end); found the flag was already harness-default-on since `b53a0747` (predates R28/`v1`) — remaining work is documenting that explicitly, not flipping a switch** |
@@ -331,6 +333,74 @@ is available again — gate any candidate against R28.
 | ~~P11~~ | ~~Whole-run mode for the pre-gate screen~~ | — | **landed 2026-08-06**, tooling only | landed |
 | ~~P14~~ | ~~Promote P8/P9 to harness defaults~~ | — | **landed 2026-08-06** | landed |
 | ~~P0/P7~~ | ~~Reproducible restart seed; worker count from affinity~~ | — | **landed 2026-08-05** | landed |
+
+### P28 — honor a stated room count *(landed 2026-08-09, both gates GREEN)*
+
+**The largest single defect found in this cycle, and it hid behind a metric label.** The oracle checks
+the hotel room count exactly (`room_count(activity) != N -> result=False`, reading the plan's own
+`rooms` field); the solver always *derived* it as `ceil(people / beds_per_room)`. That is right while
+the traveler says nothing and wrong whenever they say otherwise — and the generalization probe could
+never flag it, because it classifies this family as **metadata-guaranteed** (no extracted family
+needed to count as covered).
+
+**How it surfaced, which is the transferable part.** Not from a coverage table but from a different
+question: *for each query that fails exactly one clause, which clause is it?* On `hf_medium`, `50`
+queries failed exactly one clause and **`28` of them failed only on `rooms`** — `18.7 %` of the split
+sitting one field away from passing everything.
+
+**Precision, measured before any solve.** `167` released queries state a room count in their text and
+`parse_room_count` reads all of them exactly as the oracle does, with **zero wrong values** on any set
+(familiar-100 `11/11`, `hf_easy` `23/23`, `hf_medium` `123/126`, `hf_human` `6/7`,
+`preference_base50` `1/1`). The `14` remaining readings are faithful (`"stay in a single bed room"` →
+1) on queries whose oracle carries no count clause; the commonsense checker has no room rule, so they
+cost nothing and a smaller count only relieves the budget.
+
+**Wired end to end**, because a parse nobody consumes is worthless: the `rooms` family added to the
+shared solver vocabulary, to normalize's LLM-parse allowlist and prompt schema, and parsed on the
+**oracle** side too (`_parse_rooms` — without it a correct extraction scores as `spurious` in every
+parser/oracle diff); `TPCAgent._rooms_for` is now the single place a room count is decided (three
+derivation sites plus `cp_candidates._normalize_hotel`'s `rooms_override`), so the CP-SAT tier, the
+base builder and the repair passes cannot disagree; and `parsed_verifier` enforces it, so the
+acceptance gate and the oracle-free self-score see the family rather than calling a query satisfied
+while it fails a real clause.
+
+**Both gates GREEN, and this is the first change that gains on *both* registers** (every earlier win
+was register-specific):
+
+| gate | result |
+| --- | --- |
+| free prose (`hf_medium`, n=150, paired, translated oracle) | C-LPR `89.6361 → 92.3259`, FPR **`48.0 → 65.3333`**, overall `66.6182 → 76.0996`; `35` clauses fail→pass against `1`; queries fully passing `72 → 98` |
+| shipped shape (familiar-100 whole run, 5 h envelope) | overall `65.7354 → 66.8128`, FPR `47 → 49`, C-LPR `90.4418 → 90.6222`, EPR flat, `empty_plans 0/100` |
+
+Screen: [`20260809_p28_room_count`](../results/phase2_baselines/screens/20260809_p28_room_count/README.md).
+Both baselines reproduce their predecessor rows to the last decimal, which is how this pair is anchored.
+
+### P29 — required in-city transport mode *(investigated and rejected 2026-08-09)*
+
+**Built, measured, and dropped in one morning; recorded so it is not rebuilt from scratch.** The oracle
+shape `{'metro'} <= innercity_transport_set` ("at least one in-city leg uses this mode") had no
+representation on our side — we carried only the negative family (`excluded_inner_transport`). On
+`hf_medium` that is `21` clauses, `11` failing, `6` of them the sole failure of their query, and after
+P28 it is the second-largest near-miss class there.
+
+The plumbing is easy and was written: family in the vocabularies, oracle-side parse
+(`_parse_required_inner_transport`), a `parsed_verifier` check against the embedded `transports`
+segments (this family is *not* vacuous on our schema, unlike the exclusion family), and a first-tried
+`forced_inner_mode` prior in `_repair_params` — the search parameter already existed.
+
+**What killed it was precision on the register we are graded on locally.** A permissive context
+(`use|take|travel ... metro`) read **35** familiar-100 queries as mode requirements from sentences about
+*ticket counts* (`"Tickets for attractions, intercity transport, and metro rides must match 3
+travelers"`) and taxi-car counts. Tightening to a dominance cue (`primarily|mainly|mostly|only|...`)
+left **23** spurious on familiar-100 and `6` on `hf_easy` while cutting `hf_medium` matches from `14` to
+`9`. A spurious requirement here forces a transport mode through the whole plan, which is exactly
+[P24](#p24--stop-inventing-satisfiable-but-unrequested-constraints)'s failure mode, so it was reverted
+rather than shipped on a same-day gate.
+
+**To reopen:** the discriminator is not the verb but the *sentence role* — the familiar template's
+mentions sit in ticket/fare clauses, the real requirements in itinerary-planning clauses. A
+per-sentence classifier (or the grounded LLM extractor, which reads sentence intent natively) is the
+right instrument, not another regex cue.
 
 ### P27 — the remaining attraction-type residual is interpretive, not lexical *(investigated and closed 2026-08-09)*
 

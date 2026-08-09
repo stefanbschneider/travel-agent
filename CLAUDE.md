@@ -56,8 +56,19 @@ prose instead — the register whose failure signature matches the held-out one 
 oracle lifting the FPR ceiling that used to make such a measurement unreadable: **C-LPR
 `75.55 → 88.37`, FPR `10.67 → 44.00`, overall `44.41 → 64.28`**, `191` clauses fail→pass against `29`
 lost. Two candidate flags were decided there and in
-[R33](docs/tpc_phase2_eval.md#r33--the-v2-whole-run-gate-on-familiar-100): read those two sections
-before changing a default.
+[R33](docs/tpc_phase2_eval.md#r33--the-v2-whole-run-gate-on-familiar-100).
+
+**Then 2026-08-09 found something bigger, and how it was found is the reusable part.**
+[P28](docs/tpc_phase2_roadmap.md#p28--honor-a-stated-room-count): the solver derived the hotel room
+count from party size instead of reading the count the traveler stated, and **`28` of 150 `hf_medium`
+queries failed *only* that clause**. Every coverage instrument called the family fine, because the probe
+classifies it as metadata-guaranteed. What found it was asking *for each query failing exactly one
+clause, which clause is it?* — so **run that question after any measured run; a coverage table cannot
+answer it.** Both gates GREEN ([R36](docs/tpc_phase2_eval.md#r36--the-stated-room-count-gate-on-both-registers)):
+free prose FPR `48.0 → 65.3333` and overall `66.6182 → 76.0996`, familiar-100 whole run
+`65.7354 → 66.8128` — the first change to gain on *both* registers. Cumulative `v1 → v2` on free prose:
+C-LPR `75.55 → 92.33`, FPR `10.67 → 65.33`, overall `44.41 → 76.10`. Read those sections before
+changing a default.
 
 **Read [the eval doc's opening](docs/tpc_phase2_eval.md#the-one-fact-that-reorganizes-this-document)
 before trusting any local number**; treat a familiar-100 result as evidence about *one phrasing

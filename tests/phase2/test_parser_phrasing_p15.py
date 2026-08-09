@@ -184,7 +184,11 @@ def test_budget_in_city_synonym():
 # To regenerate after a deliberate familiar-100-affecting change: rerun the hash computation below
 # with the new code, update `_EXPECTED_HASH`, and say why in the commit message -- this hash must
 # never be updated to silence a failure without reading the diff first.
-_EXPECTED_HASH = "aa50249aa7eada6cfe8e33519912a729697e27454722d37b71f52ec09561c6c3"
+# Regenerated 2026-08-09 for P28 (stated room counts): 11 familiar-100 queries now carry a
+# `rooms` family. Deliberate and measured -- the extraction is 11/11 exact against this
+# split's oracle, and every one of those counts equals what the old ceil(people/beds)
+# derivation already produced, so no familiar-100 plan can change because of it.
+_EXPECTED_HASH = "6aa91d61d0f5bf461129f9f2e0336f0b6f0cd7699c70ef1515ea856bdb797bb4"
 
 
 @pytest.fixture(scope="module")

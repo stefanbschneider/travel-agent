@@ -48,6 +48,7 @@ _BRANCH_LOCAL_KEYS = {
     "taxi_cars_equals",
     "excluded_inner_transport",
     "position_presence",
+    "rooms",
 }
 
 _LIST_KEYS = {
@@ -200,6 +201,7 @@ def _parse_logic_snippet(logic: str, include_inner_transport: bool) -> dict:
     _parse_budgets(logic, result)
     _parse_intercity(logic, result)
     _parse_room_type(logic, result)
+    _parse_rooms(logic, result)
     _parse_hotel_distance(logic, result)
     _parse_activity_windows(logic, result)
     _parse_taxi_cars(logic, result)
@@ -369,6 +371,22 @@ def _parse_room_type(logic: str, result: dict[str, Any]) -> None:
     # nothing distinguishes it from code 2 in the data we've seen.
     room_map = {1: "single", 2: "twin", 3: "twin"}
     result["room_type"] = room_map.get(room_num, room_num)
+
+
+def _parse_rooms(logic: str, result: dict[str, Any]) -> None:
+    """The oracle's exact room *count* per accommodation activity (P28).
+
+    ``room_count(activity) != N -> result=False`` is the only shape the released generator emits for
+    this family, and ``concept_func.room_count`` reads the plan's own ``rooms`` field. Parsed here so
+    the oracle side of every parser/solver diff carries the family the no-oracle side now extracts;
+    without it a correct extraction would be scored as ``spurious``.
+    """
+    match = re.search(r"room_count\(activity\)\s*(?:==|!=)\s*(\d+)", logic)
+    if not match:
+        return
+    count = int(match.group(1))
+    if count > 0:
+        result["rooms"] = count
 
 
 def _parse_hotel_distance(logic: str, result: dict[str, Any]) -> None:

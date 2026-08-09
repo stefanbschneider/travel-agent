@@ -62,11 +62,11 @@ and improving that system, and selectively useful for language understanding;
 they did not replace deterministic optimization and verification. The first
 official held-out submission sharpened this division of labor: grounding
 generalized, while constraint extraction tuned to one phrasing style did not.
-Repairing that generalization gap is what the second version contains, and on
-unfamiliar phrasing it raises the clause satisfaction rate from 75.6 to 89.6.
-We also report how the system was built: near-continuous, multi-agent
-``vibe coding'' behind a deterministic evaluation harness, which we treat as a
-result in its own right.
+Repairing that gap is what the second version contains: on unfamiliar phrasing it
+raises the clause satisfaction rate from 75.6 to 92.3 and the share of fully
+satisfied itineraries from 10.7\% to 65.3\%. We also report how the system was
+built --- near-continuous multi-agent ``vibe coding'' behind a deterministic
+evaluation harness --- as a result in its own right.
 \end{abstract}
 
 \section{Introduction}
@@ -124,15 +124,13 @@ grounding, construction, repair, and acceptance remain deterministic.}
 \subsection{Parsing and normalization}
 
 The parser extracts dates, cities, budgets, excluded transportation, named POIs,
-timed visits, hotel properties, cuisines, and attraction categories. Alternatives
-remain separate solver variants rather than becoming an impossible conjunction.
-Normalization resolves names and concepts against each target city's catalog.
-
-Deterministic extraction is fast and testable, but it is not synonymous with
-understanding. We added phrasing-robust fallbacks for the largest measured recall
-gaps and an optional Qwen extractor that may fill a missing family but never
-overwrite a deterministic value. Model-proposed entities and categories are
-matched against the environment vocabulary before use.
+timed visits, hotel properties, room counts, cuisines, and attraction categories.
+Alternatives remain separate solver variants rather than an impossible conjunction,
+and normalization resolves names and concepts against each city's catalog.
+Deterministic extraction is fast and testable but not synonymous with
+understanding, so we added phrasing-robust fallbacks for the largest measured
+recall gaps and an optional Qwen extractor that may fill a missing family but never
+overwrite a deterministic value.
 
 Precision is equally important. Our audit found that in 23--50\% of free-prose
 queries, depending on the set, the parser invented a required POI name that did
@@ -165,19 +163,18 @@ transportation gaps, and rebuilding intercity legs. The same acceptance checker
 evaluates every candidate: query constraints, schema, and commonsense rules must
 all pass. Accepted candidates are ranked by preference value and cost.
 
-Packing and densification add meals and activities only while the checker
-continues to pass. A minimal schema-valid itinerary is written before solving so
-an interrupted run still has an output, but this is availability rather than
-success: an empty schema-valid itinerary scores zero.
+Packing and densification add meals and activities only while the checker keeps
+passing. A minimal schema-valid itinerary is written before solving so an
+interrupted run still has output --- availability, not success, since an empty
+itinerary scores zero.
 
 \subsection{Scheduling the five-hour run}
 
 The whole-split scheduler uses \emph{triage}, \emph{repair}, and \emph{polish}
-passes in parallel across queries. Triage reaches every query cheaply; repair
-revisits the nearest failures with larger budgets; polish spends remaining time
+passes in parallel across queries: triage reaches every query cheaply, repair
+revisits the nearest failures with larger budgets, and polish spends what is left
 only after hard requirements pass. A keep-best rule makes updates monotonic, and
-deadline checks prevent starting work that cannot finish within the shared
-five-hour envelope.
+deadline checks prevent starting work that cannot finish.
 
 \section{Evaluation}
 \label{sec:evaluation}
@@ -242,16 +239,19 @@ real denominator.\footnote{Those released sets state their query text in English
 but their verifier literals in Chinese, which caps the achievable full-plan rate;
 we translate the literals with an audited one-to-one map for measurement only,
 and the agent never reads them.} Figure~\ref{fig:v1v2} shows the result: the
-clause rate rises from 75.6 to 89.6 and the full-plan rate from 10.7 to 48.0.
-Checked clause by clause, 205 of 1264 clauses move from failing to passing
-against 27 lost.
+clause rate rises from 75.6 to 92.3 and the full-plan rate from 10.7 to 65.3.
+Checked clause by clause, 225 of 1264 clauses move from failing to passing
+against 13 lost, and the number of queries satisfying every requirement rises
+from 16 to 98 of 150.
 % SCREEN: results/phase2_baselines/screens/20260808_v2_candidate_freeprose/README.md
 % SCREEN: results/phase2_baselines/screens/20260809_r34_intercity_e2e/README.md
-On the familiar register, where none of this can help, a paired run of the full
-five-hour pipeline confirms no regression and a small gain: 64.69 to 65.74
-overall, with the full-plan rate moving from 45 to 47 of 100 queries.
+On the familiar register, where most of this cannot help, a paired run of the
+full five-hour pipeline confirms no regression and a modest gain: 64.69 to 66.81
+overall, with the full-plan rate moving from 45 to 49 of 100 queries.
 % ROW: results/phase2_baselines/full_runs/20260808T200402Z_v2gate_base.json
 % ROW: results/phase2_baselines/full_runs/20260808T200402Z_v2gate_cand.json
+% ROW: results/phase2_baselines/full_runs/20260809T055547Z_p28gate_cand.json
+% SCREEN: results/phase2_baselines/screens/20260809_p28_room_count/README.md
 
 \begin{figure}[t]
 \centering
@@ -262,34 +262,38 @@ organizers' held-out set, a different query set, shown for scale.}
 \label{fig:v1v2}
 \end{figure}
 
-We deliberately do not convert this into a predicted held-out score. It is one
-register measured once, and the last prediction we made from a local number was
-wrong by a factor of two. What it does establish is direction and size in the one
-metric that currently decides the ranking.
+The largest single fix illustrates a measurement lesson. Our coverage audits
+classified the hotel room count as ``guaranteed by trip metadata'', because the
+planner derives it from party size and beds per room --- correct only while the
+traveler says nothing. Asking a different question, \emph{for each query that fails
+exactly one requirement, which requirement is it?}, showed that 28 of 150
+free-prose queries failed \emph{only} the room count: one field away from
+satisfying everything. Reading the stated count instead of deriving it moved the
+full-plan rate on that set from 48\% to 65\%. No coverage table could have found
+this; a near-miss analysis found it in minutes.
+% SCREEN: results/phase2_baselines/screens/20260809_p28_room_count/README.md
+
+We deliberately do not convert these numbers into a predicted held-out score. It
+is one register, and the last prediction we made from a local number was wrong by
+a factor of two. What they establish is direction and size in the metric that
+currently decides the ranking.
 
 \subsection{Query phrasing}
 
-The familiar released set was presented as in distribution, so prioritizing it
-was a reasonable development choice. Its queries use a regular numbered
-template, whereas other released sets express similar requirements in varied
-prose. Offline oracle-backed audits found no missed clauses on the familiar
-register but 12--29\% on the differently phrased sets --- we had optimized against
-the one register we were already perfect on.
+The familiar released set was presented as in distribution, so prioritizing it was
+a reasonable choice. Its queries use a regular numbered template, whereas other
+released sets express the same requirements in varied prose: offline audits found
+no missed clauses on the familiar register but 12--29\% on the differently phrased
+ones. We had optimized against the one register we were already perfect on.
 % SCREEN: results/phase2_baselines/screens/20260807_generalization_post_p15/README.md
-The precision audit described in Section~\ref{sec:system} then revealed the
-unsatisfiable-name problem, which can pin an otherwise solvable query at a
-full-plan rate of zero regardless of search time. Both classes of fix are what
-Figure~\ref{fig:v1v2} measures.
 
 \subsection{Planning baselines}
 
-We ran two small, matched comparisons to identify failure modes. An autonomous
-tool-using Qwen agent scored 1.88 on eight familiar queries and 2.64 on eight
-free-prose queries, versus 67.71 and 48.49 for our solver; none of its itineraries
-passed all commonsense checks. The upstream RuleNeSy baseline
-\cite{shao2024chinatravel} scored about 9.5 on four queries from each register,
-grounding most individual facts but still violating at least one commonsense rule
-in every itinerary.
+We ran two small, matched comparisons. An autonomous tool-using Qwen agent scored
+1.88 and 2.64 on eight familiar and eight free-prose queries, versus 67.71 and
+48.49 for our solver; the upstream RuleNeSy baseline \cite{shao2024chinatravel}
+scored about 9.5 on four of each. Neither produced an itinerary passing every
+commonsense rule.
 % SCREEN: results/phase2_baselines/screens/20260806_llm_arms/README.md
 These samples are too small to rank systems, but the failure modes support
 retaining deterministic acceptance and optimization.
@@ -300,11 +304,11 @@ retaining deterministic acceptance and optimization.
 \subsection{The competition as a safe vibe-coding experiment}
 
 We used this challenge deliberately as a low-risk environment in which to push
-agent-driven development much harder than we would on a production system. The
-task has an objective, automatic scorer; nothing is deployed; and a wrong change
-is caught by a test or a measurement rather than by an incident. That let us ask a
-question that is otherwise expensive: how far can coding agents carry a real system
-if you give them fast, honest feedback and remove yourself from the inner loop?
+agent-driven development much harder than we would on a production system: an
+objective automatic scorer, nothing deployed, and wrong changes caught by a test
+rather than an incident. It let us ask an otherwise expensive question --- how far
+can coding agents carry a real system given fast, honest feedback and no human in
+the inner loop?
 
 Very far, as it turned out, given a great deal of scaffolding. We ran multiple
 paid agent subscriptions across several machines, with one or more agents working
@@ -334,16 +338,14 @@ against a criterion written before the run.
 
 \textbf{Write the invariants down and let them be enforced by tests.} Grounding,
 no oracle leakage, acceptance-before-emission, and flags-off-is-the-floor are
-recorded as project rules and pinned by tests, so an agent that would violate one
-fails rather than persuades. Cold-start verification is part of that: it caught a
-start-up race that would have shipped empty itineraries for an entire split while
-still exiting successfully, a failure no ordinary local run could expose.
+project rules pinned by tests, so an agent that would violate one fails rather than
+persuades. Cold-start verification caught a start-up race that would have shipped
+empty itineraries for a whole split while still exiting successfully.
 
-Two limits are worth stating honestly. The volume of agent output is not itself a
-result: much of it was superseded, and the ratio of committed work to accepted
-improvement was low. And agents were reliably over-optimistic about their own
-changes, which is why promotion required an independent measurement rather than an
-argument.
+Two limits are worth stating. The volume of agent output is not itself a result:
+much of it was superseded, and the ratio of committed work to accepted improvement
+was low. And agents were reliably over-optimistic about their own changes, which is
+why promotion required an independent measurement.
 
 \subsection{Inside the system}
 
@@ -380,10 +382,10 @@ negative result rather than omitted.
 
 End-to-end itinerary generation was the clearer boundary. Even with environment
 tools, autonomous Qwen planning accumulated small inconsistencies, and one
-violation invalidated the whole itinerary. Better prompts and tool interfaces may
-improve grounding, but dates, opening windows, travel times, budgets, meals, and
-disjunctions remain a constrained optimization problem. Deterministic solving
-provides reproducibility, explicit acceptance, and efficient targeted repair.
+violation invalidated the whole itinerary. Dates, opening windows, travel times,
+budgets, meals, and disjunctions remain a constrained optimization problem, where
+deterministic solving provides reproducibility, explicit acceptance, and efficient
+targeted repair.
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -408,12 +410,11 @@ boundary between language and symbols, provided their proposals are grounded. Ha
 itinerary construction remains optimization.
 
 A production system would replace the sandbox with live map, hotel, rail, flight,
-and booking APIs or MCP servers. It would also infer user-specific objectives
-rather than inherit fixed challenge preferences: some travelers want four
-attractions per day, while others value unplanned time. Live availability and
-uncertain travel times would require replanning, but the same architecture remains
-useful. Let AI interpret intent and help build the system; let APIs establish
-reality; let optimization construct the itinerary; and let deterministic
+and booking APIs, and would infer user-specific objectives rather than inherit
+fixed challenge preferences: some travelers want four attractions per day, others
+value unplanned time. Live availability would require replanning, but the same
+architecture holds. Let AI interpret intent and help build the system; let APIs
+establish reality; let optimization construct the itinerary; and let deterministic
 verification decide what is safe to emit.
 
 \section*{Acknowledgments}

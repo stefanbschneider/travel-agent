@@ -175,6 +175,18 @@ def evaluate_parsed_constraints(constraints, plan, target_city):
     if room_numbed is not None and hotels:
         add(all(room_type_fn(a) == room_numbed for a in hotels))
 
+    # --- Room count (P28) --------------------------------------------------
+    # The oracle checks this exactly (``room_count(activity) != N -> False``), so the acceptance
+    # gate and the oracle-free self-score have to see it too, or the scheduler will call a query
+    # satisfied while it fails a clause on the real oracle.
+    rooms_required = constraints.get("rooms")
+    try:
+        rooms_required = int(rooms_required)
+    except (TypeError, ValueError):
+        rooms_required = None
+    if rooms_required and hotels:
+        add(all(int(a.get("rooms", 0) or 0) == rooms_required for a in hotels))
+
     # --- Hotel proximity ---------------------------------------------------
     # Display-rounded hotel-distance values can be up to 0.01 km looser than the oracle
     # threshold. Tighten by that bound so this acceptance check is never looser; retain the
