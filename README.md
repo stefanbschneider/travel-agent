@@ -69,6 +69,49 @@ and still leaves a complete, non-regressed set of plans.
 Optional overrides, none needed for evaluation: `--budget-sec` (per-query cap), `--total-budget-sec`
 (whole-run envelope; `0` disables it), `--workers`, `--limit`, `--resume`, `--harness`.
 
+### Worked example: solve a split, then score it
+
+Copy-pasteable, with real values. The one thing that must match between the two commands is
+`--method`: it names the results directory the solve writes and the scorer reads.
+
+```bash
+# 1. solve the whole split into results/my_run/
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py \
+    --method my_run --split tpc_phase2_test
+
+# 2. score exactly that run -- note eval_tpc.py spells it --splits, plural
+.venv/bin/python eval_tpc.py --splits tpc_phase2_test --method my_run
+```
+
+Smaller variants for a quick check:
+
+```bash
+# three queries only, into its own directory
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py \
+    --method smoke --split tpc_phase2_familiar_100_val --limit 3
+.venv/bin/python eval_tpc.py --splits tpc_phase2_familiar_100_val --method smoke
+
+# both flags omitted: the defaults now agree instead of diverging
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py --split tpc_phase2_test
+.venv/bin/python eval_tpc.py --splits tpc_phase2_test
+```
+
+The solve prints the exact `eval_tpc.py` command for the run it just wrote, so the pair never has
+to be reconstructed from memory.
+
+**`--split` has no default.** A run without it stops immediately and prints the command it should
+have been given. It used to fall back to `easy`, an upstream split whose query JSON the submission
+archive does not ship — so the argument-less run loaded a world, then died in the loader with a
+resolution error about a split nobody had asked for.
+
+**A method directory with no plans is an error, not a score.** `eval_tpc.py` maps an absent plan
+file to `{}`, which scores zero on every metric without raising. That is right for a run with a few
+gaps and badly wrong when *nothing* was found: a `--method` that does not match the solve used to
+print a full, confident scorecard of `0.0` that reads like a broken solver rather than the lookup
+mistake it is. Now an empty intersection stops with the directory it searched, what `results/`
+actually contains, and the paired commands that would have worked; a partial one scores and prints
+`plans=N/M` plus a warning. `--allow_missing_results` restores the old all-zeros behaviour.
+
 ### `--method`: naming the output directory
 
 `--method` is a label, not a mode. Whatever string is passed becomes the output directory verbatim,
@@ -111,8 +154,12 @@ Each query JSON needs only the visible fields: `uid`, `nature_language`, `start_
 local convenience scoring in `agent_env/runs/<method>/<uid>/evaluation.json` degrades to its
 oracle-free half (`has_oracle: false`); the solve is unaffected.
 
-Splits already present include `tpc_phase2_familiar_100` and its `_val` / `_test` folds
-(`make phase2-familiar-splits` regenerates the folds), plus upstream's `easy`, `medium`, `human`.
+Splits with **both** halves present here are `tpc_phase1`, `tpc_phase2_test`,
+`tpc_phase2_familiar_100` and its `_val` / `_test` folds (`make phase2-familiar-splits` regenerates
+the folds). Upstream's `easy`, `medium` and `human` have a UID list but no query JSON in this
+archive, so naming one of them fails to resolve — the error names both halves and lists the
+nameable splits. A split name that is merely *nameable* is never rejected up front, because the
+held-out split the organizers pass is in neither list at packaging time and must still run.
 
 ## How the run spends its 5 hours
 
@@ -144,7 +191,15 @@ way, passing the same `--method` the run used:
 
 ```bash
 .venv/bin/python eval_tpc.py --splits <split> --method <method>
+
+# concretely:
+.venv/bin/python eval_tpc.py --splits tpc_phase2_test --method my_run
 ```
+
+The flag is `--splits` (plural) here and `--split` (singular) in the harness; `--split` still works
+as an unambiguous abbreviation. Omitting `--method` scores `results/phase2_e2e_<split>/`, the
+directory the harness writes when its own `--method` is omitted, so the two entry points line up
+with no arguments at all.
 
 ## Development
 

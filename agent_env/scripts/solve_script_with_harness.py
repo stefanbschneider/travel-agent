@@ -97,6 +97,41 @@ def _load_queries_for_lang(split: str, lang: str) -> tuple[list[str], dict[str, 
     return query_ids, query_data
 
 
+DEFAULT_SPLITS_DIR = PROJECT_ROOT / "chinatravel" / "evaluation" / "default_splits"
+
+
+def available_splits() -> list[str]:
+    """Split names this tree can name on the command line, for use in error messages only.
+
+    A split is nameable when ``default_splits/<name>.txt`` exists. That file is necessary but not
+    sufficient -- the query JSON must also be present -- so this list is a hint for a human who
+    mistyped a name, never a validation whitelist. The held-out split the organizers pass is not
+    in this tree at packaging time and must keep working, which is exactly why nothing here may
+    reject a name that is missing from the list.
+    """
+    try:
+        names = sorted(
+            path.stem
+            for path in DEFAULT_SPLITS_DIR.glob("*.txt")
+            if not path.stem.endswith("_suboptimal")
+        )
+    except OSError:
+        return []
+    return names
+
+
+def _abbreviate(text: object, limit: int = 400) -> str:
+    """Shorten a loader error so the actionable first line is not buried.
+
+    Upstream's resolver embeds every missing UID in its message; on a 300-query split that is
+    thousands of characters of noise around one sentence that matters.
+    """
+    value = str(text)
+    if len(value) <= limit:
+        return value
+    return value[:limit] + f"... [{len(value) - limit} more chars]"
+
+
 def _is_split_resolution_failure(exc: BaseException) -> bool:
     """Is ``exc`` "this split is not in this language tree", as opposed to "this data is broken"?
 
@@ -155,9 +190,15 @@ def load_queries_with_lang(
         try:
             query_ids, query_data = _load_queries_for_lang(split, other)
         except Exception as secondary:
+            hint = ", ".join(available_splits()) or "(none found)"
             raise RuntimeError(
-                f"Split {split!r} did not resolve in either language. "
-                f"lang={lang}: {primary}; lang={other}: {secondary}"
+                f"Split {split!r} did not resolve in either language, so there is nothing to "
+                f"solve. Check that chinatravel/evaluation/default_splits/{split}.txt exists and "
+                f"that its query JSON files are present under chinatravel/data/en/ (--lang en) or "
+                f"chinatravel/data/ (--lang zh).\n"
+                f"  lang={lang}: {_abbreviate(primary)}\n"
+                f"  lang={other}: {_abbreviate(secondary)}\n"
+                f"  splits nameable in this tree: {hint}"
             ) from primary
         print(
             f"warning: split {split!r} did not resolve at lang={lang} ({primary}); "
@@ -1318,6 +1359,47 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def resolve_split_argument(
+    cli_split: object, config_split: object, config_path: Path
+) -> str:
+    """Return the split to solve, or refuse to guess one.
+
+    There used to be an ``"easy"`` fallback here. It was worse than no default at all: ``easy`` is
+    an upstream split whose query JSON this archive does not ship, so an argument-less run spent
+    its startup loading a WorldEnv and then died inside the loader -- a resolution error about a
+    split nobody asked for. Whatever the caller meant, it was not that. Since the organizers always
+    pass ``--split``, the only callers who reach this branch are humans who forgot it, and the
+    useful thing to hand them is the command they meant to type.
+    """
+    # Not ``choose_nonempty``: that helper drops straight to the default when the CLI value is
+    # blank, skipping the config. Here a blank ``--split ""`` should mean "I named nothing", so
+    # each source is tried in turn and only a non-blank one counts.
+    value = None
+    for candidate in (cli_split, config_split):
+        if candidate is None:
+            continue
+        text = str(candidate).strip()
+        if text:
+            value = text
+            break
+
+    if value is None:
+        hint = ", ".join(available_splits()) or "(none found)"
+        raise SystemExit(
+            "error: no split selected.\n"
+            "  Pass --split explicitly (this is what the evaluation host does):\n"
+            "      python agent_env/scripts/solve_script_with_harness.py "
+            "--method <method> --split <split>\n"
+            "  for example:\n"
+            "      python agent_env/scripts/solve_script_with_harness.py "
+            "--method my_run --split tpc_phase2_test\n"
+            f"  or set [run].split in {config_path} (the shipped config leaves it unset on "
+            "purpose, so a command-line value is never overridden).\n"
+            f"  Splits nameable in this tree: {hint}"
+        )
+    return value
+
+
 def main() -> None:
     args = parse_args()
     config = read_config(Path(args.config))
@@ -1329,7 +1411,7 @@ def main() -> None:
     opencode_config = config_section(config, "opencode")
     codex_config = config_section(config, "codex")
 
-    split = str(choose(args.split, run_config.get("split"), "easy"))
+    split = resolve_split_argument(args.split, run_config.get("split"), Path(args.config))
     lang = normalize_lang(choose(args.lang, run_config.get("lang"), "en"))
     uid = choose(args.uid, run_config.get("uid"), None)
     limit = choose(args.limit, run_config.get("limit"), None)
@@ -1372,6 +1454,14 @@ def main() -> None:
             work_dir=work_dir,
         )
         print(f"\nSaved plans: {PROJECT_ROOT / 'results' / method}")
+        # The summary's ``self_*`` numbers are the solver's own view of the plans it kept, not the
+        # official score. Scoring them means pointing eval_tpc.py at the same --method, and getting
+        # that pairing wrong reads as a flawless 0.0 rather than as a mistake -- so print the exact
+        # command rather than leaving it to be reconstructed.
+        print(
+            "\nScore this run with (note --splits, and the same --method):\n"
+            f"    python eval_tpc.py --splits {split} --method {method}"
+        )
         print(json.dumps(summary, ensure_ascii=False, indent=2, default=json_default))
         return
 
