@@ -100,10 +100,10 @@ LITERALS: dict[str, Literal] = {
     "r32_v1_overall": Literal(44.4077, "screens/20260808_v2_candidate_freeprose/README.md"),
     # The v2 configuration as shipped: the same free-prose contract, measured after P26 landed.
     "r32_v2_clpr": Literal(
-        89.6361, "screens/20260809_r34_intercity_e2e/README.md", "v2 as shipped"
+        92.3259, "screens/20260809_p28_room_count/README.md", "v2 as shipped, after P28"
     ),
-    "r32_v2_fpr": Literal(48.0, "screens/20260809_r34_intercity_e2e/README.md"),
-    "r32_v2_overall": Literal(66.6182, "screens/20260809_r34_intercity_e2e/README.md"),
+    "r32_v2_fpr": Literal(65.3333, "screens/20260809_p28_room_count/README.md"),
+    "r32_v2_overall": Literal(76.0996, "screens/20260809_p28_room_count/README.md"),
     # The organizers' board, read 2026-08-08: the leading team's C-LPR and ours.
     "board_rank1_clpr": Literal(
         67.7669, "organizer portal, read 2026-08-08", "leading team's held-out C-LPR"
@@ -431,7 +431,7 @@ def figure_v1_v2_free_prose(path: Path) -> None:
         ax.text(rect.get_x() + rect.get_width() / 2, value + 1.8, f"{value:.1f}",
                 ha="center", fontsize=6.6, fontweight="bold")
     ax.axhline(LITERALS["board_ours_clpr"].value, color="#a33b3b", linewidth=0.7, linestyle=":")
-    ax.text(1.0, LITERALS["board_ours_clpr"].value + 2.5, "our held-out v1 clause rate",
+    ax.text(1.62, LITERALS["board_ours_clpr"].value + 2.5, "our held-out v1 clause rate",
             fontsize=5.8, color="#a33b3b", ha="center")
     ax.set_xticks(list(x))
     ax.set_xticklabels(metrics, fontsize=6.6)

@@ -189,6 +189,12 @@ measurement said what that was worth, because every row we hold is on familiar-1
 where all of it is structurally inert. `v1` was built from `be196d00` (2026-08-05); the phrasing fix
 landed 2026-08-06, and P15, P20, P22, P23, P24, P17(a), P4, P6 and P25 after it.
 
+**Updated 2026-08-09: the delta is now much larger than R32 measured, because
+[P28](tpc_phase2_roadmap.md#p28--honor-a-stated-room-count) landed after it.** On the same free-prose
+contract, `v1 → v2` as shipped is **C-LPR `75.5538 → 92.3259`, FPR `10.6667 → 65.3333`, overall
+`44.4077 → 76.0996`**, with `225` of `1264` clauses flipping fail→pass against `13` lost, and the
+familiar-register whole run moves `64.6878 → 66.8128` — see [R36](#r36--the-stated-room-count-gate-on-both-registers).
+
 [R32](#r32--what-landed-since-v1-measured-on-free-prose) closes that gap on the free-prose register,
 now that [R31](#r31--the-first-real-free-prose-fpr-gate) has removed the oracle-literal FPR ceiling
 that made such a measurement unreadable: on `hf_medium` (n=150, paired, same host, translated oracle)
@@ -670,6 +676,38 @@ byte-identical. That also means R33 and R34 still describe the shipped configura
 also records the one honest caveat (a shared-noun OR whose second arm P20's guard cannot see) and the
 larger negative finding: the rest of the attraction-type residual is interpretive, and the oracle's own
 labels for it are inconsistent, so a deterministic mapping would be guessing.
+
+### R36 — the stated-room-count gate, on both registers *(closed 2026-08-09, GREEN)*
+
+**The gate for [P28](tpc_phase2_roadmap.md#p28--honor-a-stated-room-count), and the largest movement any
+arm in this project has produced.** Two paired measurements, both from pinned worktrees, both run
+concurrently: free prose (`hf_medium`, n=150, `90 s`/query, translated oracle) and the shipped shape
+(familiar-100 whole run, 5 h envelope, 4 workers).
+
+| | free prose: pre → P28 | shipped shape: pre → P28 |
+| --- | --- | --- |
+| C-LPR | `89.6361 → 92.3259` | `90.4418 → 90.6222` |
+| FPR | **`48.0000 → 65.3333`** | `47.0 → 49.0` |
+| overall | **`66.6182 → 76.0996`** | `65.7354 → 66.8128` |
+| clause level | `35` fail→pass, `1` pass→fail | — |
+| queries passing everything | `72 → 98` of 150 | `47 → 49` of 100 |
+
+EPR-micro and EPR-macro are flat in both, `empty_plans` is `0/100` in both whole-run rows, and each
+baseline arm reproduces its predecessor row to the last decimal (free prose `66.61823026511775` from
+R34; whole run `65.73543493802828` from R33) — which is what anchors these numbers to the earlier ones.
+
+**Why it was invisible for so long, which matters more than the number.** The room-count family is
+classified *metadata-guaranteed* by the coverage probe: no extracted family is needed for the clause to
+count as covered, because the solver derives the count from party size and beds per room. Every recall
+and precision instrument in this repository therefore reported it as fine. What found it was a
+different question — *for each query failing exactly one clause, which clause is it?* — and the answer
+was `28` of `50` near-misses on one register. **Add that question to the standard post-run analysis;
+coverage tables cannot answer it.**
+
+Screen: [`20260809_p28_room_count`](../results/phase2_baselines/screens/20260809_p28_room_count/README.md).
+The same analysis names the next two candidates on that register (`attraction_name` 18 sole failures,
+`inner_transport_required` 6 — the latter built and rejected the same day, see
+[P29](tpc_phase2_roadmap.md#p29--required-in-city-transport-mode)).
 
 ### R20 — does grounded fill-only LLM extraction convert? *(HOLD; not promoted)*
 

@@ -1,0 +1,121 @@
+clause_count_mismatch: 0 []
+fail->pass flips (expected, from translation lifting the cap): 35
+pass->fail flips (RED if any -- translation changed a literal's meaning): 1
+
+=== RED: pass->fail flips ===
+uid=e20241028160939613971 clause#3
+  A(control):    attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'Cultural Landscape'}<=attraction_type_set)
+  B(translated): attraction_type_set=set()
+for activity in allactivities(plan):
+  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))
+result=({'Cultural Landscape'}<=attraction_type_set)
+
+=== fail->pass flips (sample of 15) ===
+uid=e20241028160842228543 clause#5
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028160851829629 clause#5
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028160857444675 clause#5
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028160918445815 clause#5
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028160932644544 clause#5
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028160934978800 clause#5
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028160939613971 clause#5
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+uid=e20241028160941454573 clause#5
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+uid=e20241028160942866027 clause#5
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028160956304302 clause#5
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161049552536 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161119161993 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161122171567 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+uid=e20241028161126940854 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False
+uid=e20241028161130188821 clause#4
+  A(control):    result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
+  B(translated): result=True
+for activity in allactivities(plan):
+  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False
