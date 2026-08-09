@@ -326,54 +326,57 @@ retaining deterministic acceptance and optimization.
 \section{Where AI Helped --- and Where It Did Not}
 \label{sec:ai}
 
-\subsection{The competition as a safe vibe-coding experiment}
+\subsection{A safe vibe-coding experiment}
 
 We used this challenge deliberately as a low-risk environment in which to push
-agent-driven development much harder than we would on a production system: an
-objective automatic scorer, nothing deployed, and wrong changes caught by a test
-rather than an incident. It let us ask an otherwise expensive question --- how far
-can coding agents carry a real system given fast, honest feedback and no human in
+agent-driven development (``vibe coding'') much harder than we would on a production system.
+In the challenge, we had an objective automatic scorer, nothing deployed, and no dependencies to/from others. 
+It let us ask an otherwise expensive question --- how far
+can coding agents carry a real system given fast, measurable feedback and no human in
 the inner loop?
 
-Very far, as it turned out, given a great deal of scaffolding. We ran multiple
+Very far, as it turned out, given a great deal of scaffolding and proper initial design. We ran multiple
 paid agent subscriptions across several machines, with one or more agents working
-almost continuously for eight weeks. The result is 798 commits and 100 merged
-pull requests over 109 opened ones, a suite of 1339 tests, and 47 committed
-measurement screens alongside 63 recorded evaluation rows. Humans still made every
-decision that mattered: what to measure, what a measurement was allowed to prove,
-and what to submit.
+almost continuously for eight weeks. The result is hundreds of commits, 100+ reviewed and merged
+pull requests, a suite of 1000+ tests to ensure high code coverage, and dozens of long-running evaluation
+measurements. Humans still made every
+decision that mattered: what to prioritize and
+how to split the work, how to measure progress and
+provide a fast, meaningful feedback loop for the
+agents, and what to finally submit.
+Three findings that we found to work well:
 
-Three practices did the actual work.
-
-\textbf{Split the roles by cost and by kind of thinking.} Expensive reasoning
+\textbf{1. Split the roles by cost and by kind of thinking.} Expensive reasoning
 models were used for analysis, diagnosis, and planning: reading measurements,
 proposing the next experiment, ranking work by expected effect. Faster, cheaper
 agents then implemented a specified change with tests, and ran evaluations. The
 planning agent maintained a ranked work list; implementation and evaluation
 proceeded in parallel branches against it, which also avoided the common failure
 where an implementing agent silently redefines the task it was given.
+Additionally, we heavily used the advisor feature to allow cheaper agents to ask a stronger agent for guidance where needed.
 
-\textbf{Make feedback fast, automatic, and cheap to trust.} We invested more in
+\textbf{2. Make feedback fast, automatic, and cheap to trust.} We invested more in
 the evaluation harness than in any single planner feature: a paired A/B screen
 that decides in one or two hours whether a change is worth a long run, a whole-run
 mode reproducing the submission's exact shape, deterministic seeds, and result
 ledgers recording every condition needed to decide whether two numbers may be
 compared. Agents could then evaluate their own work overnight and report a verdict
 against a criterion written before the run.
+We also split our available data into splits for validation and held-out test to avoid over-fitting to known queries as far as possible.
 
-\textbf{Write the invariants down and let them be enforced by tests.} Grounding,
-no oracle leakage, acceptance-before-emission, and flags-off-is-the-floor are
+\textbf{3. Write the invariants down and let them be enforced by tests.} Grounding,
+no oracle leakage, acceptance-before-emission, and evaluation proof before enabling new features are
 project rules pinned by tests, so an agent that would violate one fails rather than
 persuades. Cold-start verification caught a start-up race that would have shipped
 empty itineraries for a whole split while still exiting successfully.
 
 Two limits are worth stating. The volume of agent output is not itself a result:
 much of it was superseded, and the ratio of committed work to accepted improvement
-was low. And agents were reliably over-optimistic about their own changes, which is
-why promotion required an independent measurement.
+was comparably low. Moreover, agents were often over-optimistic about their own changes, which is made a rigorous evaluation and promotion system for new features even more important in order to avoid unexpected degradation.
 
 \subsection{Inside the system}
 
+% TODO: That's a weird intro; change it. Also mention (once in the paper is enough) that we use a DeepInfra API to run against the exact same Qwen model version as used by the organizers without having to deploy one ourselves.
 Natural-language interpretation is a more nuanced case. LLM-first extraction cut
 missing free-prose constraint families by 40--65\%, but initially converted many
 misses into values that did not match the environment vocabulary.
@@ -383,11 +386,13 @@ catalogs used by the solver. Grounded, fill-only extraction improved one small
 familiar A/B but was flat on the matched free-prose subset, and still matched fewer
 clauses than the contemporaneous deterministic parser.
 % SCREEN: results/phase2_baselines/screens/20260807_p16_entity_resolution_probe/README.md
-The current default consequently makes zero LLM calls, while retaining the
-grounded extractor as an optional path. This is not a rejection of LLM parsing;
+Our final agent consequently makes zero LLM calls, while retaining the
+grounded extractor as an optional path. This is not a rejection of LLM parsing in general;
 it separates recognizing a requirement from resolving its values against the
 actual database.
 
+% TODO: I'm confused by this section. Which path? if we argue here for the LLM as parser, why did we not use it? make it clearer what's in fhe final version and how we made the decisions.
+% TODO: Cover LLM as parser, LLM as solver/repair (different variants), vs no LLM at all. Possibly show a small plot/table that explains why we went for zero LLM in the end.
 The strongest argument for that path is what our deterministic extractor cannot
 reach. Its largest remaining gap on unfamiliar phrasing is no longer lexical: the
 queries say ``we are more interested in history and culture'' or simply ``going on
@@ -398,11 +403,10 @@ is for, through the existing tools or an MCP-style interface; its answer only ha
 to be resolved against the closed vocabulary first.
 % SCREEN: results/phase2_baselines/screens/20260809_r35_preference_verb_trigger/README.md
 
-We also tried the obvious hybrid: letting a model repair itineraries the checker
+We also tried a hybrid: letting a model repair itineraries the checker
 rejected, with every proposed edit re-verified before it could be kept. On ten
 deterministic failures the loop iterated, proposed valid-looking edits, and
-flipped none of them to passing. It is off by default and reported here as a
-negative result rather than omitted.
+flipped none of them to passing. That's why we did not enable it in the final system.
 % SCREEN: results/phase2_baselines/screens/20260808_r27_llm_repair_loop/README.md
 
 End-to-end itinerary generation was the clearer boundary. Even with environment
@@ -417,9 +421,11 @@ targeted repair.
 
 The Travel Planning Challenge rewarded a hybrid division of labor. AI agents accelerated the
 construction and analysis of the system, and model-based extraction recognized
-language missed by deterministic patterns. Environment tools supplied facts;
+language missed by deterministic patterns. % TODO: I'm still confused: I thought we don't use an LLM/model for parsing?! This should be very clear after the eval and the conclusion should be consistent
+Environment tools supplied facts;
 deterministic search assembled them; and the acceptance gate ensured that only
-verified itineraries could be emitted. The official v1 result sharpened that
+verified itineraries could be emitted. 
+Official feedback for our v1 submission sharpened that
 boundary: grounding transferred to hidden data, while constraint extraction tuned
 to one advertised in-distribution phrasing register did not --- and repairing that
 is what the second version measurably contains.
@@ -431,20 +437,21 @@ operation we would not risk on a production system. What made it work was not th
 agents but the harness around them: written invariants enforced by tests, a
 measurement contract that says when two numbers may be compared, and a rule that
 only an independent run may promote a change. Models are valuable at the fuzzy
-boundary between language and symbols, provided their proposals are grounded. Hard
-itinerary construction remains optimization.
+boundary between language and symbols, provided their proposals are grounded. 
+In contrast, hard
+itinerary construction is better tackled by classical optimization.
 
-A production system would replace the sandbox with live map, hotel, rail, flight,
+If we wanted to extend our travel planning agent to become a production system, we would replace the sandbox environment with live map, hotel, rail, flight,
 and booking APIs, and would infer user-specific objectives rather than inherit
 fixed challenge preferences: some travelers want four attractions per day, others
 value unplanned time. Live availability would require replanning, but the same
 architecture holds. Let AI interpret intent and help build the system; let APIs
 establish reality; let optimization construct the itinerary; and let deterministic
-verification decide what is safe to emit.
+verification decide what is safe to emit. Know where the AI can help and where it cannot --- and design the system accordingly.
 
 \section*{Acknowledgments}
 
-We thank the challenge organizers for the benchmark, the agent environment tooling, and
+We thank the organizers for the challenge, the benchmark tooling, and
 their clarifications and answers to our questions.
 {\small
 \bibliographystyle{named}
