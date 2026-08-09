@@ -37,6 +37,10 @@
 /TemplateVersion (IJCAI.2026.0)
 }
 
+\makeatletter
+\newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
+\makeatother
+
 \title{Agentic Travel Planning:\\Where AI Helped, and Where It Did Not}
 
 \author{
@@ -55,7 +59,7 @@ Stefan Schneider & Fabian Missbrenner\\[-0.1em]
 \begin{abstract}
 Many agentic tasks begin with an open-ended goal but are useful only when hard
 constraints are met. Multi-day travel planning is a popular example for such a task. 
-We describe our entry to the ``2nd Travel Planning Challenge with Agentic AI'' at the IJCAI 2026 conference\footnote{Website: \url{https://chinatravel-competition.github.io/IJCAI2026/}, Benchmark: \url{https://github.com/LAMDA-NeSy/ChinaTravel} (URLs accessed on August 9, 2026)}.
+We describe our entry to the ``2nd Travel Planning Challenge with Agentic AI'' at the IJCAI 2026 conference\footnote{\label{tpc}Website: \url{https://chinatravel-competition.github.io/IJCAI2026/}, Benchmark: \url{https://github.com/LAMDA-NeSy/ChinaTravel} (URLs accessed on August 9, 2026)}.
 Curiously, we found that the best-performing system was a deterministic, environment-grounded
 planner that completely ignores the available large language model~(LLM).
 Instead, it uses classical optimization and acceptance gates that can only emit itineraries confirmed valid
@@ -65,7 +69,7 @@ Conversely, AI agents were most valuable in building and improving that system:
 We successfully used the competition as a low-risk environment to run a near-continuous data-driven multi-agent AI development process, 
 generating hundreds of commits over eight weeks. 
 The agents proposed experiments, implemented changes, ran evaluations, and reviewed pull requests, while humans made every decision that mattered: 
-What to prioritize and how to split the work, how to measure progress and provide a fast, meaningful feedback loop for the agents, and what to finally submit.
+what to prioritize and how to split the work, how to measure progress and provide a fast, meaningful feedback loop for the agents, and what to finally submit.
 % The first official held-out submission sharpened this division of labor: grounding
 % generalized, while constraint extraction tuned to one phrasing style did not.
 % Repairing that gap is what the second version contains: on unfamiliar phrasing it
@@ -79,33 +83,33 @@ What to prioritize and how to split the work, how to measure progress and provid
 \label{sec:intro}
 
 Many real-world tasks involve a loosely stated human goal that needs to be turned
-into an output that is not merely plausible but correct. Multi-day travel
-planning combines fuzzy requirements with exact feasibility. The IJCAI--ECAI 2026
-Travel Planning Challenge
-extends the ChinaTravel benchmark of Shao et al.~\cite{shao2024chinatravel}: an agent must
-produce a preference-aligned itinerary over a sandbox of Chinese cities. A request
+into an output that is not merely plausible but correct. For example, multi-day travel
+planning combines fuzzy human requirements that must be turned into exact constraints, fulfilled by the constructed itinerary. 
+The IJCAI 2026 Travel Planning Challenge\footnoteref{tpc}
+extends the ChinaTravel benchmark of Shao et al.~\cite{shao2024chinatravel}: for a given human travel intent, an agent must
+produce a preference-aligned itinerary between a selection of Chinese cities. A request
 might say:
 \begin{quote}
 \small ``Plan three days in Suzhou, visit the Humble Administrator's Garden
 between 9 and 11, stay near the old town, avoid taxis, and spend at most CNY 3,000.''
 \end{quote}
 The output is structured data, not free text. Hotels, attractions, and restaurants
-must exist in the sandbox; opening hours, transportation, and costs must be
+must exist in the provided sandbox environment; opening hours, transportation, and costs must be
 consistent; logical requirements must hold; and commonsense rules such as meal
 counts must pass. The evaluator measures environmental validity (EPR), logical
-satisfaction (C-LPR and FPR), and preferences. A single failed hard requirement
-zeros all preference terms.
+satisfaction (C-LPR and FPR), and preferences. Hard constraint satisfaction heavily dominates the overall score -- preference terms only count if all hard requirements are fulfilled (else set to zero).
 
 The competition has two phases. In the offline first phase, released verifier
 fields and a generous time budget allowed us to satisfy almost all constraints
-and then polish preferences. The harder agent phase studied here exposes only
-query text and environment tools and gives the complete 100-query run one
-five-hour budget. The agent must infer what to satisfy as well as how to satisfy it.
+and then polish preferences. In the harder phase 2, which we focus on in this report, only
+query text and environment tools are exposed to the agent. 
+For each query, the agent must infer what constraints to satisfy and how -- within 5~hours total for 100 unknown queries.
 
 Our system follows a propose--verify--repair pattern related to LLM-Modulo
 systems~\cite{kambhampati2024llmmodulo}, but assigns roles asymmetrically:
 models may interpret language or propose changes; environment APIs establish
 facts; and deterministic optimization and checks decide what may be emitted.
+% TODO: What's meant by models here? LLM/AI models? Is that true? I thought we don't use the LLM at all in the final version?! Or does this refer to the deterministic solver? Or is it that our code allows LLM-based parsing, but it's disabled by default?
 
 \section{System Design}
 \label{sec:system}
@@ -113,8 +117,8 @@ facts; and deterministic optimization and checks decide what may be emitted.
 \subsection{Pipeline and trust boundary}
 
 Figure~\ref{fig:architecture} follows the example from language to a simplified
-itinerary. Oracle verifier fields are removed before execution. The only inputs
-are visible query text and allowed environment tools. Every POI, hotel,
+itinerary. Oracle verifier fields are removed before execution (only available in the public data, not the held-out test set). The only inputs
+are visible query text and allowed environment tools. Every point of interest~(POI), hotel,
 restaurant, price, opening hour, and transportation record is read from
 \texttt{WorldEnv}; nothing is generated as a plausible substitute.
 
@@ -126,31 +130,34 @@ opening example. Optional model-based extraction may fill missing constraints;
 grounding, construction, repair, and acceptance remain deterministic.}
 \label{fig:architecture}
 \end{figure*}
+%TODO: figure is cut off on the left side (even original pdf). Can we fix that?
+%TODO: add short description of each of the three phases in brackets underneath: triage (quickly construct initial candidates), repair (fix failing constraints), polish (optimize preferences)
 
 \subsection{Parsing and normalization}
 
 The parser extracts dates, cities, budgets, excluded transportation, named POIs,
 timed visits, hotel properties, room counts, cuisines, and attraction categories.
-Alternatives remain separate solver variants rather than an impossible conjunction,
+It also handles alternatives (``visit A \textit{or} B'') by creating separate solver variants rather than an impossible conjunction. Grounding
 and normalization resolves names and concepts against each city's catalog.
 Deterministic extraction is fast and testable but not synonymous with
 understanding, so we added phrasing-robust fallbacks for the largest measured
-recall gaps and an optional Qwen extractor that may fill a missing family but never
+recall gaps and an optional LLM\footnote{The organizers provide a Qwen3.6-27B model for evaluation.} extractor that may fill a missing family but never
 overwrite a deterministic value.
+%TODO: That's nice to mention! But we should already clarify here if the LLM is used in the final version or not, possibly referring to a later eval section comparing the two.
 
 Precision is equally important. Our audit found that in 23--50\% of free-prose
-queries, depending on the set, the parser invented a required POI name that did
+queries, depending on the set, the parser initially invented a required POI name that did
 not exist in the target city.
 % SCREEN: results/phase2_baselines/screens/20260807_p22_unsatisfiable_names/README.md
 Such a query has no feasible solution at all, so it can never earn a full-plan
-point no matter how long the solver runs. A catalog check now removes only
+point no matter how long the solver runs. Therefore, a catalog check in the final parser removes such
 provably unsatisfiable required names and category values, after first trying to
 salvage a real POI name from the captured text. It reduced this measured failure
 class to zero on every set we hold.
 % SCREEN: results/phase2_baselines/screens/20260808_p22_salvage_before_drop/README.md
 
-The most recent recall fix illustrates how narrow these gaps are. Intercity
-transport was the largest remaining unextracted family on free prose: the
+Further investigation illustrates how narrow these parsing gaps are. Until a recent fix to our final agent, intercity
+transport was the largest remaining unextracted family on the free-prose dataset: the
 extractor recognized ``take the train to the destination'' but not ``we have
 chosen to fly'' or ``by high-speed train (G)'', missing 33 of 85 such
 requirements on one released set and 27 of 32 on another. Adding verb-form and
