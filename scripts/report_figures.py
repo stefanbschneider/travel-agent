@@ -165,8 +165,8 @@ def figure_architecture(path: Path) -> None:
     import matplotlib.pyplot as plt
     from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
-    fig, ax = plt.subplots(figsize=(7.0, 2.75))
-    ax.set_xlim(0, 100)
+    fig, ax = plt.subplots(figsize=(7.0, 2.25))
+    ax.set_xlim(-1, 100.5)
     ax.set_ylim(0, 41)
     ax.axis("off")
 
@@ -240,8 +240,13 @@ def figure_architecture(path: Path) -> None:
     # Whole-run scheduler across the top.
     ax.text(0.0, 37.6, "one shared 5 h wall clock, $cores-1$ workers:", fontsize=6.9,
             color="#333333", va="center", ha="left")
-    for sx, sw, slabel in [(41.0, 17.0, "triage"), (61.0, 17.0, "repair"), (81.0, 17.0, "polish")]:
-        box(sx, 34.0, sw, 6.2, slabel, "#f2f2f2", "#888888", fontsize=7.0)
+    scheduler = [
+        (41.0, 17.0, "triage\n(initial candidates)"),
+        (61.0, 17.0, "repair\n(failing constraints)"),
+        (81.0, 17.0, "polish\n(preferences)"),
+    ]
+    for sx, sw, slabel in scheduler:
+        box(sx, 34.0, sw, 6.2, slabel, "#f2f2f2", "#888888", fontsize=6.2)
     arrow(58.0, 37.1, 61.0, 37.1)
     arrow(78.0, 37.1, 81.0, 37.1)
 
@@ -372,7 +377,7 @@ def figure_registers_single(path: Path) -> None:
     ]
     before = LITERALS["free_prose_before"].value
 
-    fig, ax = plt.subplots(figsize=(3.4, 2.35))
+    fig, ax = plt.subplots(figsize=(3.4, 1.9))
     colors = ["#9db8d6", "#3a5f8f", "#c98b3a", "#a33b3b"]
     bars = ax.bar(range(len(values)), values, color=colors, width=0.66)
     ax.plot([2], [before], marker="_", markersize=13, color="#6b4a17", linewidth=0)
@@ -425,8 +430,8 @@ def figure_v1_v2_free_prose(path: Path) -> None:
     fig, ax = plt.subplots(figsize=(3.4, 2.35))
     x = range(len(metrics))
     width = 0.36
-    b1 = ax.bar([i - width / 2 for i in x], v1, width, label="submitted v1", color="#9db8d6")
-    b2 = ax.bar([i + width / 2 for i in x], v2, width, label="v2 (this system)", color="#3a5f8f")
+    b1 = ax.bar([i - width / 2 for i in x], v1, width, label="our v1 agent", color="#9db8d6")
+    b2 = ax.bar([i + width / 2 for i in x], v2, width, label="our v2 agent", color="#3a5f8f")
     for rect, value in list(zip(b1, v1)) + list(zip(b2, v2)):
         ax.text(rect.get_x() + rect.get_width() / 2, value + 1.8, f"{value:.1f}",
                 ha="center", fontsize=6.6, fontweight="bold")
