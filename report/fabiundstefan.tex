@@ -54,29 +54,35 @@ Stefan Schneider & Fabian Missbrenner\\[-0.1em]
 
 \begin{abstract}
 Many agentic tasks begin with an open-ended goal but are useful only when hard
-constraints are met. Multi-day travel planning is a clean instance. We describe
-our entry to the ChinaTravel challenge: a deterministic, environment-grounded
-planner with an acceptance gate that can only emit itineraries confirmed valid
-against the environment rules and APIs. AI agents were most valuable in building
-and improving that system, and selectively useful for language understanding;
-they did not replace deterministic optimization and verification. The first
-official held-out submission sharpened this division of labor: grounding
-generalized, while constraint extraction tuned to one phrasing style did not.
-Repairing that gap is what the second version contains: on unfamiliar phrasing it
-raises the clause satisfaction rate from 75.6 to 92.3 and the share of fully
-satisfied itineraries from 10.7\% to 65.3\%. We also report how the system was
-built --- near-continuous multi-agent ``vibe coding'' behind a deterministic
-evaluation harness --- as a result in its own right.
+constraints are met. Multi-day travel planning is a popular example for such a task. 
+We describe our entry to the ``2nd Travel Planning Challenge with Agentic AI'' at the IJCAI 2026 conference\footnote{Website: \url{https://chinatravel-competition.github.io/IJCAI2026/}, Benchmark: \url{https://github.com/LAMDA-NeSy/ChinaTravel} (URLs accessed on August 9, 2026)}.
+Curiously, we found that the best-performing system was a deterministic, environment-grounded
+planner that completely ignores the available large language model~(LLM).
+Instead, it uses classical optimization and acceptance gates that can only emit itineraries confirmed valid
+against the environment rules and APIs. 
+
+Conversely, AI agents were most valuable in building and improving that system:
+We successfully used the competition as a low-risk environment to run a near-continuous data-driven multi-agent AI development process, 
+generating hundreds of commits over eight weeks. 
+The agents proposed experiments, implemented changes, ran evaluations, and reviewed pull requests, while humans made every decision that mattered: 
+What to prioritize and how to split the work, how to measure progress and provide a fast, meaningful feedback loop for the agents, and what to finally submit.
+% The first official held-out submission sharpened this division of labor: grounding
+% generalized, while constraint extraction tuned to one phrasing style did not.
+% Repairing that gap is what the second version contains: on unfamiliar phrasing it
+% raises the clause satisfaction rate from 75.6 to 92.3 and the share of fully
+% satisfied itineraries from 10.7\% to 65.3\%. We also report how the system was
+% built --- near-continuous multi-agent ``vibe coding'' behind a deterministic
+% evaluation harness --- as a result in its own right.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:intro}
 
-A growing class of useful tasks asks a system to turn a loosely stated human goal
+Many real-world tasks involve a loosely stated human goal that needs to be turned
 into an output that is not merely plausible but correct. Multi-day travel
 planning combines fuzzy requirements with exact feasibility. The IJCAI--ECAI 2026
-ChinaTravel challenge\footnote{\url{https://github.com/LAMDA-NeSy/ChinaTravel}}
-extends the benchmark of Shao et al.~\cite{shao2024chinatravel}: an agent must
+Travel Planning Challenge
+extends the ChinaTravel benchmark of Shao et al.~\cite{shao2024chinatravel}: an agent must
 produce a preference-aligned itinerary over a sandbox of Chinese cities. A request
 might say:
 \begin{quote}
@@ -390,7 +396,7 @@ targeted repair.
 \section{Conclusion}
 \label{sec:conclusion}
 
-ChinaTravel rewarded a hybrid division of labor. AI agents accelerated the
+The Travel Planning Challenge rewarded a hybrid division of labor. AI agents accelerated the
 construction and analysis of the system, and model-based extraction recognized
 language missed by deterministic patterns. Environment tools supplied facts;
 deterministic search assembled them; and the acceptance gate ensured that only
@@ -419,8 +425,8 @@ verification decide what is safe to emit.
 
 \section*{Acknowledgments}
 
-We thank the ChinaTravel organizers for the benchmark, sandbox environment, and
-their clarifications on the execution contract.
+We thank the challenge organizers for the benchmark, the agent environment tooling, and
+their clarifications and answers to our questions.
 {\small
 \bibliographystyle{named}
 \bibliography{ijcai26}
