@@ -1,0 +1,56 @@
+{
+  "kind": "heldout_observation",
+  "source": "LAMDA-NeSy/ChinaTravel HF dataset repo, phase2/competition_test.csv, revision 44d5dbf3bba26bdf9a212c3e76d3242b67f0d349 (dataset lastModified 2026-08-20T05:12:22Z)",
+  "recorded_utc": "2026-09-05T13:15:00Z",
+  "trigger": "upstream README (LAMDA-NeSy/ChinaTravel) started linking a new HF sandbox dataset (commit b071db2, 2026-08-17); checking it surfaced a separate, already-linked dataset repo change instead",
+  "what_this_is": "a post-competition identity check, not a promotable measurement -- the competition is over and no submission slot is spent",
+  "final_leaderboard": {
+    "source": "submissions/Final Phase 2 Leaderboard — TPC@IJCAI2026.pdf (committed 2026-08-13)",
+    "rank": 10,
+    "of": 14,
+    "v1_score": 33.2473,
+    "v2_score": 33.3175
+  },
+  "newly_linked_sandbox": {
+    "url": "https://huggingface.co/datasets/LAMDA-NeSy/ChinaTravel-Sandbox",
+    "release_version": "2026.08.2",
+    "contains_queries_or_oracle": false,
+    "contents": ["accommodations", "attractions", "restaurants", "trains", "flights", "poi", "subway_stations"],
+    "diff_vs_v1_v2_bundled_sandbox": "27 files differ (database_en/*, matching accommodations/attractions/restaurants csvs) -- postdates the graded runs (DATA_QUALITY_FIXES_2026_08)",
+    "diff_vs_v1_bundled_sandbox_vs_v2_bundled_sandbox_vs_this_repo_tracked_sandbox": "0 files differ across all three -- same snapshot used for both graded submissions and still tracked here",
+    "conclusion": "environment/world data only; not the held-out test set; must not be swapped in to reproduce a historical score"
+  },
+  "newly_published_test_set": {
+    "url": "https://huggingface.co/datasets/LAMDA-NeSy/ChinaTravel",
+    "path": "phase2/competition_test.csv",
+    "hf_revision": "44d5dbf3bba26bdf9a212c3e76d3242b67f0d349",
+    "csv_sha256": "fbc3379e930c6fc22071bbd2fedaf7c4d34d47cc3a157e8db22cffeb99715447",
+    "row_count": 100,
+    "official_phase2_evaluation_true_count": 100,
+    "uid_prefix": "phase2_extended_",
+    "uid_prefix_of_known_dev_set": "phase2_familiar_",
+    "newly_present_fields": ["hard_logic_py", "hard_logic_nl"],
+    "self_described_as": "the official Phase 2 competition test split (dataset repo's own PHASE2_RELEASE_NOTES.md)"
+  },
+  "identity_check": {
+    "method": "replayed the unmodified fabiundstefan_v1.zip and fabiundstefan_v2.zip archives (each including its own bundled, pre-fix sandbox database, confirmed byte-identical to this repo's tracked chinatravel/environment/database_en) against the newly materialized split via each archive's own agent_env/scripts/solve_script_with_harness.py --harness tpc and eval_tpc.py",
+    "materializer": "scripts/materialize_official_heldout_test.py (evaluation-only; raw CSV and per-query JSON never committed, hf_* .gitignore rule)",
+    "split_name": "hf_phase2_official_competition_test",
+    "workers": 3,
+    "results": {
+      "v1": {"official": 33.2473, "reproduced": 33.61245791245791, "delta": 0.36515791245791},
+      "v2": {"official": 33.3175, "reproduced": 34.15791245791246, "delta": 0.84041245791246}
+    },
+    "reproduced_full_scores": {
+      "v1": {"MicEPR": 99.85185185185185, "MacEPR": 99.0, "C-LPR": 53.309090909090905, "FPR": 1.0, "DAV": 0.0, "ATT": 0.0, "DDR": 0.0, "overall": 33.61245791245791},
+      "v2": {"MicEPR": 99.85185185185185, "MacEPR": 99.0, "C-LPR": 55.49090909090909, "FPR": 1.0, "DAV": 0.0, "ATT": 0.0, "DDR": 0.0, "overall": 34.15791245791246}
+    },
+    "reading": "both reproduce within ~1 point of the organizer-reported score, in the same direction, from identical code and byte-identical environment data. Attributed to solve_phase2.py's wall-clock-budget-driven triage/repair/polish passes (multi-minute real-time budgets that converge differently depending on host speed/load), not to a different or partially-overlapping query population -- a population mismatch would produce an unrelated score on two independent submissions, not a consistent ~1-point same-direction offset on both.",
+    "conclusion": "high confidence this is the actual organizer held-out test set, its oracle now public post-competition"
+  },
+  "what_is_still_unknown": [
+    "whether the organizers' own scoring host would reproduce these exact numbers if re-run (their SGLang/Qwen host is not reachable from here; that endpoint is irrelevant to this deterministic solver anyway)",
+    "whether the +0.365 / +0.840 residual is fully explained by budget-pass timing or partly by an unrelated minor drift (e.g. floating point, library version) -- not investigated further since this is retrospective"
+  ],
+  "analysis": "docs/tpc_phase2_eval.md#r37--identity-check-the-published-held-out-test-set, docs/reference/competition.md#final-leaderboard-and-the-newly-published-held-out-test-set-2026-09-05"
+}

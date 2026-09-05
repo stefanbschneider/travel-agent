@@ -709,6 +709,35 @@ The same analysis names the next two candidates on that register (`attraction_na
 `inner_transport_required` 6 — the latter built and rejected the same day, see
 [P29](tpc_phase2_roadmap.md#p29--required-in-city-transport-mode)).
 
+### R37 — identity check: the published held-out test set *(closed 2026-09-05, retrospective only)*
+
+The competition is over (`submissions/Final Phase 2 Leaderboard — TPC@IJCAI2026.pdf`, rank 10/14,
+`v1 = 33.2473`, `v2 = 33.3175`). Upstream's README started linking a new HF sandbox
+(`LAMDA-NeSy/ChinaTravel-Sandbox`, 2026-08-17) — checked, it is environment/world data only, not
+queries, and it postdates the graded runs (27 files differ from the sandbox `v1`/`v2` actually
+shipped, which is byte-identical to this repo's tracked one). The sibling, already-linked
+`LAMDA-NeSy/ChinaTravel` dataset repo separately gained `phase2/competition_test.csv` around
+2026-08-18/20: 100 rows, all `official_phase2_evaluation=true`, UIDs prefixed `phase2_extended_...`
+(disjoint from the dev set's `phase2_familiar_...`), and — for the first time — populated
+`hard_logic_py`/`hard_logic_nl`.
+
+**Identity check:** materialized that split (`scripts/materialize_official_heldout_test.py`,
+evaluation-only, never committed) and replayed the unmodified `fabiundstefan_v1.zip` /
+`fabiundstefan_v2.zip` archives against it, on their own bundled (pre-fix) sandbox, through their own
+`solve_script_with_harness.py --harness tpc` + `eval_tpc.py`:
+
+| | official | reproduced | Δ |
+| --- | --- | --- | --- |
+| `v1` | `33.2473` | `33.6125` | `+0.365` |
+| `v2` | `33.3175` | `34.1579` | `+0.840` |
+
+Both land within ~1 point, same direction, identical code and environment — consistent with the
+harness's wall-clock-budget triage/repair/polish passes, not with a different query population.
+**Conclusion: this is, with high confidence, the actual organizer held-out set**, its answer key now
+public post-competition. Retrospective only: no submission slot spent, no shipped default touched.
+Full writeup: [competition reference](reference/competition.md#final-leaderboard-and-the-newly-published-held-out-test-set-2026-09-05).
+Row: [`results/phase2_baselines/heldout/20260905_official_test_set_identity_check.json`](../results/phase2_baselines/heldout/20260905_official_test_set_identity_check.json).
+
 ### R20 — does grounded fill-only LLM extraction convert? *(HOLD; not promoted)*
 
 P16 fixed two real grounding defects and remains useful infrastructure. It does not yet satisfy the

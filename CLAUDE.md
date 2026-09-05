@@ -30,11 +30,17 @@ its default `--harness tpc` dispatches in-process to `solve_phase2.run_split` (z
 subprocesses), and the run is bounded by the 5-hour envelope rather than a fixed per-query budget
 (roadmap item 0a, closed 2026-08-04). Install for that path is `requirements-submission.txt`, and
 `scripts/assemble_phase2_submission.py` packages and verifies the archive.
-**Submission status (2026-08-08): `v1` is uploaded and scored `33.2473`; `v2` is prepared, measured and
-waiting for the owner.** The `v1` archive (`submissions/phase2/fabiundstefan_v1.zip`, built from
-`be196d00`, tagged `phase2-v1`) was the team's first official submission under the 2026-08-04
-resubmission reset, so **one slot (`v2`) remains**, due with the technical report on 2026-08-10, 24:00
-Beijing Time.
+**Submission status: the competition is over.** Both slots were used (`v1 = 33.2473`,
+`v2 = 33.3175`); the final Phase 2 leaderboard (`submissions/Final Phase 2 Leaderboard —
+TPC@IJCAI2026.pdf`, committed 2026-08-13) has the team at rank **10 of 14**. Everything below this
+paragraph is the historical record of how `v2` was built and reasoned about before that result was
+known — read it for the method, not as an open task list. The one live thread post-competition is
+[R37](docs/tpc_phase2_eval.md#r37--identity-check-the-published-held-out-test-set): the organizers
+later published the actual held-out test set's oracle on Hugging Face, and replaying the frozen
+`v1`/`v2` archives against it reproduces both official scores within about a point — see the
+[competition reference](docs/reference/competition.md#final-leaderboard-and-the-newly-published-held-out-test-set-2026-09-05)
+for the full writeup, including why the *other* newly-linked HF resource (the upstream README's new
+sandbox link) is environment data only and not that test set.
 
 **The 2026-08-08 leaderboard has five teams and reorganizes the priorities again**
 ([artifact](results/phase2_baselines/heldout/20260808_leaderboard_5teams.json)): `36.4060` /

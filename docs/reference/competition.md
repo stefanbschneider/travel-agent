@@ -471,6 +471,65 @@ Concretely:
 The Agent Environment Guide and 100 familiar examples were released on 2026-07-15.
 The examples are drawn from the same distribution as final evaluation but are development-only; final evaluation uses a separate held-out set.
 
+## Final leaderboard and the newly published held-out test set (2026-09-05)
+
+**The competition has concluded.** `submissions/Final Phase 2 Leaderboard — TPC@IJCAI2026.pdf`
+(committed 2026-08-13) records the published result: `fabiundstefan` ranked **10th of 14** teams,
+`v1 = 33.2473`, `v2 = 33.3175` (best-of-two, per team, per the board's own scoring rule). `v1`'s
+number matches every locally recorded reading (`results/phase2_baselines/heldout/`) exactly.
+
+**Upstream's README then linked a new Hugging Face sandbox** (commit `b071db2`, 2026-08-17,
+"Use Hugging Face for sandbox download"), replacing the old Google Drive/NJU Drive links with
+[`LAMDA-NeSy/ChinaTravel-Sandbox`](https://huggingface.co/datasets/LAMDA-NeSy/ChinaTravel-Sandbox)
+(release `2026.08.2`). Checked: **that repo is environment/world data only** —
+accommodations/attractions/restaurants/trains/flights/POI/subway-station tables — no queries, no
+`hard_logic*`. It is *not* the held-out test set, and it postdates the graded runs: diffed against
+the sandbox bundled in both `fabiundstefan_v1.zip` and `fabiundstefan_v2.zip` (which is byte-identical
+to what this repo already ships), 27 of its files differ — the post-competition
+`DATA_QUALITY_FIXES_2026_08` repairs the sibling dataset's release notes describe. **Do not swap the
+tracked sandbox to this release to reproduce a historical score** — it was not the data the organizers
+scored `v1`/`v2` against.
+
+**But the sibling, already-linked dataset repo had also changed.**
+[`LAMDA-NeSy/ChinaTravel`](https://huggingface.co/datasets/LAMDA-NeSy/ChinaTravel) (HF revision
+`44d5dbf3bba26bdf9a212c3e76d3242b67f0d349`, dataset `lastModified` 2026-08-20T05:12:22Z) gained a
+`phase2/competition_test.csv` — 100 rows, every one flagged `official_phase2_evaluation=true`, under
+UIDs prefixed `phase2_extended_...` (disjoint from the dev set's `phase2_familiar_...` prefix) — and,
+for the first time, it carries `hard_logic_py`/`hard_logic_nl`: the oracle verifier fields. Its own
+`PHASE2_RELEASE_NOTES.md` calls it "the official Phase 2 competition test split." Downloaded and
+parsed: exactly 100 rows, all `official_phase2_evaluation=true`
+(sha256 `fbc3379e930c6fc22071bbd2fedaf7c4d34d47cc3a157e8db22cffeb99715447` of the raw CSV at that
+revision).
+
+**Identity check: replay the exact frozen submissions against it.** Materialized the split locally
+(`scripts/materialize_official_heldout_test.py`, evaluation-only — see below) and ran the unmodified
+`fabiundstefan_v1.zip` and `fabiundstefan_v2.zip` archives against it through their own
+`agent_env/scripts/solve_script_with_harness.py --harness tpc` and `eval_tpc.py`, on their own bundled
+sandbox (confirmed byte-identical to this repo's tracked one, so no environment drift):
+
+| | official (organizer-scored) | reproduced locally | Δ |
+| --- | --- | --- | --- |
+| `v1` | `33.2473` | `33.6125` | `+0.365` |
+| `v2` | `33.3175` | `34.1579` | `+0.840` |
+
+Both reproduce within ~1 point, in the same direction, from identical code and identical environment
+data. The residual is consistent with `solve_phase2.py`'s wall-clock-budget-driven triage/repair/polish
+passes (multi-minute real-time budgets whose convergence depends on host speed and load, not on
+anything the query content determines) — not with a different or partially-overlapping query
+population, which would produce an unrelated score, not a ~1-point offset in one direction on both
+independent submissions. **Conclusion: this is, with high confidence, the actual organizer held-out
+test set**, its oracle now public after the competition's close.
+
+This is retrospective evidence only — the competition is over, no submission slot is consumed, and it
+changes no shipped default. `scripts/materialize_official_heldout_test.py` fetches the CSV pinned to
+the revision above (sha256-checked) and writes the same evaluation-only layout every other
+`materialize_hf_split.py` output uses; both the raw CSV and the materialized per-query JSON are
+intentionally **never committed** (existing `hf_*` `.gitignore` rule) since this file is now the real
+competition answer key. See
+[R37](../tpc_phase2_eval.md#r37--identity-check-the-published-held-out-test-set) for the eval-doc
+entry and `results/phase2_baselines/heldout/20260905_official_test_set_identity_check.json` for the
+recorded row.
+
 ## Evaluator version
 
 **Parity point: upstream `LAMDA-NeSy/ChinaTravel` `main` at `c89cfca` (2026-08-04), integrated here on 2026-08-04.**
