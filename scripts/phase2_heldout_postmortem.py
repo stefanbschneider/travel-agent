@@ -37,8 +37,9 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 FAMILIAR_DIR = PROJECT_ROOT / "chinatravel/data/en/TPC_IJCAI_2026_phase2_familiar_100_data"
-_ACTIVITY_WORDS = {"attraction", "accommodation", "breakfast", "lunch", "dinner", "airplane",
-                   "train", "metro", "taxi", "walk"}
+# Only the activity categories that separate otherwise-identical templates (attraction vs
+# accommodation time windows, etc.); mode values like "walk"/"taxi" are template parameters.
+_ACTIVITY_WORDS = {"attraction", "accommodation", "breakfast", "lunch", "dinner"}
 
 
 def clause_shape(code: str) -> str:

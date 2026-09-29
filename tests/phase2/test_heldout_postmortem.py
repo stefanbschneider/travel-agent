@@ -47,3 +47,15 @@ def test_shape_to_key_majority_vote():
     probe = _WINDOW.format(kind="attraction", name="Z", a="08:00", b="09:30")
     assert mapping[pm.clause_shape(probe)] == "attraction_time_window"
     assert len(set(mapping.values())) == 2
+
+
+def test_shape_ignores_transport_mode_values():
+    template = (
+        "inner_city_transportation_set=set()\nfor activity in allactivities(plan):\n"
+        "  if activity_transports(activity)!=[]: "
+        "inner_city_transportation_set.add(innercity_transport_type(activity_transports(activity)))\n"
+        "result=not ({modes} & inner_city_transportation_set)"
+    )
+    walk = template.format(modes='{"walk"}')
+    taxi_walk = template.format(modes='{"taxi", "walk"}')
+    assert pm.clause_shape(walk) == pm.clause_shape(taxi_walk)

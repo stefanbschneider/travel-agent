@@ -764,7 +764,7 @@ and party sizes — but not its constraint vocabulary:
 | distinct template keys | `29` | **`53`** (all of them) |
 | OR clauses (`either_requirement`) | `0` | **`140`** (`1.4` / query) |
 | held-out clauses whose key familiar-100 never uses | — | **`816 / 1375` (`59.3 %`)** |
-| exclusion clauses (`forbidden_*` keys — satisfiable by omission) | `373 / 1109` (`33.6 %`) | `179 / 1375` (`13.0 %`) |
+| exclusion clauses (`forbidden_*` keys — satisfiable by omission) | `377 / 1109` (`34.0 %`) | `179 / 1375` (`13.0 %`) |
 
 The 24 keys familiar-100 never exercises carry most of the held-out weight: `cross_category_order`
 (`100` clauses, one per query — "Visit X before dining at Y"), `daily_budget` (`61`),
