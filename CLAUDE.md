@@ -41,6 +41,12 @@ later published the actual held-out test set's oracle on Hugging Face, and repla
 [competition reference](docs/reference/competition.md#final-leaderboard-and-the-newly-published-held-out-test-set-2026-09-05)
 for the full writeup, including why the *other* newly-linked HF resource (the upstream README's new
 sandbox link) is environment data only and not that test set.
+**Why we placed 10th is now answered:** [R38](docs/tpc_phase2_eval.md#r38--held-out-postmortem-why-the-improvements-did-not-transfer-closed-2026-09-29-retrospective-only)
+attributes the held-out gap clause by clause. The held-out set shares familiar-100's numbered-list
+format but uses all 53 constraint template keys (familiar-100: 29) and `140` OR clauses (familiar-100:
+0); `59 %` of its clauses sit in families our parser and solver schema never represented, and the
+`v1 → v2` work was aimed at a free-prose register that was not graded. Read R38's lessons before
+reusing any diagnosis below.
 
 **The 2026-08-08 leaderboard has five teams and reorganizes the priorities again**
 ([artifact](results/phase2_baselines/heldout/20260808_leaderboard_5teams.json)): `36.4060` /

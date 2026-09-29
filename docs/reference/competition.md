@@ -530,6 +530,21 @@ competition answer key. See
 entry and `results/phase2_baselines/heldout/20260905_official_test_set_identity_check.json` for the
 recorded row.
 
+**The final board (all 14 teams).** Best-of-two per team: `37.0395`, `36.9983`, `36.7454`,
+`36.4934`, `36.4060`, `36.4002`, `36.2921`, `36.1830`, `36.1409`, **`33.3175` (us, 10th)**,
+`33.0616`, `31.9439`, `29.5695`, `4.2327`. Nine teams finished inside a `0.9`-point band at
+`36.1–37.0`; we were `2.8` below that band and `3.7` below first. Several teams used their `v1`
+score as held-out feedback and jumped into that band with `v2` (`21.0 → 37.0`, `21.3 → 36.2`,
+`32.6 → 37.0`, `27.5 → 33.1`); we gained `0.07`.
+
+**Was the held-out set "the same distribution" as familiar-100?** Only in format. The published CSV's
+`constraint_keys` column (one of 53 generator template keys per clause) shows the held-out set uses all
+53 keys, `13.75` clauses per query and `140` OR clauses, against familiar-100's `29` keys, `11.09`
+clauses per query and zero OR clauses; `59 %` of held-out clauses belong to keys familiar-100 never
+contains. The organizers' own release notes describe the 2,000-query Phase 2 pool the test set was
+drawn from as covering all 53 templates. Full clause-level postmortem and lessons:
+[R38](../tpc_phase2_eval.md#r38--held-out-postmortem-why-the-improvements-did-not-transfer-closed-2026-09-29-retrospective-only).
+
 ## Evaluator version
 
 **Parity point: upstream `LAMDA-NeSy/ChinaTravel` `main` at `c89cfca` (2026-08-04), integrated here on 2026-08-04.**
