@@ -6,11 +6,25 @@
  "instrument": "scripts/phase2_heldout_postmortem.py",
  "plans": {
   "archive": "submissions/phase2/fabiundstefan_v2.zip (unmodified)",
-  "stage": "triage-pass plans (pass 1 of the sweep)",
+  "stage": "final plans after the whole sweep",
   "envelope_sec": 3600,
   "workers": 3,
   "host": "4-core cloud container",
-  "scheduler_self_report": "60/100 queries satisfy their (parsed) constraints after triage"
+  "eval_tpc": {
+   "MicEPR": 99.8519,
+   "MacEPR": 99.0,
+   "C-LPR": 55.7818,
+   "FPR": 1.0,
+   "overall": 34.2306
+  },
+  "official_v2": 33.3175,
+  "scheduler_self_report": "60/100 after triage, 70/100 at the end (against our own parse); true all-pass 1/100",
+  "unspent_envelope_sec": 1587,
+  "triage_stage": {
+   "clause_pass_rate": 54.11,
+   "pass_rate_keys_seen_in_familiar": 87.1,
+   "pass_rate_keys_absent_from_familiar": 31.5
+  }
  },
  "heldout": {
   "queries": 100,
@@ -243,28 +257,28 @@
  },
  "scored": {
   "missing_plans": 0,
-  "clause_pass_rate": 54.11,
+  "clause_pass_rate": 56.36,
   "queries_all_pass": 1,
   "failed_clauses_per_query_histogram": {
    "0": 1,
-   "2": 3,
+   "2": 4,
    "3": 5,
-   "4": 9,
-   "5": 15,
-   "6": 23,
-   "7": 17,
-   "8": 12,
-   "9": 9,
-   "10": 2,
-   "11": 3,
+   "4": 10,
+   "5": 21,
+   "6": 22,
+   "7": 16,
+   "8": 9,
+   "9": 8,
+   "10": 1,
+   "11": 2,
    "12": 1
   },
   "sole_failure_key": {},
   "per_key": {
    "either_requirement": {
-    "passed": 87,
+    "passed": 89,
     "total": 140,
-    "rate": 62.1
+    "rate": 63.6
    },
    "trip_days": {
     "passed": 100,
@@ -287,19 +301,19 @@
     "rate": 4.0
    },
    "daily_budget": {
-    "passed": 38,
+    "passed": 36,
     "total": 61,
-    "rate": 62.3
+    "rate": 59.0
    },
    "attraction_count_on_day": {
-    "passed": 8,
+    "passed": 2,
     "total": 59,
-    "rate": 13.6
+    "rate": 3.4
    },
    "required_meals_on_day": {
-    "passed": 16,
+    "passed": 19,
     "total": 44,
-    "rate": 36.4
+    "rate": 43.2
    },
    "attraction_pair_on_day": {
     "passed": 0,
@@ -317,19 +331,19 @@
     "rate": 0.0
    },
    "forbidden_inner_transport_modes": {
-    "passed": 26,
+    "passed": 28,
     "total": 28,
-    "rate": 92.9
+    "rate": 100.0
    },
    "innercity_travel_time_budget": {
-    "passed": 21,
+    "passed": 26,
     "total": 27,
-    "rate": 77.8
+    "rate": 96.3
    },
    "total_attraction_count": {
-    "passed": 2,
+    "passed": 4,
     "total": 23,
-    "rate": 8.7
+    "rate": 17.4
    },
    "forbidden_attraction_types": {
     "passed": 23,
@@ -342,39 +356,39 @@
     "rate": 100.0
    },
    "forbidden_accommodation_types": {
-    "passed": 19,
+    "passed": 20,
     "total": 22,
-    "rate": 86.4
+    "rate": 90.9
    },
    "forbidden_depart_transport": {
-    "passed": 10,
+    "passed": 9,
     "total": 21,
-    "rate": 47.6
+    "rate": 42.9
    },
    "outbound_departure_deadline": {
-    "passed": 3,
+    "passed": 2,
     "total": 20,
-    "rate": 15.0
+    "rate": 10.0
    },
    "free_attraction_count_minimum": {
-    "passed": 7,
+    "passed": 11,
     "total": 20,
-    "rate": 35.0
+    "rate": 55.0
    },
    "attraction_duration_minimum": {
-    "passed": 8,
+    "passed": 13,
     "total": 20,
-    "rate": 40.0
+    "rate": 65.0
    },
    "walking_distance_budget": {
-    "passed": 10,
+    "passed": 17,
     "total": 19,
-    "rate": 52.6
+    "rate": 89.5
    },
    "forbidden_return_transport": {
-    "passed": 12,
+    "passed": 11,
     "total": 19,
-    "rate": 63.2
+    "rate": 57.9
    },
    "attraction_exact_time": {
     "passed": 0,
@@ -412,9 +426,9 @@
     "rate": 0.0
    },
    "forbidden_attraction_names": {
-    "passed": 13,
+    "passed": 14,
     "total": 14,
-    "rate": 92.9
+    "rate": 100.0
    },
    "restaurant_on_day": {
     "passed": 1,
@@ -437,9 +451,9 @@
     "rate": 0.0
    },
    "required_restaurant_names": {
-    "passed": 6,
+    "passed": 8,
     "total": 12,
-    "rate": 50.0
+    "rate": 66.7
    },
    "accommodation_on_day": {
     "passed": 10,
@@ -447,9 +461,9 @@
     "rate": 90.9
    },
    "accommodation_budget": {
-    "passed": 6,
+    "passed": 7,
     "total": 10,
-    "rate": 60.0
+    "rate": 70.0
    },
    "restaurant_time_window": {
     "passed": 0,
@@ -467,9 +481,9 @@
     "rate": 42.9
    },
    "inner_transport_modes_subset": {
-    "passed": 3,
+    "passed": 6,
     "total": 7,
-    "rate": 42.9
+    "rate": 85.7
    },
    "required_accommodation_types": {
     "passed": 5,
@@ -482,9 +496,9 @@
     "rate": 100.0
    },
    "required_attraction_names": {
-    "passed": 1,
+    "passed": 2,
     "total": 4,
-    "rate": 25.0
+    "rate": 50.0
    },
    "required_restaurant_types": {
     "passed": 4,
@@ -492,14 +506,14 @@
     "rate": 100.0
    },
    "innercity_budget": {
-    "passed": 0,
+    "passed": 1,
     "total": 4,
-    "rate": 0.0
+    "rate": 25.0
    },
    "required_attraction_types": {
-    "passed": 3,
+    "passed": 4,
     "total": 4,
-    "rate": 75.0
+    "rate": 100.0
    },
    "required_accommodation_names": {
     "passed": 3,
@@ -507,9 +521,9 @@
     "rate": 100.0
    },
    "room_count": {
-    "passed": 2,
+    "passed": 3,
     "total": 3,
-    "rate": 66.7
+    "rate": 100.0
    },
    "taxi_cars": {
     "passed": 3,
@@ -527,8 +541,8 @@
     "rate": 100.0
    }
   },
-  "pass_rate_keys_seen_in_familiar": 87.1,
-  "pass_rate_keys_absent_from_familiar": 31.5
+  "pass_rate_keys_seen_in_familiar": 89.6,
+  "pass_rate_keys_absent_from_familiar": 33.6
  },
  "analysis": "docs/tpc_phase2_eval.md#r38--held-out-postmortem-why-the-improvements-did-not-transfer-closed-2026-09-29-retrospective-only"
 }

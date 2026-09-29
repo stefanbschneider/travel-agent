@@ -811,24 +811,25 @@ earlier diagnosis got right — the collapse is in knowing *what* to satisfy, no
 grounding (EPR-micro `99.5`) — is confirmed; the *cause* it named (phrasing register) was wrong.
 
 **4. What the per-family replay says.** Replaying the unmodified `v2` archive on the held-out set
-(`TPC_P2_TOTAL_BUDGET_SEC=3600`, 3 workers, 4-core box; numbers below are from the triage-pass plans,
-which every later pass only improves — see the row for the full-run figures) and scoring each clause
-against its key:
+(`TPC_P2_TOTAL_BUDGET_SEC=3600`, 3 workers, 4-core box — overall `34.23`, C-LPR `55.78`, FPR `1.0`,
+against the official `33.32`) and scoring each clause against its key:
 
-- **Clauses in families familiar-100 contains pass at `87.1 %`; clauses in families it never contains
-  pass at `31.5 %`.** Overall clause pass rate `54.1 %`, matching the official C-LPR (`55.2`).
-- **No query was a near miss.** Failed clauses per query: median `6`, one query passed everything, only `3` queries failed as few
+- **Clauses in families familiar-100 contains pass at `89.6 %`; clauses in families it never contains
+  pass at `33.6 %`.** Overall clause pass rate `56.4 %`.
+- **No query was a near miss.** Failed clauses per query: median `6`, one query passed everything, only `4` queries failed as few
   as two, `0` failed exactly one. There was no single fix like P28 to find — the P28 question returns
   an empty list.
 - **Zero-pass families** (`0 %`): `attraction_pair_on_day` (43), `inner_transport_mode_count` (40),
   `attraction_order` (34), all three `*_exact_time` (53), `attraction_on_day` (13), and — families we
   *did* support, lost to wording drift — `attraction_time_window` (15), `restaurant_time_window` (9).
-  `cross_category_order` (100, one per query) passes `4 %`; `attraction_count_on_day` `13.6 %`.
+  `cross_category_order` (100, one per query) passes `4 %`; `attraction_count_on_day` (59) `3.4 %`.
 - **The scheduler could not see any of it.** Against our own parse, triage reported `60/100` queries
-  fully satisfied; the true count was `1`. So the repair/polish envelope was spent on 40 queries our
-  parse called failing, and the other 60 were "polished" toward constraints we had not extracted.
+  fully satisfied and the finished run `70/100`; the true count was `1`. Repair went to the 40 queries
+  our parse called failing, the rest were "polished" toward constraints we had not extracted, and the
+  sweep then stopped with `1587 s` of its `3600 s` envelope unspent because "no pass would do anything
+  new". More time would not have helped a parse that could not see the failures.
 - **Counterfactual.** Had unseen-family clauses passed at the seen-family rate, the clause pass rate
-  would be `~87 %`, which by [reading 4](#the-measured-breakdown) is the regime where FPR stops being
+  would be `~90 %`, which by [reading 4](#the-measured-breakdown) is the regime where FPR stops being
   zero. The representation gap alone accounts for the whole distance to the threshold.
 
 **5. What this corrects in this document.** [R23](#r23--what-else-separates-the-held-out-set-closed-2026-08-07-static-1-h)
