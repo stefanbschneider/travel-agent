@@ -1,6 +1,6 @@
-# ChinaTravel Agent — a solver-first travel planner
+# Agentic Travel Planning — A Deterministic Approach
 
-Team `fabiundstefan`'s entry to the [2nd Travel Planning Challenge (TPC) with Agentic AI at IJCAI
+Our entry to the [2nd Travel Planning Challenge (TPC) with Agentic AI at IJCAI
 2026](https://chinatravel-competition.github.io/IJCAI2026/), built on the
 [ChinaTravel](https://github.com/LAMDA-NeSy/ChinaTravel) benchmark.
 
@@ -19,7 +19,9 @@ in the benchmark's sandbox and checked against its rules.
   commonsense and logical checks pass.
 - **Solver-first, zero LLM calls.** The query is parsed into branch-local constraints, then a
   deterministic builder, bounded repair search and an optional CP-SAT (OR-Tools constraint solver)
-  tier construct the itinerary. No model, API key or network access is needed.
+  tier construct the itinerary. No model, API key or network access is needed. This was a measured
+  choice: we evaluated the provided LLM for both parsing and plan repair, and it gave no benefit or
+  made results worse (see the report).
 - **Anytime and robust.** A schema-valid fallback plan exists for every query before the first solve;
   results only ever replace a plan on disk when they are strictly better, so the run can be stopped at
   any moment.
@@ -34,13 +36,12 @@ in the benchmark's sandbox and checked against its rules.
 - **[Technical report](report/fabiundstefan.pdf)** (4 pages, IJCAI format) — *Agentic Travel
   Planning: Where AI Helped, and Where It Did Not*. Start here for the design, the evidence behind it,
   and our lessons on agent-driven development.
-- **Why the held-out score lagged our local numbers.** The final Phase 2 score was `33.32`
-  (the top-9 teams scored `36.1–37.0`). After the organizers published the test set we
-  [reproduced both submissions](docs/reference/competition.md#final-leaderboard-and-the-newly-published-held-out-test-set-2026-09-05)
-  and ran a [clause-level postmortem](docs/tpc_phase2_eval.md#r38--held-out-postmortem-why-the-improvements-did-not-transfer-closed-2026-09-29-retrospective-only):
-  the test set used all 53 constraint templates and OR-clauses, while our development set covered 29
-  and none. Clauses from familiar templates passed at `90 %`, unseen ones at `34 %` — the gap was
-  constraint *extraction*, not search or grounding.
+- **Competition results:** 2nd place in Phase 1, 10th place in Phase 2
+  ([Phase 1](submissions/Final%20Phase%201%20Leaderboard%20—%20TPC@IJCAI2026.pdf) and
+  [Phase 2](submissions/Final%20Phase%202%20Leaderboard%20—%20TPC@IJCAI2026.pdf) leaderboards).
+- **Analysis of our Phase 2 gap:** the
+  [held-out postmortem](docs/tpc_phase2_eval.md#r38--held-out-postmortem-why-the-improvements-did-not-transfer-closed-2026-09-29-retrospective-only)
+  explains why our local improvements did not transfer to the test set.
 
 ## Quick start
 
@@ -117,6 +118,6 @@ make help && make phase2-help                          # command catalog
 
 ## Authors
 
-[Stefan Schneider](https://github.com/stefanbschneider) and Fabian Missbrenner.
+[Stefan Schneider](https://github.com/stefanbschneider) and [Fabian Missbrenner](https://github.com/fabufab).
 Built on [ChinaTravel](https://github.com/LAMDA-NeSy/ChinaTravel) by LAMDA-NeSy — please cite their
-benchmark if you use this work.
+benchmark if you use this work. Licensed under the [MIT License](LICENSE), like upstream.
