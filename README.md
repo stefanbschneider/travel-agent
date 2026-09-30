@@ -15,8 +15,8 @@ in the benchmark's sandbox and checked against its rules.
 ## Highlights
 
 - **Deterministic and grounded.** Every POI, opening hour, price and timetable comes from the sandbox
-  `WorldEnv`; nothing is generated as free text. A plan is emitted only after the official schema,
-  commonsense and logical checks pass.
+  `WorldEnv`; nothing is generated as free text. A solver candidate is kept only after the official
+  schema, commonsense and logical checks pass; otherwise the query keeps a schema-valid fallback.
 - **Solver-first, zero LLM calls.** The query is parsed into branch-local constraints, then a
   deterministic builder, bounded repair search and an optional CP-SAT (OR-Tools constraint solver)
   tier construct the itinerary. No model, API key or network access is needed. This was a measured
@@ -26,7 +26,8 @@ in the benchmark's sandbox and checked against its rules.
   results only ever replace a plan on disk when they are strictly better, so the run can be stopped at
   any moment.
 - **Budget-aware scheduling.** A whole split is solved within one 5-hour wall-clock envelope across
-  all CPU cores: *triage* every query quickly, *repair* failing ones, then *polish* preferences.
+  `CPU count − 1` worker processes: *triage* every query quickly, *repair* failing ones, then
+  *polish* preferences.
 - **Built by AI agents, steered by humans.** Over eight weeks, coding agents proposed experiments,
   implemented changes, ran evaluations and reviewed pull requests (800+ commits, 1,300+ tests) behind
   a deterministic evaluation harness, while we made the decisions.
