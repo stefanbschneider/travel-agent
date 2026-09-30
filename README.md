@@ -1,232 +1,124 @@
-# ChinaTravel TPC 2026 — Phase 2 harness
+# Agentic Travel Planning — A Deterministic Approach
 
-Team `fabiundstefan`'s entry for the [Travel Planning Challenge at IJCAI
-2026](https://chinatravel-competition.github.io/IJCAI2026/), Phase 2.
+Our entry to the [2nd Travel Planning Challenge (TPC) with Agentic AI at IJCAI
+2026](https://chinatravel-competition.github.io/IJCAI2026/), built on the
+[ChinaTravel](https://github.com/LAMDA-NeSy/ChinaTravel) benchmark.
 
-It is a **deterministic, solver-first travel planner**. From the visible query text alone it builds
-grounded multi-day China itineraries and accepts a plan only after the official schema, commonsense
-and logical checks pass. Every fact comes from the sandbox `WorldEnv`; nothing is generated as prose.
-The submitted path makes **zero LLM calls and zero network calls**, so it needs no model, no API key
-and no egress.
+🏆 **Competition finalists, awarded the _Special Contribution Award_.**
 
-This file is the run instruction for the evaluation and ships inside the submission archive; the
-archive root also carries a generated `SUBMISSION.md` with the same install-and-run steps.
+Given a natural-language request such as *"Plan three days in Suzhou, visit the Humble
+Administrator's Garden between 9 and 11, stay near the old town, avoid taxis, and spend at most CNY
+3,000"*, the agent produces a complete multi-day
+itinerary — intercity transport, hotels, attractions, meals and in-city transfers — that is grounded
+in the benchmark's sandbox and checked against its rules.
 
-## Install
+## Highlights
 
-Setup only — not part of the timed run. Python 3.12, from this directory:
+- **Deterministic and grounded.** Every POI, opening hour, price and timetable comes from the sandbox
+  `WorldEnv`; nothing is generated as free text. A solver candidate is kept only after the official
+  schema, commonsense and logical checks pass; otherwise the query keeps a schema-valid fallback.
+- **Solver-first, zero LLM calls.** The query is parsed into branch-local constraints, then a
+  deterministic builder, bounded repair search and an optional CP-SAT (OR-Tools constraint solver)
+  tier construct the itinerary. No model, API key or network access is needed. This was a measured
+  choice: we evaluated the provided LLM for both parsing and plan repair, and it gave no benefit or
+  made results worse (see the report).
+- **Anytime and robust.** A schema-valid fallback plan exists for every query before the first solve;
+  results only ever replace a plan on disk when they are strictly better, so the run can be stopped at
+  any moment.
+- **Budget-aware scheduling.** A whole split is solved within one 5-hour wall-clock envelope across
+  `CPU count − 1` worker processes: *triage* every query quickly, *repair* failing ones, then
+  *polish* preferences.
+- **Built by AI agents, steered by humans.** Over eight weeks, coding agents proposed experiments,
+  implemented changes, ran evaluations and reviewed pull requests (800+ commits, 1,300+ tests) behind
+  a deterministic evaluation harness, while we made the decisions.
+
+## Report and results
+
+- **[Technical report](report/fabiundstefan.pdf)** (4 pages, IJCAI format) — *Agentic Travel
+  Planning: Where AI Helped, and Where It Did Not*. Start here for the design, the evidence behind it,
+  and our lessons on agent-driven development.
+- **Competition results:** 2nd place in Phase 1, 10th place in Phase 2
+  ([Phase 1](submissions/Final%20Phase%201%20Leaderboard%20—%20TPC@IJCAI2026.pdf) and
+  [Phase 2](submissions/Final%20Phase%202%20Leaderboard%20—%20TPC@IJCAI2026.pdf) leaderboards).
+- **Analysis of our Phase 2 gap:** the
+  [held-out postmortem](docs/tpc_phase2_eval.md#r38--held-out-postmortem-why-the-improvements-did-not-transfer-closed-2026-09-29-retrospective-only)
+  explains why our local improvements did not transfer to the test set.
+
+## Quick start
+
+Python 3.12:
 
 ```bash
 python3.12 -m venv .venv
-.venv/bin/python -m pip install -r requirements-submission.txt
+.venv/bin/python -m pip install -r requirements-submission.txt   # 8 PyPI packages, no GPU
 ```
 
-or with [uv](https://docs.astral.sh/uv/):
+The travel database ships in `chinatravel/environment/database_en/`, so there is nothing to download.
+
+Solve a split, then score it with the official evaluator (`--method` names the output directory
+`results/<method>/` and must match between the two commands):
 
 ```bash
-uv venv --python 3.12 .venv
-uv pip install --python .venv/bin/python -r requirements-submission.txt
-```
-
-That is the whole installation: **eight PyPI packages**, no extra index, no system packages, no GPU
-stack, no model download. `pip install .` and `uv run` resolve the same set (`pyproject.toml`'s core
-dependencies mirror `requirements-submission.txt`). The travel database ships in the repository at
-`chinatravel/environment/database_en/`, so there is nothing to fetch.
-
-## Run
-
-Run this from the root of this directory:
-
-```bash
-.venv/bin/python agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>
-```
-
-With the venv on `PATH`, plain `python agent_env/scripts/solve_script_with_harness.py --method
-<method> --split <split>` is the same thing, and so is `uv run python
-agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>` (both routes
-verified from the packaged archive).
-
-That single command is the whole system. No other flags are needed, and it is exactly the command
-the organizers confirmed for automated evaluation. It:
-
-- loads the split named by `--split` and **strips every oracle verifier field** (`hard_logic`,
-  `hard_logic.py`, `hard_logic_py`, `hard_logic_nl`) before the agent path sees a query — the
-  formal held-out data contains none of them, and the solver never needed them;
-- solves each query with the deterministic `TPCAgent` **in-process** — no subprocess, no external
-  CLI, no LLM, no network (`--harness tpc` is the shipped default; `opencode`/`codex` remain
-  explicit opt-ins and never run by default);
-- defaults language to `en`, whatever the split is named, and falls back to `zh` if the split
-  resolves only there;
-- keeps the whole run inside a **5-hour wall-clock envelope**, spending it adaptively across the
-  split rather than giving each query a fixed budget;
-- writes each plan to **`results/<method>/<uid>.json`**, with per-query telemetry and a split
-  summary under `agent_env/runs/<method>/`.
-
-A schema-valid plan for every query is written **before the first solve**, and every later result is
-kept only if it beats what is already on disk. The run can therefore be interrupted at any instant
-and still leaves a complete, non-regressed set of plans.
-
-Optional overrides, none needed for evaluation: `--budget-sec` (per-query cap), `--total-budget-sec`
-(whole-run envelope; `0` disables it), `--workers`, `--limit`, `--resume`, `--harness`.
-
-### Worked example: solve a split, then score it
-
-Copy-pasteable, with real values. The one thing that must match between the two commands is
-`--method`: it names the results directory the solve writes and the scorer reads.
-
-```bash
-# 1. solve the whole split into results/my_run/
-.venv/bin/python agent_env/scripts/solve_script_with_harness.py \
-    --method my_run --split tpc_phase2_test
-
-# 2. score exactly that run -- note eval_tpc.py spells it --splits, plural
-.venv/bin/python eval_tpc.py --splits tpc_phase2_test --method my_run
-```
-
-Smaller variants for a quick check:
-
-```bash
-# three queries only, into its own directory
+# quick check: 3 queries
 .venv/bin/python agent_env/scripts/solve_script_with_harness.py \
     --method smoke --split tpc_phase2_familiar_100_val --limit 3
 .venv/bin/python eval_tpc.py --splits tpc_phase2_familiar_100_val --method smoke
 
-# both flags omitted: the defaults now agree instead of diverging
-.venv/bin/python agent_env/scripts/solve_script_with_harness.py --split tpc_phase2_test
-.venv/bin/python eval_tpc.py --splits tpc_phase2_test
+# the exact competition command (whole split, 5 h envelope)
+.venv/bin/python agent_env/scripts/solve_script_with_harness.py --method <method> --split <split>
 ```
 
-The solve prints the exact `eval_tpc.py` command for the run it just wrote, so the pair never has
-to be reconstructed from memory.
+Optional flags: `--budget-sec` (per-query cap), `--total-budget-sec` (whole-run envelope, `0`
+disables it), `--workers`, `--limit`, `--resume`. Plans are written to `results/<method>/<uid>.json`,
+per-query telemetry to `agent_env/runs/<method>/`.
 
-**`--split` has no default.** A run without it stops immediately and prints the command it should
-have been given. It used to fall back to `easy`, an upstream split whose query JSON the submission
-archive does not ship — so the argument-less run loaded a world, then died in the loader with a
-resolution error about a split nobody had asked for.
+Bundled splits: `tpc_phase1`, `tpc_phase2_test`, `tpc_phase2_familiar_100` and its `_val` / `_test`
+folds. To add one, put one `<uid>.json` per query under `chinatravel/data/en/<name>/` and list the
+UIDs in `chinatravel/evaluation/default_splits/<name>.txt`. Queries need only the visible fields
+(`uid`, `nature_language`, `start_city`, `target_city`, `days`, `people_number`); oracle verifier
+fields are stripped before the agent sees a query.
 
-**A method directory with no plans is an error, not a score.** `eval_tpc.py` maps an absent plan
-file to `{}`, which scores zero on every metric without raising. That is right for a run with a few
-gaps and badly wrong when *nothing* was found: a `--method` that does not match the solve used to
-print a full, confident scorecard of `0.0` that reads like a broken solver rather than the lookup
-mistake it is. Now an empty intersection stops with the directory it searched, what `results/`
-actually contains, and the paired commands that would have worked; a partial one scores and prints
-`plans=N/M` plus a warning. `--allow_missing_results` restores the old all-zeros behaviour.
+## How it works
 
-### `--method`: naming the output directory
+```
+query text ─► parse & normalize ─► base build ─► bounded restarts / repair ─► acceptance gate ─► plan
+              (branch-local        (grounded in   (+ optional CP-SAT tier)    (schema, common-
+               constraints)         WorldEnv)                                  sense, logic)
+```
 
-`--method` is a label, not a mode. Whatever string is passed becomes the output directory verbatim,
-so plans land at `results/<method>/<uid>.json` — nothing is sanitized, prefixed, or derived from the
-split. Any name works; the run behaves identically for all of them, because the solver has exactly
-one path.
-
-The single exception is a method that would write *outside* `results/` (a leading `/`, or a `..`
-component). That layout is unsatisfiable by definition, so the run refuses to start rather than
-sanitizing the value — a rewritten method would put a whole split's plans somewhere they are never
-read, which is the failure the check exists to prevent, not a fix for it.
-
-Omitting `--method` falls back to `phase2_e2e_<split>` (which is also what `make phase2-run` and
-`agent_env/scripts/solve_phase2.py` use, so the two entry points resume each other's work). The
-shipped `agent_env/config.toml` deliberately pins **no** `method` and **no** `split`, so a
-command-line value is never overridden.
-
-The directory is reused, not overwritten: an existing non-empty plan is treated as an incumbent and
-is replaced only by a strictly better one. To start clean, delete `results/<method>/` first.
-
-### `--split`: selecting and adding a split
-
-`--split <name>` resolves through upstream's loader (`chinatravel/data/load_datasets.py`, unmodified),
-which needs two things:
-
-| What | Where |
+| Entry point | What it is |
 | --- | --- |
-| The UID list, one per line | `chinatravel/evaluation/default_splits/<name>.txt` |
-| One JSON file per UID, named `<uid>.json` | `chinatravel/data/en/<name>/` for `--lang en` (the default), `chinatravel/data/<name>/` for `--lang zh` |
+| [`agent_env/scripts/solve_script_with_harness.py`](agent_env/scripts/solve_script_with_harness.py) | The competition command; dispatches to `solve_phase2.run_split` |
+| [`chinatravel/agent/phase2/`](chinatravel/agent/phase2/) | No-oracle parsing, normalization, whole-run sweeps, fallbacks |
+| [`chinatravel/agent/tpc_agent/`](chinatravel/agent/tpc_agent/readme.md) | The deterministic planner and its repair search |
+| [`eval_tpc.py`](eval_tpc.py) | Official scoring, identical to upstream ChinaTravel |
 
-So adding a split is: drop the query JSON files into a directory, and write a `.txt` file listing
-their UIDs. The directory may also be named `<name>_EN`, and if no directory matches the split name
-the loader falls back to scanning the language tree for the listed UIDs — a query set can therefore
-live in a directory whose name has nothing to do with the split. If the split does not resolve under
-the requested language, this harness retries the other one and reports which it used, rather than
-failing the run.
-
-Each query JSON needs only the visible fields: `uid`, `nature_language`, `start_city`,
-`target_city`, `days`, `people_number`. Verifier fields are optional and, when absent, only the
-local convenience scoring in `agent_env/runs/<method>/<uid>/evaluation.json` degrades to its
-oracle-free half (`has_oracle: false`); the solve is unaffected.
-
-Splits with **both** halves present here are `tpc_phase1`, `tpc_phase2_test`,
-`tpc_phase2_familiar_100` and its `_val` / `_test` folds (`make phase2-familiar-splits` regenerates
-the folds). Upstream's `easy`, `medium` and `human` have a UID list but no query JSON in this
-archive, so naming one of them fails to resolve — the error names both halves and lists the
-nameable splits. A split name that is merely *nameable* is never rejected up front, because the
-held-out split the organizers pass is in neither list at packaging time and must still run.
-
-## How the run spends its 5 hours
-
-Every query is weighted equally, so one hard query must not starve the rest of the split. Passes run
-across `CPU count - 1` worker processes (a single solve is single-threaded):
-
-1. **triage** — every query once at a small budget, so every query has a real plan early;
-2. **repair** — only queries whose plan does not satisfy its constraints, at a growing budget,
-   most-nearly-passing first;
-3. **polish** — preferences on constraint-satisfying queries with whatever time is left (the
-   evaluator zeroes preference terms for a failing query, so they are worth nothing until it passes).
-
-Per query the pipeline is: parse and normalize the visible text into branch-local constraints →
-deterministic base build → bounded restarts and repairs (plus an optional CP-SAT tier) →
-acceptance-gated packing → finalize with telemetry. Details:
-[Phase 2 design](docs/tpc_phase2_design.md).
-
-## Evaluator
-
-`chinatravel/evaluation/`, `chinatravel/symbol_verification/`, `chinatravel/environment/tools/`,
-`chinatravel/data/load_datasets.py` and `eval_tpc.py`'s scoring reproduce upstream
-[`LAMDA-NeSy/ChinaTravel`](https://github.com/LAMDA-NeSy/ChinaTravel) `main` at `c89cfca`. The only
-local deltas there are performance (lazy per-language tool loading) and defensive guards against
-malformed plans — never a scoring difference. Upstream `main` has since advanced to `456b60a`
-(English language propagation in the agent harness, upstream PR #33), which touches **no** scoring
-file: the parity point stays `c89cfca` because the two commits are byte-identical across every path
-listed above, so scores recorded on either side remain comparable. Score a produced split the usual
-way, passing the same `--method` the run used:
-
-```bash
-.venv/bin/python eval_tpc.py --splits <split> --method <method>
-
-# concretely:
-.venv/bin/python eval_tpc.py --splits tpc_phase2_test --method my_run
-```
-
-The flag is `--splits` (plural) here and `--split` (singular) in the harness; `--split` still works
-as an unambiguous abbreviation. Omitting `--method` scores `results/phase2_e2e_<split>/`, the
-directory the harness writes when its own `--method` is omitted, so the two entry points line up
-with no arguments at all.
+The evaluator code (`chinatravel/evaluation/`, `chinatravel/symbol_verification/`,
+`chinatravel/environment/tools/`, `chinatravel/data/load_datasets.py`) matches upstream
+[`LAMDA-NeSy/ChinaTravel`](https://github.com/LAMDA-NeSy/ChinaTravel) at `c89cfca`, with only
+performance and defensive changes — never a scoring difference.
 
 ## Development
 
-For the full development environment (upstream's baseline agents, plotting, the local model stack):
-`pip install -r requirements.txt`, then `make help` and `make phase2-help` for the command catalog,
-and `.venv/bin/python -m pytest tests` for the test suite. Contributor conventions and invariants are
-in [CLAUDE.md](CLAUDE.md).
+```bash
+.venv/bin/python -m pip install -r requirements.txt   # full dev environment
+.venv/bin/python -m pytest tests
+make help && make phase2-help                          # command catalog
+```
 
-## More documentation
+## Further documentation
 
-- [Phase 2 design](docs/tpc_phase2_design.md): no-oracle contract, entry point, whole-run
-  scheduling, per-query pipeline, flag policy, outputs.
-- [Phase 2 implementation roadmap](docs/tpc_phase2_roadmap.md): the search-space diagnosis, ranked
-  open work items, and the landed/closed record.
-- [Phase 2 evaluation roadmap](docs/tpc_phase2_eval.md): what a measurement may prove (metrics,
-  gates, dataset boundaries) and what to run next.
-- [Agent environment guide](agent_env/README.md) and [agent contract](agent_env/SKILL.md): the
-  wrapper interface and its setup boundary.
-- [TPCAgent internals](chinatravel/agent/tpc_agent/readme.md): planner internals and tuning knobs.
-- [Competition reference](docs/reference/competition.md): dated summary of official facts, the
-  evaluation host, packaging and the pre-submission checklist.
-- [Technical report](report/README.md): the mandatory Phase 2 report and how to build it.
-- [Phase 1 playbook](docs/tpc_phase1_playbook.md) and [HPC workflows](slurm/README.md): the Phase 1
-  prediction workflow, which shares this solver but not its trust boundary.
-- [Documentation archive](docs/archive/README.md): superseded plans and measurement chronology.
+- [Phase 2 design](docs/tpc_phase2_design.md) — architecture, no-oracle contract, scheduling, flags.
+- [Evaluation log](docs/tpc_phase2_eval.md) and [implementation roadmap](docs/tpc_phase2_roadmap.md) —
+  every measurement and work item, including the held-out postmortem.
+- [Competition reference](docs/reference/competition.md) — rules, submission packaging, final
+  leaderboard ([PDF](submissions/Final%20Phase%202%20Leaderboard%20—%20TPC@IJCAI2026.pdf)).
+- [Agent environment](agent_env/README.md) and [TPCAgent internals](chinatravel/agent/tpc_agent/readme.md).
+- [Phase 1 playbook](docs/tpc_phase1_playbook.md) and the [documentation archive](docs/archive/README.md).
+- [CLAUDE.md](CLAUDE.md) — conventions for the coding agents that built this repository.
 
-The [competition website](https://chinatravel-competition.github.io/IJCAI2026/) is authoritative for
-rules and dates; the [Agent Environment
-Guide](https://chinatravel-competition.github.io/IJCAI2026/agent-environment.html) defines the
-wrapper interface.
+## Authors
+
+[Stefan Schneider](https://github.com/stefanbschneider) and [Fabian Missbrenner](https://github.com/fabufab).
+Built on [ChinaTravel](https://github.com/LAMDA-NeSy/ChinaTravel) by LAMDA-NeSy — please cite their
+benchmark if you use this work. Licensed under the [MIT License](LICENSE), like upstream.
