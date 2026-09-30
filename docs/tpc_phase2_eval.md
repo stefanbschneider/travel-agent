@@ -8,6 +8,13 @@ document defines their interpretation. What to *implement* is the
 
 ## The one fact that reorganizes this document
 
+> **Superseded as a diagnosis, 2026-09-29.** The held-out answer key is now public, and
+> [R38](#r38--held-out-postmortem-why-the-improvements-did-not-transfer-closed-2026-09-29-retrospective-only)
+> attributes the gap clause by clause: the held-out set uses 53 constraint template keys against
+> familiar-100's 29, and `59 %` of its clauses sit in families familiar-100 never contains. The
+> readings below were reasoned from aggregates before that was knowable; their *signature* analysis
+> holds, their "free prose is the held-out register" cause does not.
+
 **The organizers returned `v1`'s held-out score on 2026-08-06: `33.2473`, and on 2026-08-07 the
 Phase 2 leaderboard published the seven metrics behind it.** The same code scores `64.17` on the
 released familiar-100 split ([R17](#the-closed-queue-r1r19)). **Local rows over-predicted held-out
@@ -737,6 +744,144 @@ harness's wall-clock-budget triage/repair/polish passes, not with a different qu
 public post-competition. Retrospective only: no submission slot spent, no shipped default touched.
 Full writeup: [competition reference](reference/competition.md#final-leaderboard-and-the-newly-published-held-out-test-set-2026-09-05).
 Row: [`results/phase2_baselines/heldout/20260905_official_test_set_identity_check.json`](../results/phase2_baselines/heldout/20260905_official_test_set_identity_check.json).
+
+### R38 — held-out postmortem: why the improvements did not transfer *(closed 2026-09-29, retrospective only)*
+
+R37 proved the published `competition_test.csv` is the graded set. Its `constraint_keys` column labels
+every oracle clause with one of the organizers' **53 generator template keys** — the label no
+pre-deadline instrument had — so for the first time the gap can be attributed clause by clause instead
+of inferred from seven aggregate numbers. Instrument: `scripts/phase2_heldout_postmortem.py`
+(evaluation-only; the CSV and materialized split stay uncommitted). Row:
+[`heldout/20260929_heldout_postmortem.json`](../results/phase2_baselines/heldout/20260929_heldout_postmortem.json).
+
+**1. The held-out set was not familiar-100's constraint distribution.** It shares familiar-100's
+*format* — every query is the same numbered `Requirements:` list, same seed-trip mix of cities, days
+and party sizes — but not its constraint vocabulary:
+
+| | familiar-100 | held-out |
+| --- | --- | --- |
+| clauses / query (mean, range) | `11.09` (`9–13`) | **`13.75`** (`9–17`) |
+| distinct template keys | `29` | **`53`** (all of them) |
+| OR clauses (`either_requirement`) | `0` | **`140`** (`1.4` / query) |
+| held-out clauses whose key familiar-100 never uses | — | **`816 / 1375` (`59.3 %`)** |
+| exclusion clauses (`forbidden_*` keys — satisfiable by omission) | `377 / 1109` (`34.0 %`) | `179 / 1375` (`13.0 %`) |
+
+The 24 keys familiar-100 never exercises carry most of the held-out weight: `cross_category_order`
+(`100` clauses, one per query — "Visit X before dining at Y"), `daily_budget` (`61`),
+`attraction_count_on_day` (`59`), `required_meals_on_day` (`44`), `attraction_pair_on_day` (`43`),
+`inner_transport_mode_count` (`40`), `attraction_order` (`34`), in-city travel-time and walking-distance
+budgets, per-day placements, exact-time slots, departure-time bounds, intercity-mode *exclusions*,
+free-attraction and total-duration minimums, distinct-hotel counts. The organizers' own
+`PHASE2_RELEASE_NOTES.md` says the 2,000-query Phase 2 pool (every UID `phase2_extended_…`) "covers
+all 53 constraint templates"; familiar-100 (`phase2_familiar_…`, no OR, 29 keys) was evidently drawn
+from a narrower generator configuration. So "same distribution" held for the seed trips and the
+surface format, and did not hold for the thing being scored. The generator itself
+(`synthetic_query_generation/`) only became public upstream on 2026-08-13, after the deadline.
+
+**2. We failed at the parse, and below it at the representation.** Feeding each held-out clause, in
+its own held-out wording, through `parse_query_no_oracle` shows three distinct failure modes:
+
+- **Unrepresentable families.** For most of the 24 unseen keys the solver-constraint schema has no
+  field at all (no per-day budget, per-day attraction count, meal set per day, ordering, travel-time,
+  walking-distance, departure-time or distinct-hotel field). Even a perfect parser could not have
+  handed them to the solver.
+- **Template drift inside families we did support.** The held-out generator words known families
+  differently, and the regexes return nothing: `"Keep the total accommodation cost within 800 CNY."`
+  → `{}` where familiar-100's `"Keep the accommodation cost within 342."` parses; `"Dine at X exactly
+  from 07:50 to 08:45."` / `"… within the time window from …"` → `{}` where `"Dine at X between 07:50
+  and 08:45."` parses; `"Visit X."`, `"Dine at X on day 2."`, `"The intercity itinerary must include
+  train."` → `{}`. Across the held-out set the deterministic parser emits `activity_time_windows` for
+  **`0`** queries against `84` on familiar-100.
+- **Wrong-sign and wrong-scope extractions — actively harmful.** `"Do not use airplane for the outbound
+  intercity trip."` is extracted as `intercity_mode.outbound = airplane` (the negation is dropped, so we
+  *require* what was forbidden); `"Keep all activity and transportation costs on day 3 within 3164
+  CNY."` becomes a **whole-trip** budget of `3164`; `"Stay at X exactly from 22:03 to 24:00."` and
+  `"Stay at exactly 1 different hotel."` become required-hotel *names* (`"exactly 1 different
+  hotel"`) that resolve to nothing; every OR clause is flattened into a hard AND (`disjunctive: false`
+  on all 100 queries), so branch B of "(A) or (B)" becomes mandatory. Each of these turns a free or
+  easy clause into a failed one, or makes the query infeasible outright.
+
+**3. Why `v2`'s measured improvements bought `+0.07`.** Everything that landed between `v1` and `v2`
+(the phrasing fix, P15–P28) was targeted and gated on **free prose** (`hf_medium`, R31/R32/R36),
+because the working hypothesis since 2026-08-06 was that held-out was a free-prose register. It is
+not: it is templated text in the familiar format, and 100 % of its queries are numbered requirement
+lists. The `v1 → v2` gains were real on the register they were measured on and structurally inert on
+the one that was graded, exactly as familiar-100 gains had been inert on free prose. The one fact the
+earlier diagnosis got right — the collapse is in knowing *what* to satisfy, not in search or
+grounding (EPR-micro `99.5`) — is confirmed; the *cause* it named (phrasing register) was wrong.
+
+**4. What the per-family replay says.** Replaying the unmodified `v2` archive on the held-out set
+(`TPC_P2_TOTAL_BUDGET_SEC=3600`, 3 workers, 4-core box — overall `34.23`, C-LPR `55.78`, FPR `1.0`,
+against the official `33.32`) and scoring each clause against its key:
+
+- **Clauses in families familiar-100 contains pass at `89.6 %`; clauses in families it never contains
+  pass at `33.6 %`.** Overall clause pass rate `56.4 %`.
+- **No query was a near miss.** Failed clauses per query: median `6`, one query passed everything, only `4` queries failed as few
+  as two, `0` failed exactly one. There was no single fix like P28 to find — the P28 question returns
+  an empty list.
+- **Zero-pass families** (`0 %`): `attraction_pair_on_day` (43), `inner_transport_mode_count` (40),
+  `attraction_order` (34), all three `*_exact_time` (53), `attraction_on_day` (13), and — families we
+  *did* support, lost to wording drift — `attraction_time_window` (15), `restaurant_time_window` (9).
+  `cross_category_order` (100, one per query) passes `4 %`; `attraction_count_on_day` (59) `3.4 %`.
+- **The scheduler could not see any of it.** Against our own parse, triage reported `60/100` queries
+  fully satisfied and the finished run `70/100`; the true count was `1`. Repair went to the 40 queries
+  our parse called failing, the rest were "polished" toward constraints we had not extracted, and the
+  sweep then stopped with `1587 s` of its `3600 s` envelope unspent because "no pass would do anything
+  new". More time would not have helped a parse that could not see the failures.
+- **Counterfactual.** Had unseen-family clauses passed at the seen-family rate, the clause pass rate
+  would be `~90 %`, which by [reading 4](#the-measured-breakdown) is the regime where FPR stops being
+  zero. The representation gap alone accounts for the whole distance to the threshold.
+
+**5. What this corrects in this document.** [R23](#r23--what-else-separates-the-held-out-set-closed-2026-08-07-static-1-h)
+concluded "unseen constraint families: ruled out" — it checked families present in *released* sets,
+and flagged that it could not rule out families no released set has. That caveat was the answer: the
+held-out set's majority mass sits in exactly such families. The "free prose is the register that
+behaves like held-out" framing in [What the gap is made of](#what-the-gap-is-made-of) and in the
+roadmap's one-paragraph version matched the *signature* (collapsed C-LPR, intact EPR) but not the
+*mechanism*; a signature match is not a register match.
+
+**6. How we could have done better** — ordered by what the evidence says each was worth:
+
+1. **Parse into the evaluator's language, not into a hand-built solver schema.** Every oracle clause is
+   a snippet over the public DSL in `chinatravel/symbol_verification/concept_func.py`
+   (`dayactivities`, `innercity_transport_time`, `innercity_transport_distance`, `activity_start_time`,
+   …). A parser — LLM or rule — that emits DSL snippets, plus a solver/repair loop that treats *any*
+   DSL predicate as a black-box check (generate → evaluate the parsed snippet on the candidate plan →
+   repair), has no closed family list to fall off. Our design routed everything through a fixed
+   ~20-field dict, so each new family needed a regex, a schema field and a solver move.
+2. **Use the provided LLM for extraction.** The organizers supplied `Qwen3.6-27B` on the grading host.
+   R20 held LLM parsing off because it did not beat regex on the registers we had — registers where
+   regex had been tuned to `0` gaps. The comparison that mattered was on *unseen templates*, which we
+   never constructed. The final board's top (`37.04`) sits `+3.7` over us; with `FPR ≈ 0` field-wide on
+   every board we saw, that gap is almost certainly per-clause rate — consistent with extractors that
+   degraded gracefully on unseen wording (we cannot see their methods).
+3. **Fail safe on unknown clauses.** A line the parser cannot classify should become "no constraint",
+   never a guessed one. Dropping the negation on "Do not use airplane" and promoting a per-day budget
+   to a trip budget cost more than ignoring those lines would have. A simple rule — only extract when
+   the whole line matches a known template, otherwise emit nothing and log it — would have made the
+   unknown families neutral instead of harmful.
+4. **Stress-test against synthetic template drift before trusting a gate.** We had R22 for phrasing,
+   but every set it checked came from the same two generators we already knew. Paraphrasing
+   familiar-100's own lines ("within 342" → "within 342 CNY", "between A and B" → "exactly from A to
+   B"), and writing a handful of new clauses over DSL functions no released query used, would have
+   exposed both the drift and the representation gap in an afternoon.
+5. **Spend the time budget on breadth, not polish.** The 5 h envelope went to repair/polish passes on a
+   parse we could not see was wrong (the scheduler judges "satisfied" against *our* parse — the
+   amplifier noted in [What the gap is made of](#what-the-gap-is-made-of)).
+
+**7. Lessons to keep.**
+
+- *"Same distribution" is a claim about a generator; verify it on the axis being scored.* Compare
+  clause-family inventories, not surface format, and treat a dev set with zero instances of a
+  construct the scoring DSL can express (OR, per-day scope, ordering) as a red flag.
+- *A component with zero measured gaps on its dev set has an unmeasured generalization error.* Parser
+  F1 `0.955–0.995` on familiar-100 described familiar-100.
+- *Match the mechanism, not the signature.* Collapsed C-LPR with intact EPR was reproducible by several
+  different causes; we picked the one we had data for.
+- *Unknown input must degrade to "no-op", not to a guess.* Precision failures on unseen inputs cost
+  more than recall failures.
+- *Build on the evaluator's own abstraction.* When the scoring DSL is public, it is the best available
+  description of the hidden constraint space.
 
 ### R20 — does grounded fill-only LLM extraction convert? *(HOLD; not promoted)*
 

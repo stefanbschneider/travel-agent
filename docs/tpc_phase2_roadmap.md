@@ -9,6 +9,17 @@ non-negotiable invariants; nothing here overrides them. Phase 1's record is in t
 
 ## The one-paragraph version
 
+> **Postmortem, 2026-09-29 (competition over, rank 10/14, `v2 = 33.3175`).** The published held-out
+> answer key shows the diagnosis below had the right *signature* and the wrong *cause*. The held-out
+> set is not free prose: it is familiar-100's numbered-list format with a larger constraint vocabulary
+> — all 53 generator template keys against familiar-100's 29, `140` OR clauses against `0`, and
+> `59 %` of its clauses in families familiar-100 never contains. Most of those families have no field
+> in our solver schema, known families are worded differently enough that our regexes miss them, and
+> several unknown lines are extracted with the wrong sign or scope (e.g. "Do not use airplane" →
+> *require* airplane). The free-prose program behind `v1 → v2` was real but aimed at a register that
+> was not graded. Read [R38](tpc_phase2_eval.md#r38--held-out-postmortem-why-the-improvements-did-not-transfer-closed-2026-09-29-retrospective-only)
+> before reusing anything below; the rest of this document is the pre-result record.
+
 **Our held-out score is `33.2473`, first place is `36.4060`, and `99.5 %` of that gap is C-LPR.** The
 2026-08-08 board ([five teams](tpc_phase2_eval.md#the-full-field-and-what-the-race-is-actually-about-2026-08-08))
 also says `FPR = 0` is the whole field, not our bug: four of five teams score exactly `0.0000` and

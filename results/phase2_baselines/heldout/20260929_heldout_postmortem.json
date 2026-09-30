@@ -1,0 +1,548 @@
+{
+ "kind": "heldout_postmortem",
+ "recorded_utc": "2026-09-29",
+ "what_this_is": "retrospective clause-level attribution of the held-out gap; no submission slot, no default changed",
+ "source_csv": "LAMDA-NeSy/ChinaTravel phase2/competition_test.csv @ 44d5dbf3bba26bdf9a212c3e76d3242b67f0d349 (sha256 fbc3379e...)",
+ "instrument": "scripts/phase2_heldout_postmortem.py",
+ "plans": {
+  "archive": "submissions/phase2/fabiundstefan_v2.zip (unmodified)",
+  "stage": "final plans after the whole sweep",
+  "envelope_sec": 3600,
+  "workers": 3,
+  "host": "4-core cloud container",
+  "eval_tpc": {
+   "MicEPR": 99.8519,
+   "MacEPR": 99.0,
+   "C-LPR": 55.7818,
+   "FPR": 1.0,
+   "overall": 34.2306
+  },
+  "official_v2": 33.3175,
+  "scheduler_self_report": "60/100 after triage, 70/100 at the end (against our own parse); true all-pass 1/100",
+  "unspent_envelope_sec": 1587,
+  "triage_stage": {
+   "clause_pass_rate": 54.11,
+   "pass_rate_keys_seen_in_familiar": 87.1,
+   "pass_rate_keys_absent_from_familiar": 31.5
+  }
+ },
+ "heldout": {
+  "queries": 100,
+  "clauses": 1375,
+  "clauses_per_query": 13.75,
+  "distinct_keys": 53,
+  "or_clauses": 140
+ },
+ "familiar_100": {
+  "clauses": 1109,
+  "unmapped_clauses": 0,
+  "distinct_keys": 29,
+  "or_clauses": 0
+ },
+ "heldout_clauses_in_keys_absent_from_familiar": 816,
+ "heldout_share_in_keys_absent_from_familiar": 59.3,
+ "keys": {
+  "either_requirement": {
+   "heldout": 140,
+   "familiar": 0
+  },
+  "trip_days": {
+   "heldout": 100,
+   "familiar": 100
+  },
+  "people_number": {
+   "heldout": 100,
+   "familiar": 100
+  },
+  "tickets_match_people": {
+   "heldout": 100,
+   "familiar": 100
+  },
+  "cross_category_order": {
+   "heldout": 100,
+   "familiar": 0
+  },
+  "daily_budget": {
+   "heldout": 61,
+   "familiar": 0
+  },
+  "attraction_count_on_day": {
+   "heldout": 59,
+   "familiar": 0
+  },
+  "required_meals_on_day": {
+   "heldout": 44,
+   "familiar": 0
+  },
+  "attraction_pair_on_day": {
+   "heldout": 43,
+   "familiar": 0
+  },
+  "inner_transport_mode_count": {
+   "heldout": 40,
+   "familiar": 0
+  },
+  "attraction_order": {
+   "heldout": 34,
+   "familiar": 0
+  },
+  "forbidden_inner_transport_modes": {
+   "heldout": 28,
+   "familiar": 60
+  },
+  "innercity_travel_time_budget": {
+   "heldout": 27,
+   "familiar": 0
+  },
+  "total_attraction_count": {
+   "heldout": 23,
+   "familiar": 0
+  },
+  "forbidden_attraction_types": {
+   "heldout": 23,
+   "familiar": 49
+  },
+  "forbidden_restaurant_types": {
+   "heldout": 22,
+   "familiar": 55
+  },
+  "forbidden_accommodation_types": {
+   "heldout": 22,
+   "familiar": 51
+  },
+  "forbidden_depart_transport": {
+   "heldout": 21,
+   "familiar": 0
+  },
+  "outbound_departure_deadline": {
+   "heldout": 20,
+   "familiar": 0
+  },
+  "free_attraction_count_minimum": {
+   "heldout": 20,
+   "familiar": 0
+  },
+  "attraction_duration_minimum": {
+   "heldout": 20,
+   "familiar": 0
+  },
+  "walking_distance_budget": {
+   "heldout": 19,
+   "familiar": 0
+  },
+  "forbidden_return_transport": {
+   "heldout": 19,
+   "familiar": 0
+  },
+  "attraction_exact_time": {
+   "heldout": 19,
+   "familiar": 0
+  },
+  "return_departure_earliest": {
+   "heldout": 19,
+   "familiar": 0
+  },
+  "restaurant_exact_time": {
+   "heldout": 18,
+   "familiar": 0
+  },
+  "forbidden_accommodation_names": {
+   "heldout": 16,
+   "familiar": 55
+  },
+  "accommodation_exact_time": {
+   "heldout": 16,
+   "familiar": 0
+  },
+  "distinct_accommodation_count": {
+   "heldout": 16,
+   "familiar": 0
+  },
+  "attraction_time_window": {
+   "heldout": 15,
+   "familiar": 59
+  },
+  "forbidden_attraction_names": {
+   "heldout": 14,
+   "familiar": 54
+  },
+  "restaurant_on_day": {
+   "heldout": 14,
+   "familiar": 0
+  },
+  "forbidden_restaurant_names": {
+   "heldout": 14,
+   "familiar": 53
+  },
+  "accommodation_time_window": {
+   "heldout": 14,
+   "familiar": 38
+  },
+  "attraction_on_day": {
+   "heldout": 13,
+   "familiar": 0
+  },
+  "required_restaurant_names": {
+   "heldout": 12,
+   "familiar": 18
+  },
+  "accommodation_on_day": {
+   "heldout": 11,
+   "familiar": 0
+  },
+  "accommodation_budget": {
+   "heldout": 10,
+   "familiar": 31
+  },
+  "restaurant_time_window": {
+   "heldout": 9,
+   "familiar": 52
+  },
+  "restaurant_budget": {
+   "heldout": 8,
+   "familiar": 16
+  },
+  "total_budget": {
+   "heldout": 7,
+   "familiar": 16
+  },
+  "inner_transport_modes_subset": {
+   "heldout": 7,
+   "familiar": 23
+  },
+  "required_accommodation_types": {
+   "heldout": 6,
+   "familiar": 16
+  },
+  "intercity_modes_include": {
+   "heldout": 4,
+   "familiar": 19
+  },
+  "required_attraction_names": {
+   "heldout": 4,
+   "familiar": 23
+  },
+  "required_restaurant_types": {
+   "heldout": 4,
+   "familiar": 12
+  },
+  "innercity_budget": {
+   "heldout": 4,
+   "familiar": 28
+  },
+  "required_attraction_types": {
+   "heldout": 4,
+   "familiar": 20
+  },
+  "required_accommodation_names": {
+   "heldout": 3,
+   "familiar": 16
+  },
+  "room_count": {
+   "heldout": 3,
+   "familiar": 11
+  },
+  "taxi_cars": {
+   "heldout": 3,
+   "familiar": 13
+  },
+  "attraction_budget": {
+   "heldout": 2,
+   "familiar": 12
+  },
+  "room_type": {
+   "heldout": 1,
+   "familiar": 9
+  }
+ },
+ "scored": {
+  "missing_plans": 0,
+  "clause_pass_rate": 56.36,
+  "queries_all_pass": 1,
+  "failed_clauses_per_query_histogram": {
+   "0": 1,
+   "2": 4,
+   "3": 5,
+   "4": 10,
+   "5": 21,
+   "6": 22,
+   "7": 16,
+   "8": 9,
+   "9": 8,
+   "10": 1,
+   "11": 2,
+   "12": 1
+  },
+  "sole_failure_key": {},
+  "per_key": {
+   "either_requirement": {
+    "passed": 89,
+    "total": 140,
+    "rate": 63.6
+   },
+   "trip_days": {
+    "passed": 100,
+    "total": 100,
+    "rate": 100.0
+   },
+   "people_number": {
+    "passed": 100,
+    "total": 100,
+    "rate": 100.0
+   },
+   "tickets_match_people": {
+    "passed": 100,
+    "total": 100,
+    "rate": 100.0
+   },
+   "cross_category_order": {
+    "passed": 4,
+    "total": 100,
+    "rate": 4.0
+   },
+   "daily_budget": {
+    "passed": 36,
+    "total": 61,
+    "rate": 59.0
+   },
+   "attraction_count_on_day": {
+    "passed": 2,
+    "total": 59,
+    "rate": 3.4
+   },
+   "required_meals_on_day": {
+    "passed": 19,
+    "total": 44,
+    "rate": 43.2
+   },
+   "attraction_pair_on_day": {
+    "passed": 0,
+    "total": 43,
+    "rate": 0.0
+   },
+   "inner_transport_mode_count": {
+    "passed": 0,
+    "total": 40,
+    "rate": 0.0
+   },
+   "attraction_order": {
+    "passed": 0,
+    "total": 34,
+    "rate": 0.0
+   },
+   "forbidden_inner_transport_modes": {
+    "passed": 28,
+    "total": 28,
+    "rate": 100.0
+   },
+   "innercity_travel_time_budget": {
+    "passed": 26,
+    "total": 27,
+    "rate": 96.3
+   },
+   "total_attraction_count": {
+    "passed": 4,
+    "total": 23,
+    "rate": 17.4
+   },
+   "forbidden_attraction_types": {
+    "passed": 23,
+    "total": 23,
+    "rate": 100.0
+   },
+   "forbidden_restaurant_types": {
+    "passed": 22,
+    "total": 22,
+    "rate": 100.0
+   },
+   "forbidden_accommodation_types": {
+    "passed": 20,
+    "total": 22,
+    "rate": 90.9
+   },
+   "forbidden_depart_transport": {
+    "passed": 9,
+    "total": 21,
+    "rate": 42.9
+   },
+   "outbound_departure_deadline": {
+    "passed": 2,
+    "total": 20,
+    "rate": 10.0
+   },
+   "free_attraction_count_minimum": {
+    "passed": 11,
+    "total": 20,
+    "rate": 55.0
+   },
+   "attraction_duration_minimum": {
+    "passed": 13,
+    "total": 20,
+    "rate": 65.0
+   },
+   "walking_distance_budget": {
+    "passed": 17,
+    "total": 19,
+    "rate": 89.5
+   },
+   "forbidden_return_transport": {
+    "passed": 11,
+    "total": 19,
+    "rate": 57.9
+   },
+   "attraction_exact_time": {
+    "passed": 0,
+    "total": 19,
+    "rate": 0.0
+   },
+   "return_departure_earliest": {
+    "passed": 4,
+    "total": 19,
+    "rate": 21.1
+   },
+   "restaurant_exact_time": {
+    "passed": 0,
+    "total": 18,
+    "rate": 0.0
+   },
+   "forbidden_accommodation_names": {
+    "passed": 16,
+    "total": 16,
+    "rate": 100.0
+   },
+   "accommodation_exact_time": {
+    "passed": 0,
+    "total": 16,
+    "rate": 0.0
+   },
+   "distinct_accommodation_count": {
+    "passed": 16,
+    "total": 16,
+    "rate": 100.0
+   },
+   "attraction_time_window": {
+    "passed": 0,
+    "total": 15,
+    "rate": 0.0
+   },
+   "forbidden_attraction_names": {
+    "passed": 14,
+    "total": 14,
+    "rate": 100.0
+   },
+   "restaurant_on_day": {
+    "passed": 1,
+    "total": 14,
+    "rate": 7.1
+   },
+   "forbidden_restaurant_names": {
+    "passed": 14,
+    "total": 14,
+    "rate": 100.0
+   },
+   "accommodation_time_window": {
+    "passed": 2,
+    "total": 14,
+    "rate": 14.3
+   },
+   "attraction_on_day": {
+    "passed": 0,
+    "total": 13,
+    "rate": 0.0
+   },
+   "required_restaurant_names": {
+    "passed": 8,
+    "total": 12,
+    "rate": 66.7
+   },
+   "accommodation_on_day": {
+    "passed": 10,
+    "total": 11,
+    "rate": 90.9
+   },
+   "accommodation_budget": {
+    "passed": 7,
+    "total": 10,
+    "rate": 70.0
+   },
+   "restaurant_time_window": {
+    "passed": 0,
+    "total": 9,
+    "rate": 0.0
+   },
+   "restaurant_budget": {
+    "passed": 6,
+    "total": 8,
+    "rate": 75.0
+   },
+   "total_budget": {
+    "passed": 3,
+    "total": 7,
+    "rate": 42.9
+   },
+   "inner_transport_modes_subset": {
+    "passed": 6,
+    "total": 7,
+    "rate": 85.7
+   },
+   "required_accommodation_types": {
+    "passed": 5,
+    "total": 6,
+    "rate": 83.3
+   },
+   "intercity_modes_include": {
+    "passed": 4,
+    "total": 4,
+    "rate": 100.0
+   },
+   "required_attraction_names": {
+    "passed": 2,
+    "total": 4,
+    "rate": 50.0
+   },
+   "required_restaurant_types": {
+    "passed": 4,
+    "total": 4,
+    "rate": 100.0
+   },
+   "innercity_budget": {
+    "passed": 1,
+    "total": 4,
+    "rate": 25.0
+   },
+   "required_attraction_types": {
+    "passed": 4,
+    "total": 4,
+    "rate": 100.0
+   },
+   "required_accommodation_names": {
+    "passed": 3,
+    "total": 3,
+    "rate": 100.0
+   },
+   "room_count": {
+    "passed": 3,
+    "total": 3,
+    "rate": 100.0
+   },
+   "taxi_cars": {
+    "passed": 3,
+    "total": 3,
+    "rate": 100.0
+   },
+   "attraction_budget": {
+    "passed": 2,
+    "total": 2,
+    "rate": 100.0
+   },
+   "room_type": {
+    "passed": 1,
+    "total": 1,
+    "rate": 100.0
+   }
+  },
+  "pass_rate_keys_seen_in_familiar": 89.6,
+  "pass_rate_keys_absent_from_familiar": 33.6
+ },
+ "analysis": "docs/tpc_phase2_eval.md#r38--held-out-postmortem-why-the-improvements-did-not-transfer-closed-2026-09-29-retrospective-only"
+}
