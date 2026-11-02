@@ -4,7 +4,7 @@ Our entry to the [2nd Travel Planning Challenge (TPC) with Agentic AI at IJCAI
 2026](https://chinatravel-competition.github.io/IJCAI2026/), built on the
 [ChinaTravel](https://github.com/LAMDA-NeSy/ChinaTravel) benchmark.
 
-🏆 **Competition finalists, awarded the _Special Contribution Award_.**
+🏆 **Competition finalists, awarded the [_Special Contribution Award_](images/ijcai2026-tpc-certificate.png).**
 
 Given a natural-language request such as *"Plan three days in Suzhou, visit the Humble
 Administrator's Garden between 9 and 11, stay near the old town, avoid taxis, and spend at most CNY
